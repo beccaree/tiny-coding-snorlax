@@ -1,0 +1,5 @@
+Meeting 2 - All members present
+
+- derived a draft for a Network Diagram for the project from the WBS created last meeting
+- derived a draft of a Gantt diagram from the Net work diagram
+	- discussed the expected time required to complete each task
