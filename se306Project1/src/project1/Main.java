@@ -14,10 +14,11 @@ public class Main {
 	}
 	
 	private static void parseArgs(String[] args) {
-		inputFileName = args[0];
-		numProcessors = Integer.parseInt(args[1]);
 		
 		try {
+			inputFileName = args[0];
+			numProcessors = Integer.parseInt(args[1]);
+		
 			for(int i=2; i < args.length; i++) {
 				if(args[i].equals("-p")) {
 					isParallel = true;
