@@ -3,4 +3,7 @@ Meeting 3 - All members present
 - Made some small changes to the WBS due to extra informaiton given during lecture
 	- renamed some titles in level 2
 	- reworded level 3 tasks so they are more outcomes than actions
+- created a Java Project in the repository named 'se306Project1'
 - added all files and meeting documents to the github repository as instructed in the lecture today
+
+- Implemented command line input reading
