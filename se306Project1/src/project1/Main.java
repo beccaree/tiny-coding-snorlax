@@ -7,7 +7,7 @@ public class Main {
 	private static boolean isParallel = false;
 	private static int numThreads;
 	private static boolean isVisualised = false;
-	private static String outputFileName = "INPUT-output.dot";
+	private static String outputFileName;
 
 	public static void main(String[] args) {
 		parseArgs(args);
@@ -18,6 +18,9 @@ public class Main {
 		try {
 			inputFileName = args[0];
 			numProcessors = Integer.parseInt(args[1]);
+			
+			String output = inputFileName.substring(0, inputFileName.indexOf(".dot"));
+			outputFileName = output+"-output.dot";
 		
 			for(int i=2; i < args.length; i++) {
 				if(args[i].equals("-p")) {
@@ -33,5 +36,4 @@ public class Main {
 			System.out.println("Invalid command!");
 		}
 	}
-
 }
