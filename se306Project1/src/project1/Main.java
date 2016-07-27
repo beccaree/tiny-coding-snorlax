@@ -25,11 +25,11 @@ public class Main {
 			for(int i=2; i < args.length; i++) {
 				if(args[i].equals("-p")) {
 					isParallel = true;
-					numThreads = Integer.parseInt(args[i + 1]);
+					numThreads = Integer.parseInt(args[++i]);
 				} else if (args[i].equals("-v")) {
 					isVisualised = true;
 				} else if (args[i].equals("-o")) {
-					outputFileName = args[i + 1];
+					outputFileName = args[++i];
 				}
 			}
 		} catch(Exception e) {
