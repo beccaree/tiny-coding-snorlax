@@ -1,0 +1,10 @@
+Meeting 4 - All members present
+
+- Discuss revised version of Gantt chart
+	- Making sure all members are happy with the time assigned for each task
+	- Moved data visualisation later on in the timeline
+
+- Decided on the next meeting time and place (Monday 12pm)
+
+- Started parsing input file into (non-existent) data structure. No logic yet.
+	- Isabel and Stefan peer programming

@@ -7,3 +7,5 @@ Meeting 3 - All members present
 - added all files and meeting documents to the github repository as instructed in the lecture today
 
 - Implemented command line input reading
+
+- Reformatted the Network diagram and gantt chart because the WBS diagram has been changed
