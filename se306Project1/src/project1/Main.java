@@ -10,7 +10,9 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
+		args = new String[]{"tests/example.dot", "1"};
 		parseArgs(args);
+		new GraphParser(inputFileName).parse();
 	}
 	
 	private static void parseArgs(String[] args) {
