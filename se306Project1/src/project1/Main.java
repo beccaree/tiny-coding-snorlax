@@ -10,7 +10,7 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/example.dot", "1"};
+		args = new String[]{"tests/example2.dot", "1"};
 		parseArgs(args);
 		new GraphParser(inputFileName).parse();
 	}
@@ -34,8 +34,8 @@ public class Main {
 					outputFileName = args[++i];
 				}
 			}
-		} catch(Exception e) {
-			System.out.println("Invalid command!");
+		} catch(ArrayIndexOutOfBoundsException e) {
+			System.out.println("Invalid command line arguments!");
 		}
 	}
 }
