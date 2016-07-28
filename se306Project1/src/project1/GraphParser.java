@@ -45,7 +45,7 @@ public class GraphParser {
 	}
 	
 	private int parseWeight(String weightString){		
-		return Integer.parseInt(weightString.substring(weightString.indexOf("=")+1, weightString.indexOf("=")+2 ));
+		return Integer.parseInt(weightString.substring(weightString.indexOf("=")+1, weightString.indexOf("]")));
 	}
 	
 	private String createOutputGraphName(String line) {
