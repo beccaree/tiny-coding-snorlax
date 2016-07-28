@@ -8,3 +8,9 @@ Meeting 4 - All members present
 
 - Started parsing input file into (non-existent) data structure. No logic yet.
 	- Isabel and Stefan peer programming
+
+- Discussed what to talk about tomorrow at the presentation lecture
+
+
+Questions for Client/TA:
+- Is the final report a group report or written individually?
