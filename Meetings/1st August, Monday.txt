@@ -1,0 +1,10 @@
+Meeting 5 - All members present
+
+- List of all the tasks we are trying to complete (Basic milestones for submission next week)
+- Split tasks up between the team members
+	- Research JGraphT and how we can use it (Isabel & Sabrina)
+	- Research JGraph and how to use it to visualise the graph (Rebecca)
+	- Bottom level calculator (Kristy & Stefan)
+
+- Begin putting intialising data into chosen data structure (JGraphT)
+- Begin creating a base JFrame for data visualisation
