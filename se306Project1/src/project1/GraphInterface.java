@@ -17,5 +17,6 @@ public interface GraphInterface<V,E> {
 	public E removeEdge(V sourceVertex, V targetVertex);
 	public void removeEdge(E e);
 	public void removeVertex(V v);
-	
+	public Set<V> vertexSet();
+	public String toString();
 }

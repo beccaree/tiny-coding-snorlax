@@ -75,5 +75,15 @@ public class JGraphTAdapter<V,E> implements GraphInterface<V,E>{
 	public void removeVertex(V v) {
 		directedGraph.removeVertex(v);
 	}
+
+	@Override
+	public String toString(){
+		return directedGraph.toString();
+	}
 	
+	@Override
+	public Set<V> vertexSet() {
+		return vertexSet();
+	}
+
 }

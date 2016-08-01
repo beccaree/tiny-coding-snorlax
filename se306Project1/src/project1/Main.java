@@ -17,8 +17,7 @@ public class Main {
 		new GraphVisualisation();
 	}
 	
-	private static void parseArgs(String[] args) {
-		
+	private static void parseArgs(String[] args) {		
 		try {
 			inputFileName = args[0];
 			numProcessors = Integer.parseInt(args[1]);
@@ -26,6 +25,7 @@ public class Main {
 			String output = inputFileName.substring(0, inputFileName.indexOf(".dot"));
 			outputFileName = output+"-output.dot";
 		
+			//Read in the Options
 			for(int i=2; i < args.length; i++) {
 				if(args[i].equals("-p")) {
 					isParallel = true;
@@ -36,6 +36,7 @@ public class Main {
 					outputFileName = args[++i];
 				}
 			}
+			
 		} catch(ArrayIndexOutOfBoundsException e) {
 			System.out.println("Invalid command line arguments!");
 		}
