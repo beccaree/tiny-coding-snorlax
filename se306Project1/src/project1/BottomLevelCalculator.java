@@ -16,8 +16,9 @@ import com.sun.javafx.geom.Edge;
  */
 public class BottomLevelCalculator {
 	
-	//hashmap to store all the weights as graph can not store weights
-
+	/**
+	 * Method stores all bottom level weight and name
+	 */
 	private void calculate(){
 		
 		DirectedGraph<Vertex, DefaultWeightedEdge> directedGraph =
@@ -30,7 +31,6 @@ public class BottomLevelCalculator {
 		for ( Vertex node: directedGraph.vertexSet()){
 			if(directedGraph.outDegreeOf(node)==0){
 				queue.add(node);
-				//TODO create something that can store the bottom level weight
 			}
 		}
 		
@@ -39,9 +39,6 @@ public class BottomLevelCalculator {
 			//get the head node from the queue
 			Vertex node = queue.remove();
 			for (DefaultWeightedEdge e: directedGraph.incomingEdgesOf(node)){
-				//get the destination node of the edge
-//				Vertex destinationNode = directedGraph.getEdgeTarget(e);
-				
 				
 				//get node from which edge comes from
 				Vertex sourceNode =directedGraph.getEdgeSource(e);
