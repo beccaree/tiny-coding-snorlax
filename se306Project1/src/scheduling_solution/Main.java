@@ -1,6 +1,11 @@
 package scheduling_solution;
 
+import org.jgrapht.graph.DefaultWeightedEdge;
+
 import scheduling_solution.input.GraphParser;
+import scheduling_solution.tools.BottomLevelCalculator;
+import scheduling_solution.tools.GraphInterface;
+import scheduling_solution.tools.Vertex;
 import scheduling_solution.visualisation.GraphVisualisation;
 
 public class Main {
@@ -15,8 +20,12 @@ public class Main {
 	public static void main(String[] args) {
 		args = new String[]{"tests/example2.dot", "1"};
 		parseArgs(args);
-		new GraphParser(inputFileName).parse();
-		
+		GraphParser graphParser = new GraphParser(inputFileName);
+		graphParser.parse();
+		GraphInterface<Vertex, DefaultWeightedEdge> graph = graphParser.directedGraph;
+		new BottomLevelCalculator().calculate(graph);
+		for(Vertex v : graph.vertexSet()) System.out.println(v.getName() + "  " + v.getBottomLevel());
+		System.out.println(graph.toString());
 		new GraphVisualisation();
 	}
 	

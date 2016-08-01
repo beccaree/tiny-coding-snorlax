@@ -15,6 +15,16 @@ public class JGraphTAdapter<V,E> implements GraphInterface<V,E>{
 	public E addEdge(V sourceVertex, V targetVertex) {
 		return directedGraph.addEdge(sourceVertex, targetVertex);
 	}
+	
+	@Override
+	public boolean addEdge(V sourceVertex, V targetVertex, E edge) {
+		return directedGraph.addEdge(sourceVertex, targetVertex, edge);
+	}
+	
+	@Override
+	public Set<E> edgeSet() {
+		return directedGraph.edgeSet();
+	}
 
 	@Override
 	public void addVertex(V v) {
@@ -52,6 +62,11 @@ public class JGraphTAdapter<V,E> implements GraphInterface<V,E>{
 	}
 
 	@Override
+	public Set<E> edgesOf(V vertex) {
+		return directedGraph.edgesOf(vertex);
+	}
+
+	@Override
 	public Set<E> incomingEdgesOf(V vertex) {
 		return directedGraph.incomingEdgesOf(vertex);
 	}
@@ -83,7 +98,7 @@ public class JGraphTAdapter<V,E> implements GraphInterface<V,E>{
 	
 	@Override
 	public Set<V> vertexSet() {
-		return vertexSet();
+		return directedGraph.vertexSet();
 	}
 
 }

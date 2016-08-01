@@ -7,6 +7,11 @@ public class Vertex {
 	private int weight;
 	private int bottomLevel;
 	
+	
+	public Vertex(String name, int weight) {
+		this.name = name;
+		this.weight = weight;
+	}
 	//Get methods
 	/**
 	 * Get Name of Vertex
@@ -37,8 +42,18 @@ public class Vertex {
 	 * Set new value to bottom level variable
 	 * @param value from bottomLevel
 	 */
-	public void SetBottomLevel(int value) {
+	public void setBottomLevel(int value) {
 		bottomLevel = value;
 	}
 	
+	@Override
+	public String toString() {
+		return name + "(" + weight + ")";
+	}
+	
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+		
+	}
 }

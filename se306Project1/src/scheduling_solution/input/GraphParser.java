@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
 import scheduling_solution.tools.GraphInterface;
 import scheduling_solution.tools.JGraphTAdapter;
+import scheduling_solution.tools.Vertex;
 
 /**
  * GraphParser Class creates a weighted directed graph with values from an input file
@@ -17,8 +19,9 @@ import scheduling_solution.tools.JGraphTAdapter;
 public class GraphParser {
 
 	private String inputFile;
-	private GraphInterface<String, DefaultWeightedEdge> directedGraph = new JGraphTAdapter<>(DefaultWeightedEdge.class);
-
+	public GraphInterface<Vertex, DefaultWeightedEdge> directedGraph = new JGraphTAdapter<>(DefaultWeightedEdge.class);
+	public HashMap<String, Vertex> vertexMap = new HashMap<>();
+	
 	public GraphParser(String inputFile) {
 		this.inputFile = inputFile;
 	}
@@ -34,6 +37,8 @@ public class GraphParser {
 			String line = br.readLine();
 			String outputGraphName = createOutputGraphName(line);
 			line = br.readLine().trim();
+			
+			Vertex fromNode, toNode;
 
 			while (!line.contains("}")) {
 				// maybe think of a better name
@@ -42,9 +47,11 @@ public class GraphParser {
 
 				if (nodeOrEdge.contains("->")) { //An edge					
 					//Get first node
-					String fromNode = nodeOrEdge.substring(0, nodeOrEdge.indexOf("-")).trim();
+					fromNode = vertexMap.get(nodeOrEdge.substring(0, nodeOrEdge.indexOf("-")).trim());
 					//Get second node
-					String toNode = nodeOrEdge.substring(nodeOrEdge.indexOf(">") + 1).trim();
+					toNode = vertexMap.get(nodeOrEdge.substring(nodeOrEdge.indexOf(">") + 1).trim());
+					
+			
 
 					//Add edge with weight to directed graph				
 					DefaultWeightedEdge edge = directedGraph.addEdge(fromNode, toNode);
@@ -56,7 +63,9 @@ public class GraphParser {
 				} else {
 					
 					//Add node to directed graph
-					directedGraph.addVertex(nodeOrEdge);
+					Vertex v = new Vertex(nodeOrEdge, Integer.parseInt(weight));
+					directedGraph.addVertex(v);
+					vertexMap.put(nodeOrEdge, v);
 					
 					//debugging
 					System.out.println("New node " + nodeOrEdge + " with weight " + weight + " created.");					
