@@ -13,6 +13,8 @@ public class Main {
 		args = new String[]{"tests/example2.dot", "1"};
 		parseArgs(args);
 		new GraphParser(inputFileName).parse();
+		
+		new GraphVisualisation();
 	}
 	
 	private static void parseArgs(String[] args) {
