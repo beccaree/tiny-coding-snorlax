@@ -1,4 +1,4 @@
-package project1;
+package scheduling_solution.tools;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;

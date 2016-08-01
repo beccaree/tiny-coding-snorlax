@@ -1,4 +1,4 @@
-package project1;
+package scheduling_solution.input;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
+
+import scheduling_solution.tools.GraphInterface;
+import scheduling_solution.tools.JGraphTAdapter;
 
 /**
  * GraphParser Class creates a weighted directed graph with values from an input file

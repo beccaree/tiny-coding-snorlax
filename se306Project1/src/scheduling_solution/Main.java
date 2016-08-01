@@ -1,4 +1,7 @@
-package project1;
+package scheduling_solution;
+
+import scheduling_solution.input.GraphParser;
+import scheduling_solution.visualisation.GraphVisualisation;
 
 public class Main {
 	

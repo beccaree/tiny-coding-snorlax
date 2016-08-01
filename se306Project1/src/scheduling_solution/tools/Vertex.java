@@ -1,4 +1,4 @@
-package project1;
+package scheduling_solution.tools;
 
 public class Vertex {
 
