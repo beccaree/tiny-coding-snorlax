@@ -6,9 +6,9 @@ import org.jgrapht.graph.*;
 public class JGraphTAdapter<V,E> implements GraphInterface<V,E>{
 	private DefaultDirectedWeightedGraph<V,E> directedGraph;
 
-	public JGraphTAdapter() {
+	public JGraphTAdapter(Class<? extends E> edgeClass) {
 		this.directedGraph = 
-				new DefaultDirectedWeightedGraph<V,E>((Class<? extends E>) DefaultWeightedEdge.class);
+				new DefaultDirectedWeightedGraph<V,E>(edgeClass);
 	}
 
 	@Override
