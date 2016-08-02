@@ -1,0 +1,5 @@
+Meeting 6 - All members present
+
+- Start implementing finding any valid schedule (Stefan & Isabel)
+- Output implementation (Sabrina)
+- Graph visualisation reserach and implmentation (Rebecca)
