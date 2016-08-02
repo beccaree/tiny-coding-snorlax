@@ -2,13 +2,8 @@ package scheduling_solution.tools;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Set;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
-
-import com.sun.javafx.geom.Edge;
 
 /**
  * Class is used to calculate the weight of the bottom levels
@@ -21,31 +16,31 @@ public class BottomLevelCalculator {
 		Queue<Vertex> queue = new LinkedList<>();
 		
 		//Add all leaves to the queue, initialise their value to their bottom level as this is our starting point
-		for (Vertex node: directedGraph.vertexSet()){
-			if(directedGraph.outDegreeOf(node) == 0){
-				queue.add(node);
-				node.setBottomLevel(node.getWeight());
+		for (Vertex vertex: directedGraph.vertexSet()){
+			if(directedGraph.outDegreeOf(vertex) == 0){
+				queue.add(vertex);
+				vertex.setBottomLevel(vertex.getWeight());
 			}
 		}
 		
 		//while the queue is not empty calculate the weight
-		Vertex node, sourceNode, targetNode;
+		Vertex vertex, sourceVertex;
 		ArrayList<DefaultWeightedEdge> removedEdges = new ArrayList<DefaultWeightedEdge>();
 		while (!queue.isEmpty()){
 			//get the head node from the queue
-			node = queue.remove();
+			vertex = queue.remove();
 			//must use edgesOf() instead of incomingEdgesOf() as the latter throws a concurrentModificationException
-			for (DefaultWeightedEdge e: directedGraph.edgesOf(node)){
+			for (DefaultWeightedEdge e: directedGraph.edgesOf(vertex)){
 				//get node from which edge comes from
-				sourceNode = directedGraph.getEdgeSource(e);
-				sourceNode.setBottomLevel(Math.max(sourceNode.getBottomLevel(),node.getBottomLevel()+sourceNode.getWeight()));
+				sourceVertex = directedGraph.getEdgeSource(e);
+				sourceVertex.setBottomLevel(Math.max(sourceVertex.getBottomLevel(),vertex.getBottomLevel()+sourceVertex.getWeight()));
 				
 				//remove used edge
-				removedEdges.add(directedGraph.removeEdge(sourceNode, node));
+				removedEdges.add(directedGraph.removeEdge(sourceVertex, vertex));
 				
 				//if the source node is now a leaf then add it into the queue
-				if(directedGraph.outDegreeOf(sourceNode) == 0){
-					queue.add(sourceNode);
+				if(directedGraph.outDegreeOf(sourceVertex) == 0){
+					queue.add(sourceVertex);
 				}
 			}
 			
