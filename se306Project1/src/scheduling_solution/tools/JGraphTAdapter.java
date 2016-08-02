@@ -101,4 +101,8 @@ public class JGraphTAdapter<V,E> implements GraphInterface<V,E>{
 		return directedGraph.vertexSet();
 	}
 
+	@Override
+	public DefaultDirectedWeightedGraph<V,E> getGraph(){
+		return directedGraph;
+	}
 }

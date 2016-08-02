@@ -2,6 +2,8 @@ package scheduling_solution.tools;
 
 import java.util.Set;
 
+import org.jgrapht.graph.DefaultDirectedWeightedGraph;
+
 public interface GraphInterface<V,E> {
 	
 	public E addEdge(V sourceVertex, V targetVertex);
@@ -22,5 +24,6 @@ public interface GraphInterface<V,E> {
 	public void removeVertex(V v);
 	public Set<V> vertexSet();
 	public String toString();
+	public DefaultDirectedWeightedGraph<V,E> getGraph();
 	
 }

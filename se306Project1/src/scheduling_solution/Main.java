@@ -27,13 +27,15 @@ public class Main {
 		BottomLevelCalculator.calculate(graph);
 		for(Vertex v : graph.vertexSet()) System.out.println(v.getName() + "  " + v.getBottomLevel());
 		System.out.println(graph.toString());
-		//new GraphVisualisation();
+		//new GraphVisualisation(graph.getGraph());
 		//Basic milestone: Produce any schedule
 		List<Vertex> topologicalSort = DFS.calculate(graph);
 		System.out.println("topologicalSort");
 		for(Vertex vertex : topologicalSort){			
 			System.out.print(vertex+",");
 		}
+		
+		
 	}
 	
 	private static void parseArgs(String[] args) {		
