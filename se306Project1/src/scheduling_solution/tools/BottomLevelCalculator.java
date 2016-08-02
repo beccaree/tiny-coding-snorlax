@@ -6,13 +6,12 @@ import java.util.Queue;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
 /**
- * Class is used to calculate the weight of the bottom levels
+ * Class to calculate the bottom level of each node in the input graph.
  * @author Kristy, Stefan
- *
  */
 public class BottomLevelCalculator {
 
-	public void calculate(GraphInterface<Vertex, DefaultWeightedEdge> directedGraph){
+	public static void calculate(GraphInterface<Vertex, DefaultWeightedEdge> directedGraph){
 		Queue<Vertex> queue = new LinkedList<>();
 		
 		//Add all leaves to the queue, initialise their value to their bottom level as this is our starting point

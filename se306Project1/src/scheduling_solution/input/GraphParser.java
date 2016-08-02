@@ -18,20 +18,19 @@ import scheduling_solution.tools.Vertex;
  */
 public class GraphParser {
 
-	private String inputFile;
-	public GraphInterface<Vertex, DefaultWeightedEdge> directedGraph = new JGraphTAdapter<>(DefaultWeightedEdge.class);
-	public HashMap<String, Vertex> vertexMap = new HashMap<>();
+	private static GraphInterface<Vertex, DefaultWeightedEdge> directedGraph;
+	private static HashMap<String, Vertex> vertexMap = new HashMap<>();
 	
-	public GraphParser(String inputFile) {
-		this.inputFile = inputFile;
-	}
-
 	/**
 	 * Reads the input file, parses each line
 	 * and adds the edges and nodes into a directed graph
 	 */
-	public void parse() {
+	public static GraphInterface<Vertex, DefaultWeightedEdge> parse(String inputFile) {
+		
+		directedGraph = new JGraphTAdapter<>(DefaultWeightedEdge.class);
+		vertexMap = new HashMap<>();
 		BufferedReader br;
+		
 		try {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile)));
 			String line = br.readLine();
@@ -51,8 +50,6 @@ public class GraphParser {
 					//Get second node
 					toNode = vertexMap.get(nodeOrEdge.substring(nodeOrEdge.indexOf(">") + 1).trim());
 					
-			
-
 					//Add edge with weight to directed graph				
 					DefaultWeightedEdge edge = directedGraph.addEdge(fromNode, toNode);
 					directedGraph.setEdgeWeight(edge, Integer.parseInt(weight));
@@ -78,6 +75,8 @@ public class GraphParser {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		return directedGraph;
 	}
 
 	/**
@@ -87,7 +86,7 @@ public class GraphParser {
 	 * @param line - the line containing the graph's name
 	 * @return
 	 */
-	private String createOutputGraphName(String line) {
+	private static String createOutputGraphName(String line) {
 		String inputGraphName = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 		return "output" + inputGraphName.substring(0, 1).toUpperCase()
 				+ inputGraphName.substring(1, inputGraphName.length());

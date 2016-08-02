@@ -23,15 +23,13 @@ public class Main {
 	public static void main(String[] args) {
 		args = new String[]{"tests/example2.dot", "1"};
 		parseArgs(args);
-		GraphParser graphParser = new GraphParser(inputFileName);
-		graphParser.parse();
-		GraphInterface<Vertex, DefaultWeightedEdge> graph = graphParser.directedGraph;
-		new BottomLevelCalculator().calculate(graph);
+		GraphInterface<Vertex, DefaultWeightedEdge> graph = GraphParser.parse(inputFileName);
+		BottomLevelCalculator.calculate(graph);
 		for(Vertex v : graph.vertexSet()) System.out.println(v.getName() + "  " + v.getBottomLevel());
 		System.out.println(graph.toString());
-		new GraphVisualisation();
+		//new GraphVisualisation();
 		//Basic milestone: Produce any schedule
-		List<Vertex> topologicalSort = DFS.calculate(graphParser.directedGraph);
+		List<Vertex> topologicalSort = DFS.calculate(graph);
 		System.out.println("topologicalSort");
 		for(Vertex vertex : topologicalSort){			
 			System.out.print(vertex+",");
