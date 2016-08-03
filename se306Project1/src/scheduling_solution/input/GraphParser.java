@@ -91,4 +91,8 @@ public class GraphParser {
 		return "output" + inputGraphName.substring(0, 1).toUpperCase()
 				+ inputGraphName.substring(1, inputGraphName.length());
 	}
+	
+	public static HashMap<String, Vertex> getHashMap() {
+		return vertexMap;
+	}
 }
