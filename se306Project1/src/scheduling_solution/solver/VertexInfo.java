@@ -14,6 +14,10 @@ public class VertexInfo {
 		this.processor = processor;
 	}
 	
+	public int getStartTime() {
+		return startTime;
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
