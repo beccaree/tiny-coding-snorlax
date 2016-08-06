@@ -1,4 +1,4 @@
-package scheduling_solution.tools;
+package graph;
 
 public class Vertex {
 

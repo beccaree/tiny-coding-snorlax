@@ -5,11 +5,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import graph.GraphInterface;
+import graph.JGraphTAdapter;
+import graph.Vertex;
 import junit.framework.TestCase;
 import scheduling_solution.input.GraphParser;
-import scheduling_solution.tools.GraphInterface;
-import scheduling_solution.tools.JGraphTAdapter;
-import scheduling_solution.tools.Vertex;
 
 public class TestGraphParser extends TestCase{
 	private GraphInterface<Vertex, DefaultWeightedEdge> graph;

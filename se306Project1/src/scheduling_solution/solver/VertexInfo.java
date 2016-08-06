@@ -1,4 +1,4 @@
-package scheduling_solution.tools;
+package scheduling_solution.solver;
 
 /**
  * This class stores the solution (start time and processor) for a vertex.
@@ -9,9 +9,9 @@ public class VertexInfo {
 	private int startTime;
 	private int processor;
 	
-	public VertexInfo(int startTime, int processors) {
+	public VertexInfo(int startTime, int processor) {
 		this.startTime = startTime;
-		this.processor = processors;
+		this.processor = processor;
 	}
 	
 	/* (non-Javadoc)

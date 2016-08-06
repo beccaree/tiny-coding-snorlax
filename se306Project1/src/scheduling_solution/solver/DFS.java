@@ -1,4 +1,4 @@
-package scheduling_solution.tools;
+package scheduling_solution.solver;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -6,6 +6,10 @@ import java.util.Deque;
 import java.util.List;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
+
+import graph.GraphInterface;
+import graph.JGraphTAdapter;
+import graph.Vertex;
 
 /**
  * Basic milestone:

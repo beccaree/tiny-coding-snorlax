@@ -3,12 +3,16 @@ package scheduling_solution;
 import java.util.List;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.traverse.TopologicalOrderIterator;
 
+import graph.GraphInterface;
+import graph.Vertex;
 import scheduling_solution.input.GraphParser;
-import scheduling_solution.tools.BottomLevelCalculator;
-import scheduling_solution.tools.DFS;
-import scheduling_solution.tools.GraphInterface;
-import scheduling_solution.tools.Vertex;
+import scheduling_solution.output.OutputFileCreator;
+import scheduling_solution.output.Solution;
+import scheduling_solution.solver.BottomLevelCalculator;
+import scheduling_solution.solver.DFS;
+import scheduling_solution.solver.TopologicalSolver;
 import scheduling_solution.visualisation.GraphVisualisation;
 
 public class Main {
@@ -21,18 +25,22 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/example2.dot", "1"};
+		args = new String[]{"tests/example1.dot", "1"};
 		parseArgs(args);
 		GraphInterface<Vertex, DefaultWeightedEdge> graph = GraphParser.parse(inputFileName);
 		BottomLevelCalculator.calculate(graph);
-		for(Vertex v : graph.vertexSet()) System.out.println(v.getName() + "  " + v.getBottomLevel());
-		System.out.println(graph.toString());
+//		for(Vertex v : graph.vertexSet()) System.out.println(v.getName() + "  " + v.getBottomLevel());
+//		System.out.println(graph.toString());
 		new GraphVisualisation(graph.getGraph());
 		//Basic milestone: Produce any schedule
 		List<Vertex> topologicalSort = DFS.calculate(graph);
-		System.out.println("topologicalSort");
+		
+		Solution topologicalSolution = TopologicalSolver.solve(topologicalSort, graph);
+		
+		new OutputFileCreator(outputFileName, inputFileName).create(topologicalSolution);
+//		System.out.println("topologicalSort");
 		for(Vertex vertex : topologicalSort){			
-			System.out.print(vertex+",");
+//			System.out.print(vertex+",");
 		}
 		
 		

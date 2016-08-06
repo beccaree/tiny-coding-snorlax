@@ -8,9 +8,9 @@ import java.util.HashMap;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
-import scheduling_solution.tools.GraphInterface;
-import scheduling_solution.tools.JGraphTAdapter;
-import scheduling_solution.tools.Vertex;
+import graph.GraphInterface;
+import graph.JGraphTAdapter;
+import graph.Vertex;
 
 /**
  * GraphParser Class creates a weighted directed graph with values from an input file

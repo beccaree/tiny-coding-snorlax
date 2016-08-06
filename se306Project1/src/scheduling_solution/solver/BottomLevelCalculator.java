@@ -1,9 +1,12 @@
-package scheduling_solution.tools;
+package scheduling_solution.solver;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
+
+import graph.GraphInterface;
+import graph.Vertex;
 
 /**
  * Class to calculate the bottom level of each node in the input graph.

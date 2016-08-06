@@ -7,9 +7,10 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import graph.Vertex;
 import scheduling_solution.input.GraphParser;
-import scheduling_solution.tools.VertexInfo;
-import scheduling_solution.tools.Vertex;
+import scheduling_solution.solver.VertexInfo;
 
 /**
  * Creates and writes to output file
@@ -30,7 +31,7 @@ public class OutputFileCreator {
 	 * This method creates the output file and writes to it by analysing the solution
 	 * as well as the input file.
 	 */
-	public void create() {
+	public void create(Solution solution) {
 		
 		File outFile = new File(outputFileName);
 		
@@ -56,7 +57,7 @@ public class OutputFileCreator {
 					String node = line.substring(0, line.indexOf("[")).trim();//Get vertex name
 					
 					Vertex v = GraphParser.getHashMap().get(node);
-					VertexInfo vInfo = Solution.getVertexInfo(v);//Get solution of the vertex
+					VertexInfo vInfo = solution.getVertexInfo(v);//Get solution of the vertex
 
 					bw.write(substring+vInfo.toString()+"];");//Rewrite vertex output to include solution
 					bw.newLine();
