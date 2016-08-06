@@ -5,8 +5,8 @@ import java.util.List;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.traverse.TopologicalOrderIterator;
 
-import graph.GraphInterface;
-import graph.Vertex;
+import scheduling_solution.graph.GraphInterface;
+import scheduling_solution.graph.Vertex;
 import scheduling_solution.input.GraphParser;
 import scheduling_solution.output.OutputFileCreator;
 import scheduling_solution.output.Solution;

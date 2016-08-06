@@ -8,7 +8,7 @@ import org.jgrapht.ext.JGraphModelAdapter;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
-import graph.Vertex;
+import scheduling_solution.graph.Vertex;
 
 @SuppressWarnings("serial")
 public class GraphVisualisation extends JFrame {

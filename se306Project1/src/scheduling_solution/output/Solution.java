@@ -2,7 +2,7 @@ package scheduling_solution.output;
 
 import java.util.HashMap;
 
-import graph.Vertex;
+import scheduling_solution.graph.Vertex;
 import scheduling_solution.solver.VertexInfo;
 
 /**

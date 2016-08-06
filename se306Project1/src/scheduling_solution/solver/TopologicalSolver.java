@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
-import graph.GraphInterface;
-import graph.Vertex;
+import scheduling_solution.graph.GraphInterface;
+import scheduling_solution.graph.Vertex;
 import scheduling_solution.output.Solution;
 
 /**

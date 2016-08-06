@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import graph.Vertex;
+import scheduling_solution.graph.Vertex;
 import scheduling_solution.input.GraphParser;
 import scheduling_solution.solver.VertexInfo;
 

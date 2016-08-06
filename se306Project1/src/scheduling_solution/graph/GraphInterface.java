@@ -1,4 +1,4 @@
-package graph;
+package scheduling_solution.graph;
 
 import java.util.Set;
 

@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
-import graph.GraphInterface;
-import graph.JGraphTAdapter;
-import graph.Vertex;
+import scheduling_solution.graph.GraphInterface;
+import scheduling_solution.graph.JGraphTAdapter;
+import scheduling_solution.graph.Vertex;
 
 /**
  * Basic milestone:

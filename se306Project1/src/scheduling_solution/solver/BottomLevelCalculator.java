@@ -5,8 +5,8 @@ import java.util.Queue;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
-import graph.GraphInterface;
-import graph.Vertex;
+import scheduling_solution.graph.GraphInterface;
+import scheduling_solution.graph.Vertex;
 
 /**
  * Class to calculate the bottom level of each node in the input graph.

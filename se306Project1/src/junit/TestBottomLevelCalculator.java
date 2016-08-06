@@ -5,10 +5,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import graph.GraphInterface;
-import graph.JGraphTAdapter;
-import graph.Vertex;
 import junit.framework.TestCase;
+import scheduling_solution.graph.GraphInterface;
+import scheduling_solution.graph.JGraphTAdapter;
+import scheduling_solution.graph.Vertex;
 import scheduling_solution.input.GraphParser;
 import scheduling_solution.solver.BottomLevelCalculator;
 
