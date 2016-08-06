@@ -34,7 +34,7 @@ public class GraphParser {
 		try {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile)));
 			String line = br.readLine();
-			String outputGraphName = createOutputGraphName(line);
+//			String outputGraphName = createOutputGraphName(line);
 			line = br.readLine().trim();
 			
 			Vertex fromNode, toNode;
@@ -86,11 +86,11 @@ public class GraphParser {
 	 * @param line - the line containing the graph's name
 	 * @return
 	 */
-	private static String createOutputGraphName(String line) {
-		String inputGraphName = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
-		return "output" + inputGraphName.substring(0, 1).toUpperCase()
-				+ inputGraphName.substring(1, inputGraphName.length());
-	}
+//	private static String createOutputGraphName(String line) {
+//		String inputGraphName = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+//		return "output" + inputGraphName.substring(0, 1).toUpperCase()
+//				+ inputGraphName.substring(1, inputGraphName.length());
+//	}
 	
 	public static HashMap<String, Vertex> getHashMap() {
 		return vertexMap;

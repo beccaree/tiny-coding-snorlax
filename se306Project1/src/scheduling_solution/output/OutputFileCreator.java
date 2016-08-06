@@ -45,7 +45,9 @@ public class OutputFileCreator {
 		
 		try {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFileName)));
-			FileWriter fw = new FileWriter(outputFileName);
+			
+			//Add output infront of input file name and capitlise the first letter of the input file name
+			FileWriter fw = new FileWriter(outputFileName);			
 			BufferedWriter bw = new BufferedWriter(fw);
 			
 			String line;
@@ -64,7 +66,12 @@ public class OutputFileCreator {
 					
 				} else if(line.contains("}")) {//All lines that aren't vertices are recreated without modification
 					bw.write(line);
-				} else {
+				} else if(line.contains("digraph")){// if it is the intial line
+					String outputGraphName = createOutputGraphName(line);
+					String title= line.substring(0, line.indexOf("\""))+"\""+outputGraphName+line.substring(line.lastIndexOf("\""));
+					bw.write(title);
+					bw.newLine();
+				} else {				
 					bw.write(line);
 					bw.newLine();
 				}
@@ -74,5 +81,19 @@ public class OutputFileCreator {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
+	}
+	
+	//taken from GraphParser
+	/**
+	 * This function takes the line containing the name of the graph and returns the correct
+	 * output graph name, which should capitalize the first letter and prepend the word 'output' e.g.
+	 * digraph "example" { --> outputExample
+	 * @param line - the line containing the graph's name
+	 * @return
+	 */
+	private static String createOutputGraphName(String line) {
+		String inputGraphName = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+		return "output" + inputGraphName.substring(0, 1).toUpperCase()
+				+ inputGraphName.substring(1, inputGraphName.length());
 	}
 }
