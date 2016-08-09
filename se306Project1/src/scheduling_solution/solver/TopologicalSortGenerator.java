@@ -13,10 +13,10 @@ import scheduling_solution.graph.Vertex;
 
 /**
  * Basic milestone:
- * DFS creates a topological sort of a directed graph 
+ * TopologicalSortGenerator creates a topological sort of a directed graph 
  * @author Team 8
  */
-public class DFS {
+public class TopologicalSortGenerator {
 	
 	private static List<Vertex> topologicalSort = new ArrayList<Vertex>();	
 	//Nodes with no incoming edges (i.e start nodes)

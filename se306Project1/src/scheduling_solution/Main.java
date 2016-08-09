@@ -11,7 +11,7 @@ import scheduling_solution.input.GraphParser;
 import scheduling_solution.output.OutputFileCreator;
 import scheduling_solution.output.Solution;
 import scheduling_solution.solver.BottomLevelCalculator;
-import scheduling_solution.solver.DFS;
+import scheduling_solution.solver.TopologicalSortGenerator;
 import scheduling_solution.solver.TopologicalSolver;
 import scheduling_solution.visualisation.GraphVisualisation;
 
@@ -33,7 +33,7 @@ public class Main {
 //		System.out.println(graph.toString());
 		//new GraphVisualisation(graph.getGraph());
 		//Basic milestone: Produce any schedule
-		List<Vertex> topologicalSort = DFS.calculate(graph);
+		List<Vertex> topologicalSort = TopologicalSortGenerator.calculate(graph);
 		
 		Solution topologicalSolution = TopologicalSolver.solve(topologicalSort, graph);
 		
