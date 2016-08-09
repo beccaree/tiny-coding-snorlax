@@ -7,7 +7,7 @@ import scheduling_solution.solver.VertexInfo;
 
 /**
  * Contains a HashMap of vertices and their corresponding solutions
- * @author sabflik
+ * @author Team 8
  */
 public class Solution {
 	

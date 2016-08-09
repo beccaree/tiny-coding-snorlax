@@ -13,8 +13,8 @@ import scheduling_solution.input.GraphParser;
 import scheduling_solution.solver.VertexInfo;
 
 /**
- * Creates and writes to output file
- * @author sabflik
+ * Creates and writes the output file in the same format as the input file
+ * @author Team 8
  */
 public class OutputFileCreator {
 	
@@ -28,25 +28,17 @@ public class OutputFileCreator {
 	}
 	
 	/**
-	 * This method creates the output file and writes to it by analysing the solution
+	 * This method creates the output file and writes to it by analyzing the solution
 	 * as well as the input file.
 	 */
 	public void create(Solution solution) {
-		
-		File outFile = new File(outputFileName);
-		
-		try {//Creates output file with correct name
-			outFile.createNewFile();
-		} catch (IOException e) {
-			System.out.println("Output File couldn't be created");
-		}
-		
+			
 		BufferedReader br;
 		
 		try {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFileName)));
 			
-			//Add output infront of input file name and capitlise the first letter of the input file name
+			//Write to output file with output file name 
 			FileWriter fw = new FileWriter(outputFileName);			
 			BufferedWriter bw = new BufferedWriter(fw);
 			
@@ -54,25 +46,32 @@ public class OutputFileCreator {
 
 			while ((line = br.readLine()) != null) {
 				
-				if((line.contains("]")) && (!line.contains("->"))) {//If it's a vertex do..
+				//Read input file and write output format for a vertex
+				// i.e. doesn't contain "->" characters
+				if((line.contains("]")) && (!line.contains("->"))) {
+					//Store line of input as "substring"
 					String substring = line.substring(0,line.lastIndexOf("]"));
-					String node = line.substring(0, line.indexOf("[")).trim();//Get vertex name
+					//Get vertex name
+					String vertex = line.substring(0, line.indexOf("[")).trim();
 					
-					Vertex v = GraphParser.getHashMap().get(node);
-					VertexInfo vInfo = solution.getVertexInfo(v);//Get solution of the vertex
+					Vertex v = GraphParser.getVertexMap().get(vertex);
+					//Get solution of the vertex 
+					//i.e. the string that appears after each vertex/edge in the output file
+					VertexInfo vInfo = solution.getVertexInfo(v);
 
-					bw.write(substring+vInfo.toString()+"];");//Rewrite vertex output to include solution
+					//Rewrite vertex output to include solution
+					bw.write(substring+vInfo.toString()+"];");
 					bw.newLine();
 					
-				} else if(line.contains("}")) {//All lines that aren't vertices are recreated without modification
-					bw.write(line);
-				} else if(line.contains("digraph")){// if it is the intial line
+				} else if(line.contains("digraph")){// If it is the initial line
 					String outputGraphName = createOutputGraphName(line);
-					String title= line.substring(0, line.indexOf("\""))+"\""+outputGraphName+line.substring(line.lastIndexOf("\""));
+					String title = line.substring(0, line.indexOf("\""))+"\""+outputGraphName+line.substring(line.lastIndexOf("\""));
 					bw.write(title);
 					bw.newLine();
-				} else {				
+				} else if(line.contains("}")) { //Rewrites last line without newline
 					bw.write(line);
+				} else {				
+					bw.write(line); //Rewrites edges
 					bw.newLine();
 				}
 			}
@@ -83,7 +82,6 @@ public class OutputFileCreator {
 		}		
 	}
 	
-	//taken from GraphParser
 	/**
 	 * This function takes the line containing the name of the graph and returns the correct
 	 * output graph name, which should capitalize the first letter and prepend the word 'output' e.g.

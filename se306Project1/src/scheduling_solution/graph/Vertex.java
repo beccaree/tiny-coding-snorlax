@@ -2,7 +2,6 @@ package scheduling_solution.graph;
 
 public class Vertex {
 
-	//variables
 	private String name;
 	private int weight;
 	private int bottomLevel;
@@ -12,9 +11,11 @@ public class Vertex {
 		this.name = name;
 		this.weight = weight;
 	}
-	//Get methods
+	
+	//---Get Methods---
+	
 	/**
-	 * Get Name of Vertex
+	 * Get name of Vertex
 	 * @return String name
 	 */
 	public String getName(){
@@ -37,7 +38,8 @@ public class Vertex {
 		return bottomLevel;
 	}
 	
-	//Set methods
+	//---Set methods---
+	
 	/**
 	 * Set new value to bottom level variable
 	 * @param value from bottomLevel
