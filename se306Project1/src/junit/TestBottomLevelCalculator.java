@@ -13,7 +13,7 @@ import scheduling_solution.input.GraphParser;
 import scheduling_solution.solver.BottomLevelCalculator;
 
 /**
- * 
+ * Unit tests for BottomLevelCalculator
  * @author Team 8
  */
 public class TestBottomLevelCalculator extends TestCase{

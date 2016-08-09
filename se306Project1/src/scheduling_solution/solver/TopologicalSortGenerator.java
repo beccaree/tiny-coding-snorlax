@@ -18,9 +18,12 @@ import scheduling_solution.graph.Vertex;
  */
 public class TopologicalSortGenerator {
 	
+	// A List that contains nodes in topological order
 	private static List<Vertex> topologicalSort = new ArrayList<Vertex>();	
-	//Nodes with no incoming edges (i.e start nodes)
+	
+	// A Stack that contains nodes with no incoming edges (i.e start nodes)
 	private static Deque<Vertex> vertexStack = new ArrayDeque<Vertex>();
+	
 	//For final milestone
 	public GraphInterface<Vertex, DefaultWeightedEdge> outputDirectedGraph = new JGraphTAdapter<>(DefaultWeightedEdge.class);
 	

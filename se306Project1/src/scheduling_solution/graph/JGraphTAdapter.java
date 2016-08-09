@@ -3,6 +3,13 @@ package scheduling_solution.graph;
 import java.util.Set;
 import org.jgrapht.graph.*;
 
+/**
+ * JGraphTAdapter customizes JGraphT methods needed for this project 
+ * @author Team 8
+ *
+ * @param <V>
+ * @param <E>
+ */
 public class JGraphTAdapter<V,E> implements GraphInterface<V,E>{
 	private DefaultDirectedWeightedGraph<V,E> directedGraph;
 

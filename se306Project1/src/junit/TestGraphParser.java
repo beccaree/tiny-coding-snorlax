@@ -12,7 +12,7 @@ import scheduling_solution.graph.Vertex;
 import scheduling_solution.input.GraphParser;
 
 /**
- * 
+ * Unit tests for GraphParser
  * @author Team 8
  */
 public class TestGraphParser extends TestCase{
