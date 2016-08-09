@@ -25,13 +25,13 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/example1.dot", "1"};
+		args = new String[]{"tests/example1_badformat.dot", "1"};
 		parseArgs(args);
 		GraphInterface<Vertex, DefaultWeightedEdge> graph = GraphParser.parse(inputFileName);
 		BottomLevelCalculator.calculate(graph);
 //		for(Vertex v : graph.vertexSet()) System.out.println(v.getName() + "  " + v.getBottomLevel());
 //		System.out.println(graph.toString());
-		new GraphVisualisation(graph.getGraph());
+		//new GraphVisualisation(graph.getGraph());
 		//Basic milestone: Produce any schedule
 		List<Vertex> topologicalSort = DFS.calculate(graph);
 		

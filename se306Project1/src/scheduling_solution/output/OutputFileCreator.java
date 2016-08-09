@@ -14,7 +14,7 @@ import scheduling_solution.solver.VertexInfo;
 
 /**
  * Creates and writes to output file
- * @author sabflik
+ * @author Team 8
  */
 public class OutputFileCreator {
 	

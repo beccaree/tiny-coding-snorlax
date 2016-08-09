@@ -11,6 +11,10 @@ import scheduling_solution.graph.JGraphTAdapter;
 import scheduling_solution.graph.Vertex;
 import scheduling_solution.input.GraphParser;
 
+/**
+ * 
+ * @author Team 8
+ */
 public class TestGraphParser extends TestCase{
 	private GraphInterface<Vertex, DefaultWeightedEdge> graph;
 	

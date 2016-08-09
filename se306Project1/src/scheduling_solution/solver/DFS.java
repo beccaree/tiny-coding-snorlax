@@ -19,6 +19,7 @@ import scheduling_solution.graph.Vertex;
 public class DFS {
 	
 	private static List<Vertex> topologicalSort = new ArrayList<Vertex>();	
+	//Nodes with no incoming edges (i.e start nodes)
 	private static Deque<Vertex> vertexStack = new ArrayDeque<Vertex>();
 	//For final milestone
 	public GraphInterface<Vertex, DefaultWeightedEdge> outputDirectedGraph = new JGraphTAdapter<>(DefaultWeightedEdge.class);
@@ -45,6 +46,8 @@ public class DFS {
 			//Remove edges (i.e outgoing edges) to child vertices
 			for (DefaultWeightedEdge e: directedGraph.edgesOf(currentVertex)){
 				directedGraph.removeEdge(e);
+				//Check if child of currentVertex edge has no incoming edges
+				//Add it to stack as a "start node"
 				Vertex targetVertex = directedGraph.getEdgeTarget(e);
 				if(directedGraph.inDegreeOf(targetVertex)==0){
 					vertexStack.add(targetVertex);

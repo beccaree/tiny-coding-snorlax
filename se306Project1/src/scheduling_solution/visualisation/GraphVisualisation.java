@@ -10,6 +10,10 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 
 import scheduling_solution.graph.Vertex;
 
+/**
+ * 
+ * @author Team 8
+ */
 @SuppressWarnings("serial")
 public class GraphVisualisation extends JFrame {
 	

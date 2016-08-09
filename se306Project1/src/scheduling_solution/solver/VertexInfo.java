@@ -2,7 +2,7 @@ package scheduling_solution.solver;
 
 /**
  * This class stores the solution (start time and processor) for a vertex.
- * @author sabflik
+ * @author Team 8
  */
 public class VertexInfo {
 	
