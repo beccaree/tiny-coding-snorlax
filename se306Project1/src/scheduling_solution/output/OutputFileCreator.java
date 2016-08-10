@@ -45,35 +45,38 @@ public class OutputFileCreator {
 			String line;
 
 			while ((line = br.readLine()) != null) {
+					//Read input file and write output format for a vertex
+					// i.e. doesn't contain "->" characters
+					if(line.contains("[") &&(line.contains("]")) && (!line.contains("->"))) {
+						
+						
+						//Store line of input as "substring"
+						String substring = line.substring(0,line.lastIndexOf("]"));
+						//Get vertex name
+						String vertex = line.substring(0, line.indexOf("[")).trim();
+						
+						Vertex v = GraphParser.getVertexMap().get(vertex);
+						//Get solution of the vertex 
+						//i.e. the string that appears after each vertex/edge in the output file
+						VertexInfo vInfo = solution.getVertexInfo(v);
+	
+						//Rewrite vertex output to include solution
+						bw.write(substring+vInfo.toString()+"];");
+						bw.newLine();
+						
+					} else if(line.contains("digraph")){// If it is the initial line //TODO this shouldn't be in the while loop: inefficient. Instead, just do it before the while loop
+						String outputGraphName = createOutputGraphName(line);
+						String title = line.substring(0, line.indexOf("\""))+"\""+outputGraphName+line.substring(line.lastIndexOf("\""));
+						bw.write(title);
+						bw.newLine();
+					} else if(line.contains("}")) { //Rewrites last line without newline
+						bw.write(line);
+					} else {				
+						bw.write(line); //Rewrites edges
+						bw.newLine();
+					}
 				
-				//Read input file and write output format for a vertex
-				// i.e. doesn't contain "->" characters
-				if((line.contains("]")) && (!line.contains("->"))) {
-					//Store line of input as "substring"
-					String substring = line.substring(0,line.lastIndexOf("]"));
-					//Get vertex name
-					String vertex = line.substring(0, line.indexOf("[")).trim();
 					
-					Vertex v = GraphParser.getVertexMap().get(vertex);
-					//Get solution of the vertex 
-					//i.e. the string that appears after each vertex/edge in the output file
-					VertexInfo vInfo = solution.getVertexInfo(v);
-
-					//Rewrite vertex output to include solution
-					bw.write(substring+vInfo.toString()+"];");
-					bw.newLine();
-					
-				} else if(line.contains("digraph")){// If it is the initial line
-					String outputGraphName = createOutputGraphName(line);
-					String title = line.substring(0, line.indexOf("\""))+"\""+outputGraphName+line.substring(line.lastIndexOf("\""));
-					bw.write(title);
-					bw.newLine();
-				} else if(line.contains("}")) { //Rewrites last line without newline
-					bw.write(line);
-				} else {				
-					bw.write(line); //Rewrites edges
-					bw.newLine();
-				}
 			}
 			bw.close();
 

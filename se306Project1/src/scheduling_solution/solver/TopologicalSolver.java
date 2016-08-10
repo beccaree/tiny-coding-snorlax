@@ -23,7 +23,7 @@ public class TopologicalSolver {
 	 * @param graph
 	 * @return
 	 */
-	public static Solution solve(List<Vertex> topologicalSort, GraphInterface<Vertex, DefaultWeightedEdge> graph) {
+	public static Solution solve(List<Vertex> topologicalSort) {
 		Solution solution = new Solution();
 		int startTime = 0;
 		

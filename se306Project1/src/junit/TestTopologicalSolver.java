@@ -52,7 +52,7 @@ public class TestTopologicalSolver extends TestCase {
 			sumOfWeights += i;
 		}
 		
-		Solution solution = TopologicalSolver.solve(topologicalSort, graph);
+		Solution solution = TopologicalSolver.solve(topologicalSort);
 		
 		//Get the maximum *finishing* time of all nodes
 		for (int i = 0; i < NUM_VERTICES; i++) {

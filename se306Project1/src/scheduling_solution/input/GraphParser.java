@@ -42,39 +42,45 @@ public class GraphParser {
 			Vertex fromVertex, toVertex;
 
 			while (!line.contains("}")) {
-				//Get node/edge and their weights
-				String vertexOrEdge = line.substring(0, line.indexOf("[")).trim();
-				String weight = line.substring(line.indexOf("=") + 1, line.lastIndexOf("]"));
-
-				// "->" indicates an edge
-				if (vertexOrEdge.contains("->")) { 					
-					//Get first node (value before "-" char)
-					fromVertex = vertexMap.get(vertexOrEdge.substring(0, vertexOrEdge.indexOf("-")).trim());
-					//Get second node (value after ">" char)
-					toVertex = vertexMap.get(vertexOrEdge.substring(vertexOrEdge.indexOf(">") + 1).trim());
-					
-					//Add the edge with weight to the directed graph				
-					DefaultWeightedEdge edge = directedGraph.addEdge(fromVertex, toVertex);
-					directedGraph.setEdgeWeight(edge, Integer.parseInt(weight));
-					
-					//TODO: remove this debugging statement at end
-					System.out.println("New edge " + fromVertex + "->" + toVertex + " with weight " + weight + " created.");
-					
-				} else {
-					
-					//Add the node with weight to the directed graph
-					Vertex v = new Vertex(vertexOrEdge, Integer.parseInt(weight));
-					directedGraph.addVertex(v);
-					vertexMap.put(vertexOrEdge, v);
-					
-					//TODO: remove this debugging statement at end
-					System.out.println("New node " + vertexOrEdge + " with weight " + weight + " created.");					
+				try {
+					//Get node/edge and their weights
+					String vertexOrEdge = line.substring(0, line.indexOf("[")).trim();
+					String weight = line.substring(line.indexOf("=") + 1, line.lastIndexOf("]"));
+	
+					// "->" indicates an edge
+					if (vertexOrEdge.contains("->")) { 					
+						//Get first node (value before "-" char)
+						fromVertex = vertexMap.get(vertexOrEdge.substring(0, vertexOrEdge.indexOf("-")).trim());
+						//Get second node (value after ">" char)
+						toVertex = vertexMap.get(vertexOrEdge.substring(vertexOrEdge.indexOf(">") + 1).trim());
+						
+						//Add the edge with weight to the directed graph				
+						DefaultWeightedEdge edge = directedGraph.addEdge(fromVertex, toVertex);
+						directedGraph.setEdgeWeight(edge, Integer.parseInt(weight));
+						
+						//TODO: remove this debugging statement at end
+						//System.out.println("New edge " + fromVertex + "->" + toVertex + " with weight " + weight + " created.");
+						
+					} else {
+						
+						//Add the node with weight to the directed graph
+						Vertex v = new Vertex(vertexOrEdge, Integer.parseInt(weight));
+						directedGraph.addVertex(v);
+						vertexMap.put(vertexOrEdge, v);
+						
+						//TODO: remove this debugging statement at end
+						//System.out.println("New node " + vertexOrEdge + " with weight " + weight + " created.");					
+					}
+				
+				} catch (StringIndexOutOfBoundsException e) {
+					line = br.readLine();
+					continue;
 				}
 				//Read next line
 				line = br.readLine();
 			}
 			//TODO: remove this debugging statement at end
-			System.out.println(directedGraph.toString());
+			//System.out.println(directedGraph.toString());
 
 		} catch (IOException e) {
 			e.printStackTrace();
