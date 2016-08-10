@@ -25,7 +25,7 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/Nodes_10_Random.dot", "1"};
+		args = new String[]{"tests/EdgesBeforeNodes.dot", "1"};
 		parseArgs(args);
 		GraphInterface<Vertex, DefaultWeightedEdge> graph = GraphParser.parse(inputFileName);
 		BottomLevelCalculator.calculate(graph);
@@ -62,7 +62,7 @@ public class Main {
 				}
 			}
 			
-		} catch(ArrayIndexOutOfBoundsException e) {
+		} catch(ArrayIndexOutOfBoundsException | StringIndexOutOfBoundsException e) {
 			System.out.println("Invalid command line arguments!");
 			e.printStackTrace();
 		}
