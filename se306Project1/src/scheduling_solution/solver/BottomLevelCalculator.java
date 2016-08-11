@@ -17,7 +17,7 @@ public class BottomLevelCalculator {
 	public static void calculate(GraphInterface<Vertex, DefaultWeightedEdge> directedGraph){
 		Queue<Vertex> queue = new LinkedList<>();
 		
-		//Add all leaves to the queue, initialize their value to their bottom level as this is our starting point
+		//Add all leaves to the queue, initialize their bottom level as their weight as this is our starting point
 		for (Vertex vertex: directedGraph.vertexSet()){
 			if(directedGraph.outDegreeOf(vertex) == 0){
 				queue.add(vertex);
@@ -31,7 +31,8 @@ public class BottomLevelCalculator {
 		while (!queue.isEmpty()){
 			//Get the head node from the queue
 			vertex = queue.remove();
-			//Use edgesOf() instead of incomingEdgesOf() or else it throws a concurrentModificationException
+			//Use edgesOf() instead of incomingEdgesOf() or else it throws a concurrentModificationException. 
+			//Node will be a leaf, so it will only have incoming edges anyway
 			for (DefaultWeightedEdge e: directedGraph.edgesOf(vertex)){
 				//Get node from which e(edge) comes from
 				sourceVertex = directedGraph.getEdgeSource(e);

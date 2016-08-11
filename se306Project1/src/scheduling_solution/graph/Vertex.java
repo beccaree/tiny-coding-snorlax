@@ -48,6 +48,14 @@ public class Vertex {
 		bottomLevel = value;
 	}
 	
+	/**
+	 * Set the nodes weight
+	 * @param weight
+	 */
+	public void setWeight(int weight) {
+		this.weight = weight;
+	}
+	
 	@Override
 	public String toString() {
 		return name + "(" + weight + ")";
@@ -56,6 +64,5 @@ public class Vertex {
 	@Override
 	public int hashCode() {
 		return name.hashCode();
-		
 	}
 }
