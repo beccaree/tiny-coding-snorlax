@@ -10,13 +10,34 @@ import scheduling_solution.graph.Vertex;
  */
 public class PartialSolution {
 
-	public PartialSolution(int numProcessors, Vertex v, int processor) {
+	Processor[] processors;
+	
+	public PartialSolution(int numProcessors, Vertex v, int processorNumber) {
 		//Brand new solution with a single vertex
+		
+		//Array of processors
+		processors = new Processor [numProcessors];
+		
+		for (int i=0; i<numProcessors;i++){
+			processors[i]=new Processor();
+		}
+		processors[processorNumber].add(new ProcessorTask(v,0));
 	}
 	
-	public PartialSolution(PartialSolution partialSolution, Vertex v, int processor) {
+	public PartialSolution(PartialSolution partialSolution, int numProcessors, Vertex v, int processor) {
 		//TODO Need to create a new solution which is the old + the new vertex. may be difficult to clone certain objects
 		//add the vertex to the new processor
+		processors = new Processor [numProcessors];
+		
+		for (int i=0; i<numProcessors;i++){
+			processors[i] = partialSolution.getProcessor(i).clone();
+			
+		}
+		
+	}
+	
+	public Processor getProcessor(int i) {
+		return processors[i];
 	}
 	
 	public int getLength(){

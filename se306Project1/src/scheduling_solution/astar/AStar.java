@@ -33,7 +33,7 @@ public class AStar {
 			} else {
 				for (Vertex v : currentSolution.getAvavilableVertices()) {
 					for (int processor= 1; processor < numProcessors; processor++) {
-						PartialSolution newSolution = new PartialSolution(currentSolution, v, processor);
+						PartialSolution newSolution = new PartialSolution(currentSolution, numProcessors, v, processor);
 						if (isViable(newSolution)) {
 							unexploredSolutions.add(newSolution);
 						}
