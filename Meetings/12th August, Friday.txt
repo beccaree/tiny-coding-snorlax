@@ -1,0 +1,22 @@
+Meeting 10 - All members present
+
+- Meeting in Engineering library side room
+
+- Discussed interview yesterday, talked about some questions that were asked
+	- Parallelisation
+		- Decided to start after completing the algorithm
+	- How to test our optimal solution
+		- Brute force an optimal solution and compare with ours
+
+- Slightly behind on our Gantt chart schedule so using the 9-11 lecture slot to catch up on the progress
+- Made sure everyone understands our goals, came to an agreement on using the A* algorithm
+
+- Started to code on a blank template that Stefan created last night
+	- decided on a data structure to store partial solutions (that will be the solution)
+	- Processor class which stores vertices and idle times of the current partial solution (Kristy & 	Stefan)
+
+- Rebecca found GraphStream and brainstormed what informative data can be presented in the JFrame
+- Isabel & Sabrina working on formatting the report so we can just fill in the information later on
+
+- Decide when to meet next and what should be done in the weekend
+
