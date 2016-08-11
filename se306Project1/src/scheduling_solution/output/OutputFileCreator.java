@@ -18,20 +18,11 @@ import scheduling_solution.solver.VertexInfo;
  */
 public class OutputFileCreator {
 	
-	private String outputFileName;
-	private String inputFileName;
-	
-	//Assigns name to output file
-	public OutputFileCreator(String outputFileName, String inputFileName) {
-		this.outputFileName = outputFileName;
-		this.inputFileName = inputFileName;
-	}
-	
 	/**
 	 * This method creates the output file and writes to it by analyzing the solution
 	 * as well as the input file.
 	 */
-	public void create(Solution solution) {
+	public static void create(String outputFileName, String inputFileName, Solution solution) {
 			
 		BufferedReader br;
 		
