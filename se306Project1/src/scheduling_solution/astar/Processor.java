@@ -9,13 +9,29 @@ import java.util.ArrayList;
  * @author Team 8
  *
  */
-public class Processor extends ArrayList<ProcessorTask>{
+public class Processor {
+	private int finishTime = 0; 
 	
+	private ArrayList<ProcessorTask> processorTasks;
+	
+	public void add(ProcessorTask p) {
+		processorTasks.add(p);
+		
+		finishTime = p.getStartTime() + p.getVertex().getWeight();
+	}
+	
+	public ArrayList<ProcessorTask> tasks() {
+		return processorTasks;
+	}
+	
+	public int getFinishTime() {
+		return finishTime;
+	}
 	
 	public Processor clone() {
 		Processor p = new Processor();
 		
-		for (ProcessorTask pTask : this ) {
+		for (ProcessorTask pTask : processorTasks ) {
 			p.add(pTask.clone());
 		}
 		

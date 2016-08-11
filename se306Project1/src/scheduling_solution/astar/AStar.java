@@ -33,7 +33,8 @@ public class AStar {
 			} else {
 				for (Vertex v : currentSolution.getAvavilableVertices()) {
 					for (int processor= 1; processor < numProcessors; processor++) {
-						PartialSolution newSolution = new PartialSolution(currentSolution, numProcessors, v, processor);
+						int startTime = calculateStartTime(currentSolution, v, processor);
+						PartialSolution newSolution = new PartialSolution(currentSolution, v, processor, startTime);
 						if (isViable(newSolution)) {
 							unexploredSolutions.add(newSolution);
 						}
@@ -62,12 +63,30 @@ public class AStar {
 		return true; //TODO
 	}
 	
+	private int calculateStartTime(PartialSolution partialSolution, Vertex v, int processorNumber) {
+		int maxStartTime = 0;
+		for (DefaultWeightedEdge e : graph.incomingEdgesOf(v)) {
+			Vertex sourceVertex = graph.getEdgeSource(e);
+			ProcessorTask processorTask = partialSolution.getTask(sourceVertex);
+			int startTime = processorTask.getStartTime();
+			if (processorTask.getProcessorNumber() != processorNumber) {
+				startTime += graph.getEdgeWeight(e);
+			}
+			if (startTime > maxStartTime) {
+				maxStartTime = startTime;
+			}
+		}
+		
+		return maxStartTime + v.getWeight();
+	}
 	
 	private boolean isViable(PartialSolution partialSolution) {
 		//This method will be large: will do all checks to see if a solution has no chance to be optimal using all pruning/bound checks
 		//Can get a simple upper bound just by adding all vertices together (== running them all sequentially on one processor)
 		return true;
 	}
+	
+	
 
 }
 

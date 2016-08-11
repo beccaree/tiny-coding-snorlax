@@ -11,9 +11,6 @@ public class PartialSolutionComparator implements Comparator<PartialSolution> {
 		 * I think the perfect load balance is not a heuristic, but is actually just a lower bound
 		 */
 	
-	
-		 
-		 
 		return 0;
 	}
 

@@ -11,14 +11,31 @@ public class ProcessorTask {
 
 	private Vertex vertex;
 	private int startTime;
+	private int processorNumber; //TODO waste of memory
 	
-	public ProcessorTask(Vertex vertex, int startTime) {
+	public ProcessorTask(Vertex vertex, int startTime, int processorNumber) {
 		this.vertex = vertex;
 		this.startTime = startTime;
 	}
 	
+	public int getStartTime() {
+		return startTime;
+	}
+	
+	public int getProcessorNumber() {
+		return processorNumber;
+	}
+	
+	public Vertex getVertex() {
+		return vertex;
+	}
+	
 	public ProcessorTask clone() {
-		return new ProcessorTask(vertex, startTime);
+		return new ProcessorTask(vertex, startTime, processorNumber);
+	}
+	
+	public boolean isForVertex(Vertex v) {
+		return this.vertex == v;
 	}
 	
 }
