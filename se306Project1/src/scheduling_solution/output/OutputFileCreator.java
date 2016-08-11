@@ -33,13 +33,17 @@ public class OutputFileCreator {
 			FileWriter fw = new FileWriter(outputFileName);			
 			BufferedWriter bw = new BufferedWriter(fw);
 			
-			String line;
+			String line = br.readLine();
+			//Format first line in output
+			String outputGraphName = createOutputGraphName(line);
+			String title = line.substring(0, line.indexOf("\""))+"\""+outputGraphName+line.substring(line.lastIndexOf("\""));
+			bw.write(title);
+			bw.newLine();
 
 			while ((line = br.readLine()) != null) {
 					//Read input file and write output format for a vertex
 					// i.e. doesn't contain "->" characters
-					if(line.contains("[") &&(line.contains("]")) && (!line.contains("->"))) {
-						
+					if(line.contains("[") &&(line.contains("]")) && (!line.contains("->"))) {						
 						
 						//Store line of input as "substring"
 						String substring = line.substring(0,line.lastIndexOf("]"));
@@ -53,21 +57,14 @@ public class OutputFileCreator {
 	
 						//Rewrite vertex output to include solution
 						bw.write(substring+vInfo.toString()+"];");
-						bw.newLine();
-						
-					} else if(line.contains("digraph")){// If it is the initial line //TODO this shouldn't be in the while loop: inefficient. Instead, just do it before the while loop
-						String outputGraphName = createOutputGraphName(line);
-						String title = line.substring(0, line.indexOf("\""))+"\""+outputGraphName+line.substring(line.lastIndexOf("\""));
-						bw.write(title);
-						bw.newLine();
+						bw.newLine();						
+					
 					} else if(line.contains("}")) { //Rewrites last line without newline
 						bw.write(line);
 					} else {				
 						bw.write(line); //Rewrites edges
 						bw.newLine();
-					}
-				
-					
+					}									
 			}
 			bw.close();
 
