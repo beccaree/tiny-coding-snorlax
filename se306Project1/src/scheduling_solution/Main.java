@@ -38,7 +38,7 @@ public class Main {
 		Solution topologicalSolution = TopologicalSolver.solve(topologicalSort);
 		
 		//Should decide on whether to do static or non-static
-		new OutputFileCreator(outputFileName, inputFileName).create(topologicalSolution);
+		OutputFileCreator.create(outputFileName, inputFileName, topologicalSolution);
 		
 	}
 	
