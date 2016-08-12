@@ -1,6 +1,7 @@
 package scheduling_solution.astar;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 
 
@@ -12,20 +13,28 @@ import java.util.ArrayList;
 public class Processor {
 	private int finishTime = 0; 
 	
-	private ArrayList<ProcessorTask> processorTasks = new ArrayList<ProcessorTask>();
+	private int idleTime = 0;
+	
+	private HashSet<ProcessorTask> processorTasks = new HashSet<ProcessorTask>();//HashSet is faster than ArrayList I think
 	
 	public void add(ProcessorTask p) {
 		processorTasks.add(p);
 		
+		idleTime += p.getStartTime() - finishTime;
+		
 		finishTime = p.getStartTime() + p.getVertex().getWeight();
 	}
 	
-	public ArrayList<ProcessorTask> tasks() {
+	public HashSet<ProcessorTask> tasks() {
 		return processorTasks;
 	}
 	
 	public int getFinishTime() {
 		return finishTime;
+	}
+	
+	public int getIdleTime() {
+		return idleTime;
 	}
 	
 	public Processor clone() {
@@ -37,4 +46,16 @@ public class Processor {
 		
 		return p;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		HashSet<ProcessorTask> processorTasks1  = ((Processor) obj).tasks();
+		return processorTasks.equals(processorTasks1);
+	}
+	
+	@Override
+	public int hashCode() {
+		return processorTasks.hashCode();
+	}
+	 
 }

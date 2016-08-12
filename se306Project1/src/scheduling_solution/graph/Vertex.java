@@ -65,4 +65,12 @@ public class Vertex {
 	public int hashCode() {
 		return name.hashCode();
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		Vertex v = (Vertex) obj;
+		return this.name.equals(v.getName());
+	}
+	
+
 }

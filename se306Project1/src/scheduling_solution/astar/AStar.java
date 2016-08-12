@@ -65,7 +65,7 @@ public class AStar {
 	public void getStartStates() {
 		for (Vertex v : graph.vertexSet()) {
 			if (graph.inDegreeOf(v) == 0) {
-				unexploredSolutions.add(new PartialSolution(numProcessors, v, 1));//TODO is it ok to add them all to processor 1?
+				unexploredSolutions.add(new PartialSolution(graph.vertexSet(), numProcessors, v, 1));//TODO is it ok to add them all to processor 1?
 			}
 		}
 		
@@ -73,11 +73,11 @@ public class AStar {
 	
 	/**
 	 * Checks if partial solution has allocated all vertices
-	 * @param Partical solution to  check
+	 * @param Partical solution to check
 	 * @return
 	 */
 	private boolean isComplete(PartialSolution p) {
-		return true; //TODO
+		return p.getAllocatedVertices().size() == graph.vertexSet().size();
 	}
 	
 	/**
@@ -105,8 +105,12 @@ public class AStar {
 	}
 	
 	private boolean isViable(PartialSolution partialSolution) {
+		if (exploredSolutions.contains(partialSolution)) {
+			return false;
+		}
 		//This method will be large: will do all checks to see if a solution has no chance to be optimal using all pruning/bound checks
 		//Can get a simple upper bound just by adding all vertices together (== running them all sequentially on one processor)
+		//Should check if it exists in the exploredSolutions Set
 		return true;
 	}
 	

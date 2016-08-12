@@ -37,5 +37,18 @@ public class ProcessorTask {
 	public boolean isForVertex(Vertex v) {
 		return this.vertex == v;
 	}
+
+	@Override
+	public int hashCode() {
+		return vertex.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		ProcessorTask p = (ProcessorTask) obj;
+		return this.vertex.equals(p.getVertex());//TODO is the vertex sufficient
+	}
+	
+	
 	
 }
