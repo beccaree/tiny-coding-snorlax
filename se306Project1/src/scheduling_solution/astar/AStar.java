@@ -28,7 +28,7 @@ public class AStar {
 	 * @param graph - weighted digraph
 	 * @return 
 	 */
-	public PartialSolution calculateOptimalSolution(GraphInterface<Vertex, DefaultWeightedEdge> graph) {
+	public PartialSolution calculateOptimalSolution() {
 		
 		//Get initial vertices of solution
 		getStartStates();
@@ -42,12 +42,12 @@ public class AStar {
 				return currentSolution;
 			} else {
 				for (Vertex v : currentSolution.getAvailableVertices()) {
-					for (int processor= 1; processor < numProcessors; processor++) {
+					for (int processor= 0; processor < numProcessors; processor++) {
 						//Get the start time of the new vertex that is too be added to solution
 						int startTime = calculateStartTime(currentSolution, v, processor);
 						
 						//add vertex into solution
-						PartialSolution newSolution = new PartialSolution(currentSolution, v, processor, startTime);
+						PartialSolution newSolution = new PartialSolution(graph, currentSolution, v, processor, startTime);
 						if (isViable(newSolution)) {
 							unexploredSolutions.add(newSolution);
 						}
@@ -65,7 +65,7 @@ public class AStar {
 	public void getStartStates() {
 		for (Vertex v : graph.vertexSet()) {
 			if (graph.inDegreeOf(v) == 0) {
-				unexploredSolutions.add(new PartialSolution(graph.vertexSet(), numProcessors, v, 1));//TODO is it ok to add them all to processor 1?
+				unexploredSolutions.add(new PartialSolution(graph, numProcessors, v, 1));//TODO is it ok to add them all to processor 1?
 			}
 		}
 		

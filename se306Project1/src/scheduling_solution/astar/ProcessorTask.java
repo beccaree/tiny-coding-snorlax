@@ -16,6 +16,7 @@ public class ProcessorTask {
 	public ProcessorTask(Vertex vertex, int startTime, int processorNumber) {
 		this.vertex = vertex;
 		this.startTime = startTime;
+		this.processorNumber = processorNumber;
 	}
 	
 	public int getStartTime() {
@@ -47,6 +48,11 @@ public class ProcessorTask {
 	public boolean equals(Object obj) {
 		ProcessorTask p = (ProcessorTask) obj;
 		return this.vertex.equals(p.getVertex());//TODO is the vertex sufficient
+	}
+	
+	@Override
+	public String toString() {
+		return vertex.getName() + " start:" + startTime + " processor:" + processorNumber;
 	}
 	
 	

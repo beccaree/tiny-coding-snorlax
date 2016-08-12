@@ -5,6 +5,10 @@ import java.util.List;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.traverse.TopologicalOrderIterator;
 
+import com.sun.jndi.toolkit.ctx.PartialCompositeContext;
+
+import scheduling_solution.astar.AStar;
+import scheduling_solution.astar.PartialSolution;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 import scheduling_solution.input.GraphParser;
@@ -25,7 +29,7 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/example1_badformat.dot", "1"};
+		args = new String[]{"tests/example1.dot", "2"};
 
 //		args = new String[]{"tests/EdgesBeforeNodes.dot", "1"};
 
@@ -35,13 +39,17 @@ public class Main {
 		
 		//new GraphVisualisation(graph.getGraph());
 		
+		AStar astar = new AStar(graph,  numProcessors);
+		PartialSolution p = astar.calculateOptimalSolution();
+		
+		p.printDetails();
 		//Basic milestone: Produce any schedule
-		List<Vertex> topologicalSort = TopologicalSortGenerator.calculate(graph);
-		
-		Solution topologicalSolution = TopologicalSolver.solve(topologicalSort);
-		
-		//Should decide on whether to do static or non-static
-		OutputFileCreator.create(outputFileName, inputFileName, topologicalSolution);
+//		List<Vertex> topologicalSort = TopologicalSortGenerator.calculate(graph);
+//		
+//		Solution topologicalSolution = TopologicalSolver.solve(topologicalSort);
+//		
+//		//Should decide on whether to do static or non-static
+//		OutputFileCreator.create(outputFileName, inputFileName, topologicalSolution);
 		
 	}
 	
