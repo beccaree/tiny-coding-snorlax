@@ -1,5 +1,6 @@
 package junit;
 
+import java.util.List;
 import java.util.PriorityQueue;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -57,11 +58,15 @@ public class TestAStar extends TestCase {
 		
 		AStar astar = new AStar(graph, 2);
 		
-		//Gets start states and checks if they are accurate
+		//Checks if the number of start states is what is expected
 		astar.getStartStates();
 		unexploredSolutions = astar.getUnexploredSolutions();
 		assertEquals("Number of start states is different than what was expected", 1, unexploredSolutions.size());
-		assertEquals("GetStartStates returns wrong vertex", vertexa, unexploredSolutions.poll());
+		
+		//Checks that the start state is vertex "a"
+		//THIS DOESN'T WORK YET BECAUSE getAvailableVertices() ISN"T IMPLEMENTED YET
+		List<Vertex> vertices = unexploredSolutions.poll().getAvailableVertices();
+		assertEquals("GetStartStates returns wrong vertex", vertexa.getName(), vertices.get(0).getName());
 	}
 	
 	@Test
