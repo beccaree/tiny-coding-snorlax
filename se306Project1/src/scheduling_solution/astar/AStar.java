@@ -23,17 +23,30 @@ public class AStar {
 		this.numProcessors = numProcessors;
 	}
 	
+	/**
+	 * Calculates the optimal solution
+	 * @param graph - weighted digraph
+	 * @return 
+	 */
 	public PartialSolution calculateOptimalSolution(GraphInterface<Vertex, DefaultWeightedEdge> graph) {
-		 getStartStates();
+		
+		//Get initial vertices of solution
+		getStartStates();
 		 
 		 while (true) {
+			 //priority list of unexplored solutions
 			PartialSolution currentSolution = unexploredSolutions.poll();
+			
+			//check partial solution has all vertices allocated
 			if (isComplete(currentSolution)) {
 				return currentSolution;
 			} else {
-				for (Vertex v : currentSolution.getAvavilableVertices()) {
+				for (Vertex v : currentSolution.getAvailableVertices()) {
 					for (int processor= 1; processor < numProcessors; processor++) {
+						//Get the start time of the new vertex that is too be added to solution
 						int startTime = calculateStartTime(currentSolution, v, processor);
+						
+						//add vertex into solution
 						PartialSolution newSolution = new PartialSolution(currentSolution, v, processor, startTime);
 						if (isViable(newSolution)) {
 							unexploredSolutions.add(newSolution);
@@ -58,11 +71,22 @@ public class AStar {
 		
 	}
 	
+	/**
+	 * Checks if partial solution has allocated all vertices
+	 * @param Partical solution to  check
+	 * @return
+	 */
 	private boolean isComplete(PartialSolution p) {
-		//partial solution should have all vertices allocated
 		return true; //TODO
 	}
 	
+	/**
+	 * Calculates the start time of the given Vertex in the allocated processor
+	 * @param partialSolution	Solution thus far
+	 * @param v					Vertex to find start time for
+	 * @param processorNumber	Processor allocated to
+	 * @return
+	 */
 	private int calculateStartTime(PartialSolution partialSolution, Vertex v, int processorNumber) {
 		int maxStartTime = 0;
 		for (DefaultWeightedEdge e : graph.incomingEdgesOf(v)) {

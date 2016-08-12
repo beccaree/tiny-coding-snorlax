@@ -53,7 +53,7 @@ public class PartialSolution {
 		return maxTime;
 	}
 	
-	public List<Vertex> getAvavilableVertices() {
+	public List<Vertex> getAvailableVertices() {
 		return null;//TODO
 	}
 	
