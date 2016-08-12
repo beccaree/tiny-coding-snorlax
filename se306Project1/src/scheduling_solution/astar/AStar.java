@@ -62,7 +62,7 @@ public class AStar {
 	/**
 	 * Initialises the PriorityQueue with the possible starting states
 	 */
-	private void getStartStates() {
+	public void getStartStates() {
 		for (Vertex v : graph.vertexSet()) {
 			if (graph.inDegreeOf(v) == 0) {
 				unexploredSolutions.add(new PartialSolution(numProcessors, v, 1));//TODO is it ok to add them all to processor 1?
@@ -110,7 +110,9 @@ public class AStar {
 		return true;
 	}
 	
-	
+	public PriorityQueue<PartialSolution> getUnexploredSolutions() {
+		return unexploredSolutions;
+	}
 
 }
 
