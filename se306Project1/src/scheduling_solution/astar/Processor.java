@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Processor {
 	private int finishTime = 0; 
 	
-	private ArrayList<ProcessorTask> processorTasks;
+	private ArrayList<ProcessorTask> processorTasks = new ArrayList<ProcessorTask>();
 	
 	public void add(ProcessorTask p) {
 		processorTasks.add(p);
