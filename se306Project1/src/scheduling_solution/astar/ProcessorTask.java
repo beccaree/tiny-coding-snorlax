@@ -57,7 +57,7 @@ public class ProcessorTask {
 	
 	@Override
 	public String toString() {
-		return vertex.getName() + " start:" + startTime + " processor:" + processorNumber;
+		return vertex.getName() + " start:" + startTime + " processor:" + processorNumber + " finish:" + (startTime + vertex.getWeight());
 	}
 	
 	

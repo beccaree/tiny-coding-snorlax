@@ -15,6 +15,11 @@ public class AStar {
 	Set<PartialSolution> exploredSolutions;
 	final int numProcessors;
 	
+	int upperBound = 0;
+	
+	public int solutionsCreated = 0;
+	
+	public int pruned = 0;
 	
 	public AStar(GraphInterface<Vertex, DefaultWeightedEdge> graph, int numProcessors) {
 		this.graph = graph;
@@ -30,10 +35,15 @@ public class AStar {
 	 */
 	public PartialSolution calculateOptimalSolution() {
 		
+		for (Vertex v : graph.vertexSet()) {
+			upperBound += v.getWeight();
+		}
+		
 		//Get initial vertices of solution
 		getStartStates();
 		 
 		 while (true) {
+			 solutionsCreated++;
 			 //priority list of unexplored solutions
 			PartialSolution currentSolution = unexploredSolutions.poll();
 			
@@ -48,6 +58,7 @@ public class AStar {
 						
 						//add vertex into solution
 						PartialSolution newSolution = new PartialSolution(graph, currentSolution, v, processor, startTime);
+						solutionsCreated++;
 						if (isViable(newSolution)) {
 							unexploredSolutions.add(newSolution);
 						}
@@ -65,7 +76,7 @@ public class AStar {
 	public void getStartStates() {
 		for (Vertex v : graph.vertexSet()) {
 			if (graph.inDegreeOf(v) == 0) {
-				unexploredSolutions.add(new PartialSolution(graph, numProcessors, v, 1));//TODO is it ok to add them all to processor 1?
+				unexploredSolutions.add(new PartialSolution(graph, numProcessors, v, 0));//TODO is it ok to add them all to processor 1?
 			}
 		}
 		
@@ -82,6 +93,8 @@ public class AStar {
 	
 	/**
 	 * Calculates the start time of the given Vertex in the allocated processor
+	 * Checks all parent nodes of the vertex and calculates when it would be able to start after that vertex.
+	 * The maximum value is returned.
 	 * @param partialSolution	Solution thus far
 	 * @param v					Vertex to find start time for
 	 * @param processorNumber	Processor allocated to
@@ -92,16 +105,22 @@ public class AStar {
 		for (DefaultWeightedEdge e : graph.incomingEdgesOf(v)) {
 			Vertex sourceVertex = graph.getEdgeSource(e);
 			ProcessorTask processorTask = partialSolution.getTask(sourceVertex);
-			int startTime = processorTask.getStartTime();
+			int finishTime = processorTask.getStartTime() + sourceVertex.getWeight();
 			if (processorTask.getProcessorNumber() != processorNumber) {
-				startTime += graph.getEdgeWeight(e);
+				finishTime += graph.getEdgeWeight(e);
 			}
-			if (startTime > maxStartTime) {
-				maxStartTime = startTime;
+			if (finishTime > maxStartTime) {
+				maxStartTime = finishTime;
 			}
 		}
 		
-		return maxStartTime + v.getWeight();
+		int processorFinishTime = partialSolution.getProcessor(processorNumber).getFinishTime();
+		
+		if (processorFinishTime > maxStartTime) {
+			maxStartTime = processorFinishTime;
+		}
+		
+		return maxStartTime;
 	}
 	
 	/**
@@ -112,7 +131,9 @@ public class AStar {
 	 * @return
 	 */
 	private boolean isViable(PartialSolution partialSolution) {
-		if (exploredSolutions.contains(partialSolution)) {
+		//TODO the closed set doesnt prune that many? is equals() correct?
+		if (exploredSolutions.contains(partialSolution) || (partialSolution.getTimeLength() + partialSolution.getMaxBottomLevel())>upperBound ) {
+			pruned++;
 			return false;
 		}
 

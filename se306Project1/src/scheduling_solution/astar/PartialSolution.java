@@ -138,7 +138,7 @@ public class PartialSolution {
 					continue outerloop;
 				}
 			}
-			availableVertices.add(v); // Only make it here if we dont find an unallocated parent
+			availableVertices.add(v); // Only make it here if we don't find an unallocated parent
 			
 		}
 		return availableVertices;

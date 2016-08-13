@@ -1,7 +1,5 @@
 package scheduling_solution;
 
-import java.util.List;
-
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.traverse.TopologicalOrderIterator;
 
@@ -29,7 +27,7 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/example1.dot", "2"};
+		args = new String[]{"tests/Nodes_11_OutTree.dot", "2"};
 
 //		args = new String[]{"tests/EdgesBeforeNodes.dot", "1"};
 
@@ -43,6 +41,7 @@ public class Main {
 		PartialSolution p = astar.calculateOptimalSolution();
 		
 		p.printDetails();
+		System.out.println(astar.solutionsCreated + " " + astar.pruned);
 		//Basic milestone: Produce any schedule
 //		List<Vertex> topologicalSort = TopologicalSortGenerator.calculate(graph);
 //		

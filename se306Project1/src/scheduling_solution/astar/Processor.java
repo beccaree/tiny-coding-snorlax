@@ -1,9 +1,6 @@
 package scheduling_solution.astar;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-
-
 
 /**
  * Class is used to represent a processor to store executed nodes and their start times
@@ -11,9 +8,9 @@ import java.util.HashSet;
  *
  */
 public class Processor {
-	private int finishTime = 0; 
+//	private int finishTime = 0; 
 	
-	private int idleTime = 0;
+	private int idleTime = 0;//TODO
 	
 	private HashSet<ProcessorTask> processorTasks = new HashSet<ProcessorTask>();//HashSet is faster than ArrayList I think
 	
@@ -24,9 +21,20 @@ public class Processor {
 	public void add(ProcessorTask p) {
 		processorTasks.add(p);
 		
-		idleTime += p.getStartTime() - finishTime;
+//		idleTime += (p.getStartTime() - finishTime);//TODO is decreasing due to a bug
+//		
+//		finishTime = p.getStartTime() + p.getVertex().getWeight();
 		
-		finishTime = p.getStartTime() + p.getVertex().getWeight();
+		for (ProcessorTask ptask : processorTasks) {
+			if (p.getStartTime() == 154 && ptask.getStartTime() == 154)  {
+				if (p.getVertex().getName().equals("2") && ptask.getVertex().getName().equals("4")) {
+//					System.out.println(2);
+				} else if (p.getVertex().getName().equals("4") && ptask.getVertex().getName().equals("2")){
+//	 				System.out.println(3);
+				}
+			}
+			assert(ptask.getStartTime() + ptask.getVertex().getWeight()) < p.getStartTime();
+		}
 	}
 	
 	/**
@@ -37,8 +45,16 @@ public class Processor {
 		return processorTasks;
 	}
 	
+	//TODO probably very slow. should increment after every addition instead of doing this
 	public int getFinishTime() {
-		return finishTime;
+		int maxFinishTime = 0;
+		for (ProcessorTask p : processorTasks) {
+			int finishTime = p.getStartTime() + p.getVertex().getWeight();
+			if (finishTime > maxFinishTime) {
+				maxFinishTime  = finishTime;
+			}
+		}
+		return maxFinishTime;
 	}
 	
 	public int getIdleTime() {
