@@ -22,7 +22,6 @@ public class PartialSolution {
 	private HashSet<Vertex> unallocatedVertices;
 //	private HashSet<Vertex> availableVertices;
 	//private int numAllocatedVertices;
-	private int maxBottomLevel;
 
 	/**
 	 * Creates an new PartialSolution with an array for processors and their tasks
@@ -96,7 +95,6 @@ public class PartialSolution {
 		
 		
 		
-		maxBottomLevel = Math.max(partialSolution.maxBottomLevel, v.getBottomLevel());
 	}
 	
 	public Processor[] getProcessors() {
@@ -107,9 +105,20 @@ public class PartialSolution {
 		return processors[i];
 	}
 	
-	public int getMaxBottomLevel() {
-		return maxBottomLevel;
+	//TODO optimisation
+	public int minimumTime() {
+		int maxTime = 0;
+		for (int i = 0; i < numProcessors; i++) {
+			for (ProcessorTask p : processors[i].tasks()) {
+				int timeToFinish = p.getStartTime() + p.getVertex().getWeight() + p.getVertex().getBottomLevel();
+				if (timeToFinish > maxTime) {
+					maxTime = timeToFinish;
+				}
+			}
+		}
+		return maxTime;
 	}
+	
 	
 	/**
 	 * Returns that maximum total run time of all processors

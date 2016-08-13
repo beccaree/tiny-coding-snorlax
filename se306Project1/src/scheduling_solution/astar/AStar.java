@@ -43,7 +43,7 @@ public class AStar {
 		getStartStates();
 		 
 		 while (true) {
-			 solutionsCreated++;
+			solutionsCreated++;
 			 //priority list of unexplored solutions
 			PartialSolution currentSolution = unexploredSolutions.poll();
 			
@@ -87,8 +87,9 @@ public class AStar {
 	 * @param Partical solution to check
 	 * @return
 	 */
-	private boolean isComplete(PartialSolution p) {
+	public boolean isComplete(PartialSolution p) {
 		return p.getAllocatedVertices().size() == graph.vertexSet().size();
+		
 	}
 	
 	/**
@@ -100,7 +101,7 @@ public class AStar {
 	 * @param processorNumber	Processor allocated to
 	 * @return
 	 */
-	private int calculateStartTime(PartialSolution partialSolution, Vertex v, int processorNumber) {
+	public int calculateStartTime(PartialSolution partialSolution, Vertex v, int processorNumber) {
 		int maxStartTime = 0;
 		for (DefaultWeightedEdge e : graph.incomingEdgesOf(v)) {
 			Vertex sourceVertex = graph.getEdgeSource(e);
@@ -132,7 +133,8 @@ public class AStar {
 	 */
 	private boolean isViable(PartialSolution partialSolution) {
 		//TODO the closed set doesnt prune that many? is equals() correct?
-		if (exploredSolutions.contains(partialSolution) || (partialSolution.getTimeLength() + partialSolution.getMaxBottomLevel())>upperBound ) {
+		if (exploredSolutions.contains(partialSolution)) {
+			//System.out.println(partialSolution.minimumTime());
 			pruned++;
 			return false;
 		}
