@@ -27,9 +27,11 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/Nodes_11_OutTree.dot", "2"};
+		args = new String[]{"tests/Nodes_9_SeriesParallel.dot", "4"};
 
 //		args = new String[]{"tests/EdgesBeforeNodes.dot", "1"};
+		
+		long startTime = System.currentTimeMillis();
 
 		parseArgs(args);
 		GraphInterface<Vertex, DefaultWeightedEdge> graph = GraphParser.parse(inputFileName);
@@ -41,7 +43,11 @@ public class Main {
 		PartialSolution p = astar.calculateOptimalSolution();
 		
 		p.printDetails();
-		System.out.println(astar.solutionsCreated + " " + astar.pruned);
+		System.out.println("Solutions created: " + astar.solutionsCreated);
+		System.out.println("Solutions popped: " + astar.solutionsPopped);
+		System.out.println("Solutions pruned: " + astar.solutionsPruned);
+		long finishTime = System.currentTimeMillis();
+		System.out.println("Time taken: " + (finishTime - startTime));
 		//Basic milestone: Produce any schedule
 //		List<Vertex> topologicalSort = TopologicalSortGenerator.calculate(graph);
 //		

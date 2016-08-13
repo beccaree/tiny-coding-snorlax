@@ -110,7 +110,7 @@ public class PartialSolution {
 		int maxTime = 0;
 		for (int i = 0; i < numProcessors; i++) {
 			for (ProcessorTask p : processors[i].tasks()) {
-				int timeToFinish = p.getStartTime() + p.getVertex().getWeight() + p.getVertex().getBottomLevel();
+				int timeToFinish = p.getStartTime() + p.getVertex().getBottomLevel();
 				if (timeToFinish > maxTime) {
 					maxTime = timeToFinish;
 				}
@@ -195,10 +195,11 @@ public class PartialSolution {
 	public void printDetails() {
 		System.out.println(allocatedVertices.size() + " allocated vertices, " + unallocatedVertices.size() + " unallocated vertices.");
 		for (int i = 0; i < numProcessors; i++) {
-			System.out.println("Processor " + i + " finishes at " + processors[i].getFinishTime());
+			System.out.print("Processor " + i + " finishes at " + processors[i].getFinishTime());
 			for (ProcessorTask p : processors[i].tasks()) {
-				System.out.println(p.toString());
+				System.out.print(" || " + p.toString());
 			}
+			System.out.println();
 		}
 		
 	}

@@ -17,9 +17,9 @@ public class AStar {
 	
 	int upperBound = 0;
 	
+	public int solutionsPopped = 0;
 	public int solutionsCreated = 0;
-	
-	public int pruned = 0;
+	public int solutionsPruned = 0;
 	
 	public AStar(GraphInterface<Vertex, DefaultWeightedEdge> graph, int numProcessors) {
 		this.graph = graph;
@@ -43,7 +43,7 @@ public class AStar {
 		getStartStates();
 		 
 		 while (true) {
-			solutionsCreated++;
+			solutionsPopped++;
 			 //priority list of unexplored solutions
 			PartialSolution currentSolution = unexploredSolutions.poll();
 			
@@ -133,9 +133,10 @@ public class AStar {
 	 */
 	private boolean isViable(PartialSolution partialSolution) {
 		//TODO the closed set doesnt prune that many? is equals() correct?
-		if (exploredSolutions.contains(partialSolution)) {
+		//could use upperbound here too
+		if (exploredSolutions.contains(partialSolution) || partialSolution.minimumTime() > upperBound ) {
 			//System.out.println(partialSolution.minimumTime());
-			pruned++;
+			solutionsPruned++;
 			return false;
 		}
 
