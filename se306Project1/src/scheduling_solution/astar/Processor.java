@@ -17,6 +17,10 @@ public class Processor {
 	
 	private HashSet<ProcessorTask> processorTasks = new HashSet<ProcessorTask>();//HashSet is faster than ArrayList I think
 	
+	/**
+	 * Add a new task to the processor and calcualtes the new finish time of the processor
+	 * @param p	task to add
+	 */
 	public void add(ProcessorTask p) {
 		processorTasks.add(p);
 		
@@ -25,6 +29,10 @@ public class Processor {
 		finishTime = p.getStartTime() + p.getVertex().getWeight();
 	}
 	
+	/**
+	 * Returns all the tasks that have been assigned to this processor
+	 * @return
+	 */
 	public HashSet<ProcessorTask> tasks() {
 		return processorTasks;
 	}

@@ -3,7 +3,7 @@ package scheduling_solution.astar;
 import scheduling_solution.graph.Vertex;
 
 /**
- * Object to 
+ * Object stores the vertex and it's start time
  * @author Team 8
  *
  */
@@ -16,6 +16,7 @@ public class ProcessorTask {
 	public ProcessorTask(Vertex vertex, int startTime, int processorNumber) {
 		this.vertex = vertex;
 		this.startTime = startTime;
+		this.processorNumber = processorNumber;
 	}
 	
 	public int getStartTime() {
@@ -34,6 +35,11 @@ public class ProcessorTask {
 		return new ProcessorTask(vertex, startTime, processorNumber);
 	}
 	
+	/**
+	 * Checks if the vertex this ProcessTask object is storing is the same to the given vertex
+	 * @param v	Vertex to be checked
+	 * @return
+	 */
 	public boolean isForVertex(Vertex v) {
 		return this.vertex == v;
 	}

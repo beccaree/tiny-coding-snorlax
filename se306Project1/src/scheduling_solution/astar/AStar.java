@@ -104,13 +104,18 @@ public class AStar {
 		return maxStartTime + v.getWeight();
 	}
 	
+	/**
+	 * Checks to see if a solution has no chance of being an optimal solution, using all pruning/bound checks
+	 * Can get a simple upper bound by adding all vertices together (== running them all sequentially on one processor)
+	 * Should check if it exists in the exploredSolutions Set
+	 * @param partialSolution
+	 * @return
+	 */
 	private boolean isViable(PartialSolution partialSolution) {
 		if (exploredSolutions.contains(partialSolution)) {
 			return false;
 		}
-		//This method will be large: will do all checks to see if a solution has no chance to be optimal using all pruning/bound checks
-		//Can get a simple upper bound just by adding all vertices together (== running them all sequentially on one processor)
-		//Should check if it exists in the exploredSolutions Set
+
 		return true;
 	}
 	
