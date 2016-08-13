@@ -7,34 +7,39 @@ import java.util.Set;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
+import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory.Default;
+
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 
 public class PartialSolution {
-	
+	private GraphInterface<Vertex, DefaultWeightedEdge> graph;
 
 	private Processor[] processors;
 	private int numProcessors;
 	
 	private HashSet<Vertex> allocatedVertices;
 	private HashSet<Vertex> unallocatedVertices;
+//	private HashSet<Vertex> availableVertices;
 	//private int numAllocatedVertices;
 	private int maxBottomLevel;
-	
-	/** 
+
+	/**
 	 * Creates an new PartialSolution with an array for processors and their tasks
-	 * Adds the initial vertex
-	 * @param vertices			All vertices
+	 * Adds the initial vertex 
+	 * @param graph				Digraph of all vertex and edges
 	 * @param numProcessors		Number of processors that will be used
 	 * @param v					Vertex to add to selected processor
 	 * @param processorNumber	Processor to allocate vertex to
 	 */
-	public PartialSolution(Set<Vertex> vertices, int numProcessors, Vertex v, int processorNumber) {
+	public PartialSolution(GraphInterface<Vertex, DefaultWeightedEdge> graph, int numProcessors, Vertex v, int processorNumber) {
+
 		//Brand new solution with a single vertex
+		this.graph = graph;
 		this.numProcessors = numProcessors;
 		
 		this.unallocatedVertices = new HashSet<>();
-		for (Vertex vertex : vertices) {
+		for (Vertex vertex : graph.vertexSet()) {
 			unallocatedVertices.add(vertex);
 		}
 		
@@ -51,16 +56,24 @@ public class PartialSolution {
 
 		allocatedVertices = new HashSet<>();
 		allocatedVertices.add(v);
+		
+		unallocatedVertices.remove(v);
 	}
 	
+
+
 	/**
 	 * Takes an existing partial solution and adds in a new task into a processor
+	 * @param graph				Digraph of all vertex and edges
 	 * @param partialSolution	Existing partial solution to be added to
 	 * @param v					Vertex to add into solution
 	 * @param processorNumber	Processor to add vertex to
 	 * @param startTime			Start time of vertex that is to be added
 	 */
-	public PartialSolution(PartialSolution partialSolution, Vertex v, int processorNumber, int startTime) {
+	public PartialSolution(GraphInterface<Vertex, DefaultWeightedEdge> graph, PartialSolution partialSolution, Vertex v, int processorNumber, int startTime) {
+		this.graph = graph;
+		this.numProcessors = partialSolution.numProcessors;//TODO getter
+		
 		//add the vertex to the new processor
 		processors = new Processor [numProcessors];
 		
@@ -80,6 +93,8 @@ public class PartialSolution {
 		//Need to cast twice as a Set doesnt have a clone() method
 		unallocatedVertices = (HashSet<Vertex>) partialSolution.getUnallocatedVertices().clone();
 		unallocatedVertices.remove(v);
+		
+		
 		
 		maxBottomLevel = Math.max(partialSolution.maxBottomLevel, v.getBottomLevel());
 	}
@@ -111,13 +126,22 @@ public class PartialSolution {
 		return maxTime;
 	}
 	
-	//TODO candidate for optimisation
-	public List<Vertex> getAvailableVertices() {
+	//TODO candidate for optimisation. Maybe its better to maintain this between PartialSolutions, and just calculate new ones
+	//based on the vertex that is being added
+	public HashSet<Vertex> getAvailableVertices() {
+		HashSet<Vertex> availableVertices = new HashSet<>();
 		
-		return null;
-		/*
-		 * Given a partial solution, what nodes can we schedule next?
-		 */
+		outerloop:
+		for (Vertex v : unallocatedVertices) {
+			for (DefaultWeightedEdge e : graph.incomingEdgesOf(v)) {
+				if (unallocatedVertices.contains(graph.getEdgeSource(e))) {//If any parent is unallocated
+					continue outerloop;
+				}
+			}
+			availableVertices.add(v); // Only make it here if we dont find an unallocated parent
+			
+		}
+		return availableVertices;
 	}
 	
 	/**
@@ -155,6 +179,20 @@ public class PartialSolution {
 	public boolean equals(Object obj) {
 		return Arrays.equals(processors, ((PartialSolution) obj).getProcessors());
 	}	
+	
+	/**
+	 * Used for debugging a solution
+	 */
+	public void printDetails() {
+		System.out.println(allocatedVertices.size() + " allocated vertices, " + unallocatedVertices.size() + " unallocated vertices.");
+		for (int i = 0; i < numProcessors; i++) {
+			System.out.println("Processor " + i + " finishes at " + processors[i].getFinishTime());
+			for (ProcessorTask p : processors[i].tasks()) {
+				System.out.println(p.toString());
+			}
+		}
+		
+	}
 	
 }
 

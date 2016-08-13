@@ -55,6 +55,11 @@ public class ProcessorTask {
 		return this.vertex.equals(p.getVertex());//TODO is the vertex sufficient
 	}
 	
+	@Override
+	public String toString() {
+		return vertex.getName() + " start:" + startTime + " processor:" + processorNumber;
+	}
+	
 	
 	
 }

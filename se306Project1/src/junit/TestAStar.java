@@ -1,5 +1,7 @@
 package junit;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -65,8 +67,9 @@ public class TestAStar extends TestCase {
 		
 		//Checks that the start state is vertex "a"
 		//THIS DOESN'T WORK YET BECAUSE getAvailableVertices() ISN"T IMPLEMENTED YET
-		List<Vertex> vertices = unexploredSolutions.poll().getAvailableVertices();
-		assertEquals("GetStartStates returns wrong vertex", vertexa.getName(), vertices.get(0).getName());
+		HashSet<Vertex> vertexSet = unexploredSolutions.poll().getAvailableVertices();
+		List<Vertex> vertexList = new ArrayList<>(vertexSet);
+		assertEquals("GetStartStates returns wrong vertex", vertexa.getName(), vertexList.get(0).getName());
 	}
 	
 	@Test
