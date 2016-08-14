@@ -6,6 +6,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+import org.graphstream.graph.Edge;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.SingleGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
 import scheduling_solution.graph.GraphInterface;
@@ -20,6 +24,7 @@ public class GraphParser {
 
 	private static GraphInterface<Vertex, DefaultWeightedEdge> directedGraph;
 	private static HashMap<String, Vertex> vertexMap = new HashMap<>();
+	private static Graph gsGraph;
 	
 	/**
 	 * Reads the input file, parses each line
@@ -30,6 +35,9 @@ public class GraphParser {
 		//Directed graph created from the input file 
 		directedGraph = new JGraphTAdapter<>(DefaultWeightedEdge.class);
 		vertexMap = new HashMap<>();
+		//Graph for display
+		gsGraph = new SingleGraph("Display");
+		gsGraph.setAutoCreate(true); //Automatically creates nodes if needed
 		BufferedReader br = null;
 		
 		try {
@@ -69,9 +77,12 @@ public class GraphParser {
 							toVertex = addVertex(toVertexString, 0);
 						}
 						
-						//Add the edge with weight to the directed graph				
+						//Add the edge with weight to the directed graph and display graph		
 						DefaultWeightedEdge edge = directedGraph.addEdge(fromVertex, toVertex);
 						directedGraph.setEdgeWeight(edge, Integer.parseInt(weight));
+						gsGraph.addEdge(fromVertex.getName()+toVertex.getName(), fromVertex.getName(), toVertex.getName(), true);
+						Edge e = gsGraph.getEdge(fromVertex.getName()+toVertex.getName());
+						e.addAttribute("ui.label", Integer.parseInt(weight));
 						
 						//TODO: remove this debugging statement at end
 						//System.out.println("New edge " + fromVertex + "->" + toVertex + " with weight " + weight + " created.");
@@ -83,8 +94,13 @@ public class GraphParser {
 						Vertex v = vertexMap.get(vertexOrEdge);
 						if (v == null) {
 							addVertex(vertexOrEdge, Integer.parseInt(weight));
+							gsGraph.addNode(vertexOrEdge);
+							Node n = gsGraph.getNode(vertexOrEdge);
+						    n.addAttribute("ui.label", vertexOrEdge + ": " + weight);
 						} else {
 							v.setWeight(Integer.parseInt(weight));
+							Node n = gsGraph.getNode(vertexOrEdge);
+						    n.addAttribute("ui.label", vertexOrEdge+ ": " + weight);
 						}
 					
 						//TODO: remove this debugging statement at end
@@ -130,5 +146,9 @@ public class GraphParser {
 	
 	public static HashMap<String, Vertex> getVertexMap() {
 		return vertexMap;
+	}
+	
+	public static Graph getDisplayGraph() {
+		return gsGraph;
 	}
 }

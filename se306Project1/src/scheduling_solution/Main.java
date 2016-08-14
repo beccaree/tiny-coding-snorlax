@@ -27,7 +27,7 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/Nodes_9_SeriesParallel.dot", "4"};
+		args = new String[]{"tests/example2.dot", "2"};
 
 //		args = new String[]{"tests/EdgesBeforeNodes.dot", "1"};
 		
@@ -37,7 +37,7 @@ public class Main {
 		GraphInterface<Vertex, DefaultWeightedEdge> graph = GraphParser.parse(inputFileName);
 		BottomLevelCalculator.calculate(graph);
 		
-		//new GraphVisualisation(graph.getGraph());
+		new GraphVisualisation(GraphParser.getDisplayGraph());
 		
 		AStar astar = new AStar(graph,  numProcessors);
 		PartialSolution p = astar.calculateOptimalSolution();
