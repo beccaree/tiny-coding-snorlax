@@ -1,14 +1,13 @@
 package scheduling_solution.visualisation;
 
+import java.awt.BorderLayout;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.jgraph.JGraph;
-import org.jgrapht.ext.JGraphModelAdapter;
-import org.jgrapht.graph.DefaultDirectedWeightedGraph;
-import org.jgrapht.graph.DefaultWeightedEdge;
-
-import scheduling_solution.graph.Vertex;
+import org.graphstream.graph.Graph;
+import org.graphstream.ui.swingViewer.ViewPanel;
+import org.graphstream.ui.view.Viewer;
 
 /**
  * 
@@ -17,21 +16,17 @@ import scheduling_solution.graph.Vertex;
 @SuppressWarnings("serial")
 public class GraphVisualisation extends JFrame {
 	
-	private JGraphModelAdapter<Vertex, DefaultWeightedEdge> jgAdapter;
-	
-	public GraphVisualisation(DefaultDirectedWeightedGraph<Vertex, DefaultWeightedEdge> defaultDirectedWeightedGraph) {
+	public GraphVisualisation(Graph gsGraph) {
 		setTitle("Process Visualisation");
-		setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		
-		JPanel graphContainer = new JPanel();
+		gsGraph.display();
 		
-		jgAdapter = new JGraphModelAdapter<Vertex, DefaultWeightedEdge>(defaultDirectedWeightedGraph);
-		JGraph jgraph = new JGraph(jgAdapter);
-		graphContainer.add(jgraph);
-
-		add(graphContainer);
+//		Viewer viewer = new Viewer(gsGraph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+//		ViewPanel view = viewer.addDefaultView(false);
+//		add(view, BorderLayout.CENTER);
 		
-		setVisible(true);
+//		setVisible(true);
 	}
 	
 }
