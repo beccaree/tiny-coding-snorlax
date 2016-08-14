@@ -2,12 +2,8 @@ package scheduling_solution.astar;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
-
-import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory.Default;
 
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
@@ -16,7 +12,7 @@ public class PartialSolution {
 	private GraphInterface<Vertex, DefaultWeightedEdge> graph;
 
 	private Processor[] processors;
-	private int numProcessors;
+	private byte numProcessors;
 	
 	private HashSet<Vertex> allocatedVertices;
 	private HashSet<Vertex> unallocatedVertices;
@@ -31,8 +27,7 @@ public class PartialSolution {
 	 * @param v					Vertex to add to selected processor
 	 * @param processorNumber	Processor to allocate vertex to
 	 */
-	public PartialSolution(GraphInterface<Vertex, DefaultWeightedEdge> graph, int numProcessors, Vertex v, int processorNumber) {
-
+	public PartialSolution(GraphInterface<Vertex, DefaultWeightedEdge> graph, byte numProcessors, Vertex v, int processorNumber) {
 		//Brand new solution with a single vertex
 		this.graph = graph;
 		this.numProcessors = numProcessors;
@@ -59,7 +54,6 @@ public class PartialSolution {
 		unallocatedVertices.remove(v);
 	}
 	
-
 
 	/**
 	 * Takes an existing partial solution and adds in a new task into a processor
@@ -92,9 +86,6 @@ public class PartialSolution {
 		//Need to cast twice as a Set doesnt have a clone() method
 		unallocatedVertices = (HashSet<Vertex>) partialSolution.getUnallocatedVertices().clone();
 		unallocatedVertices.remove(v);
-		
-		
-		
 	}
 	
 	public Processor[] getProcessors() {
@@ -105,18 +96,21 @@ public class PartialSolution {
 		return processors[i];
 	}
 	
-	//TODO optimisation
-	public int minimumTime() {
-		int maxTime = 0;
+	//TODO optimisation. The bottom level heuristic should be calculated incrementally
+	public int getMinimumTime() {
+		int maxTimeToFinish = 0, totalIdleTime = 0;
 		for (int i = 0; i < numProcessors; i++) {
+//			totalIdleTime += processors[i].getIdleTime();
 			for (ProcessorTask p : processors[i].tasks()) {
 				int timeToFinish = p.getStartTime() + p.getVertex().getBottomLevel();
-				if (timeToFinish > maxTime) {
-					maxTime = timeToFinish;
+				if (timeToFinish > maxTimeToFinish) {
+					maxTimeToFinish = timeToFinish;
 				}
 			}
 		}
-		return maxTime;
+		return maxTimeToFinish;
+		//Perfect load balance slows Nodes_11 down by ~40%
+//		return Math.max(maxTimeToFinish, (AStar.getSequentialTime() + totalIdleTime) / numProcessors);
 	}
 	
 	

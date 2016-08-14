@@ -8,33 +8,22 @@ import java.util.HashSet;
  *
  */
 public class Processor {
-//	private int finishTime = 0; 
+	private int finishTime = 0; 
 	
 	private int idleTime = 0;//TODO
 	
 	private HashSet<ProcessorTask> processorTasks = new HashSet<ProcessorTask>();//HashSet is faster than ArrayList I think
 	
 	/**
-	 * Add a new task to the processor and calcualtes the new finish time of the processor
+	 * Add a new task to the processor and calculate the new finish time of the processor
 	 * @param p	task to add
 	 */
 	public void add(ProcessorTask p) {
 		processorTasks.add(p);
 		
-//		idleTime += (p.getStartTime() - finishTime);//TODO is decreasing due to a bug
-//		
-//		finishTime = p.getStartTime() + p.getVertex().getWeight();
+		idleTime += (p.getStartTime() - finishTime);
 		
-		for (ProcessorTask ptask : processorTasks) {
-			if (p.getStartTime() == 154 && ptask.getStartTime() == 154)  {
-				if (p.getVertex().getName().equals("2") && ptask.getVertex().getName().equals("4")) {
-//					System.out.println(2);
-				} else if (p.getVertex().getName().equals("4") && ptask.getVertex().getName().equals("2")){
-//	 				System.out.println(3);
-				}
-			}
-			assert(ptask.getStartTime() + ptask.getVertex().getWeight()) < p.getStartTime();
-		}
+		finishTime = p.getStartTime() + p.getVertex().getWeight();
 	}
 	
 	/**
@@ -46,15 +35,17 @@ public class Processor {
 	}
 	
 	//TODO probably very slow. should increment after every addition instead of doing this
+	//Actually after trying an incremental solution, the runtime wasnt significantly affected.
 	public int getFinishTime() {
-		int maxFinishTime = 0;
-		for (ProcessorTask p : processorTasks) {
-			int finishTime = p.getStartTime() + p.getVertex().getWeight();
-			if (finishTime > maxFinishTime) {
-				maxFinishTime  = finishTime;
-			}
-		}
-		return maxFinishTime;
+//		int maxFinishTime = 0;
+//		for (ProcessorTask p : processorTasks) {
+//			int finishTime = p.getStartTime() + p.getVertex().getWeight();
+//			if (finishTime > maxFinishTime) {
+//				maxFinishTime  = finishTime;
+//			}
+//		}
+//		return maxFinishTime;
+		return finishTime;
 	}
 	
 	public int getIdleTime() {

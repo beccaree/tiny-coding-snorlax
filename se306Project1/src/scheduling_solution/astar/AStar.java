@@ -13,15 +13,16 @@ public class AStar {
 	private GraphInterface<Vertex, DefaultWeightedEdge> graph;
 	PriorityQueue<PartialSolution> unexploredSolutions;
 	Set<PartialSolution> exploredSolutions;
-	final int numProcessors;
+	final byte numProcessors;
 	
-	int upperBound = 0;
+	private static int sequentialTime = 0;
 	
 	public int solutionsPopped = 0;
 	public int solutionsCreated = 0;
 	public int solutionsPruned = 0;
+	public long maxMemory = 0;
 	
-	public AStar(GraphInterface<Vertex, DefaultWeightedEdge> graph, int numProcessors) {
+	public AStar(GraphInterface<Vertex, DefaultWeightedEdge> graph, byte numProcessors) {
 		this.graph = graph;
 		unexploredSolutions = new PriorityQueue<>(new PartialSolutionComparator());
 		exploredSolutions = new HashSet<>();
@@ -36,7 +37,7 @@ public class AStar {
 	public PartialSolution calculateOptimalSolution() {
 		
 		for (Vertex v : graph.vertexSet()) {
-			upperBound += v.getWeight();
+			sequentialTime += v.getWeight();
 		}
 		
 		//Get initial vertices of solution
@@ -44,6 +45,7 @@ public class AStar {
 		 
 		 while (true) {
 			solutionsPopped++;
+			
 			 //priority list of unexplored solutions
 			PartialSolution currentSolution = unexploredSolutions.poll();
 			
@@ -58,6 +60,11 @@ public class AStar {
 						
 						//add vertex into solution
 						PartialSolution newSolution = new PartialSolution(graph, currentSolution, v, processor, startTime);
+						
+						long mem = Runtime.getRuntime().totalMemory();
+						if (mem > maxMemory) {
+							maxMemory = mem;
+						}
 						solutionsCreated++;
 						if (isViable(newSolution)) {
 							unexploredSolutions.add(newSolution);
@@ -91,6 +98,16 @@ public class AStar {
 		return p.getAllocatedVertices().size() == graph.vertexSet().size();
 		
 	}
+	
+	public PriorityQueue<PartialSolution> getUnexploredSolutions() {
+		return unexploredSolutions;
+	}
+	
+	/*Not very object-oriented*/
+	public static int getSequentialTime() {
+		return sequentialTime;
+	}
+	
 	
 	/**
 	 * Calculates the start time of the given Vertex in the allocated processor
@@ -132,10 +149,7 @@ public class AStar {
 	 * @return
 	 */
 	private boolean isViable(PartialSolution partialSolution) {
-		//TODO the closed set doesnt prune that many? is equals() correct?
-		//could use upperbound here too
-		if (exploredSolutions.contains(partialSolution) || partialSolution.minimumTime() > upperBound ) {
-			//System.out.println(partialSolution.minimumTime());
+		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumTime() > sequentialTime ) {
 			solutionsPruned++;
 			return false;
 		}
@@ -143,9 +157,5 @@ public class AStar {
 		return true;
 	}
 	
-	public PriorityQueue<PartialSolution> getUnexploredSolutions() {
-		return unexploredSolutions;
-	}
-
 }
 

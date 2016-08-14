@@ -6,15 +6,9 @@ public class PartialSolutionComparator implements Comparator<PartialSolution> {
 
 	@Override
 	public int compare(PartialSolution p1, PartialSolution p2) {
-		//TODO this is a BFS currently: not using the heuristic cause its returning the wrong answer
-//		int t1 = p1.getTimeLength();
-//		int t2 = p2.getTimeLength();
-		int t1 = p1.minimumTime();
-		int t2 = p2.minimumTime();
+		int t1 = p1.getMinimumTime();
+		int t2 = p2.getMinimumTime();
 		
-		/*TODO use f = g + h here, and just compare the fs like normal integers (lower is better)
-		 h is the max of bottomlevel of all scheduled nodes
-		 */ 
 		if (t1 > t2) {
 			return 1;
 		} else if (t2 > t1) {

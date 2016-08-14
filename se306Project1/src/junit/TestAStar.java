@@ -58,7 +58,7 @@ public class TestAStar extends TestCase {
 		graph.setEdgeWeight(edgecd, 1);
 		
 		//Runs Astar on the graph with 2 processors
-		AStar astar = new AStar(graph, 2);
+		AStar astar = new AStar(graph, (byte) 2);
 		
 		//Checks if the number of start states is what is expected
 		astar.getStartStates();
@@ -102,7 +102,7 @@ public class TestAStar extends TestCase {
 		}
 		
 		//Runs Astar on the graph with 2 processors
-		AStar astar = new AStar(graph, 2);
+		AStar astar = new AStar(graph, (byte) 2);
 		
 		//Checks if the number of start states is what is expected
 		astar.getStartStates();
@@ -160,7 +160,7 @@ public class TestAStar extends TestCase {
 		graph.setEdgeWeight(edge94, 1);
 		
 		//Runs Astar on the graph with 3 processors
-		AStar astar = new AStar(graph, 3);
+		AStar astar = new AStar(graph, (byte) 3);
 		
 		//Checks if the number of start states is what is expected
 		astar.getStartStates();

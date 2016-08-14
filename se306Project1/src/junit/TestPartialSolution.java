@@ -32,7 +32,7 @@ public class TestPartialSolution extends TestCase {
 	public void testSingleVertexPartialSolution() {
 		
 		Vertex v = new Vertex("1", 10);
-		PartialSolution pSolution = new PartialSolution(graph, 2, v, 1);
+		PartialSolution pSolution = new PartialSolution(graph, (byte) 2, v, 1);
 		
 		//The finish time of the current partial solution must be equal to the weight of the vertex
 		assertEquals("Finish time of current partial solution is incorrect", 
@@ -54,7 +54,7 @@ public class TestPartialSolution extends TestCase {
 		}
 		
 		/*Test the starting vertex*/
-		PartialSolution pSolution = new PartialSolution(graph, 3, vertexArray[0], 0);
+		PartialSolution pSolution = new PartialSolution(graph, (byte) 3, vertexArray[0], 0);
 		//Finishing time of the starting partial solution should be equal to its weight
 		assertEquals("Finish time of current partial solution is incorrect", 
 				vertexArray[0].getWeight(), pSolution.getTimeLength());
@@ -105,7 +105,7 @@ public class TestPartialSolution extends TestCase {
 		graph.setEdgeWeight(edgecd, 1);
 		
 		/*Vertex A*/
-		PartialSolution pSolution = new PartialSolution(graph, 2, vertexa, 0);
+		PartialSolution pSolution = new PartialSolution(graph, (byte) 2, vertexa, 0);
 		//Check the finish time of the current partial solution
 		assertEquals("Finish time of current partial solution is incorrect", 2, pSolution.getTimeLength());
 		
