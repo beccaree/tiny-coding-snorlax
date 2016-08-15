@@ -32,7 +32,7 @@ public class AStar {
 	/**
 	 * Calculates the optimal solution
 	 * @param graph - weighted digraph
-	 * @return 
+	 * @return optimal PartialSolution object
 	 */
 	public PartialSolution calculateOptimalSolution() {
 		
@@ -61,11 +61,14 @@ public class AStar {
 						//add vertex into solution
 						PartialSolution newSolution = new PartialSolution(graph, currentSolution, v, processor, startTime);
 						
+						//Store the greatest total amount of memory 
 						long mem = Runtime.getRuntime().totalMemory();
 						if (mem > maxMemory) {
 							maxMemory = mem;
 						}
 						solutionsCreated++;
+						
+						//Check if new solution is worth further exploring
 						if (isViable(newSolution)) {
 							unexploredSolutions.add(newSolution);
 						}
@@ -92,7 +95,7 @@ public class AStar {
 	/**
 	 * Checks if partial solution has allocated all vertices
 	 * @param Partical solution to check
-	 * @return
+	 * @return	True - all vertices have been allocated
 	 */
 	public boolean isComplete(PartialSolution p) {
 		return p.getAllocatedVertices().size() == graph.vertexSet().size();
@@ -116,14 +119,20 @@ public class AStar {
 	 * @param partialSolution	Solution thus far
 	 * @param v					Vertex to find start time for
 	 * @param processorNumber	Processor allocated to
-	 * @return
+	 * @return start time of the given vertex
 	 */
 	public int calculateStartTime(PartialSolution partialSolution, Vertex v, int processorNumber) {
+		//great start time value for vertex v
 		int maxStartTime = 0;
+		
+		//Go through all the Source vertex (vertices that vertex v must be executed after)
 		for (DefaultWeightedEdge e : graph.incomingEdgesOf(v)) {
 			Vertex sourceVertex = graph.getEdgeSource(e);
+			
+			//Find the greatest finish time of out of all the source vertices
 			ProcessorTask processorTask = partialSolution.getTask(sourceVertex);
-			int finishTime = processorTask.getStartTime() + sourceVertex.getWeight();
+			int finishTime = processorTask.getStartTime() + sourceVertex.getWeight();	
+			//If the process to be added is not on the same processor, add the edge weight
 			if (processorTask.getProcessorNumber() != processorNumber) {
 				finishTime += graph.getEdgeWeight(e);
 			}
@@ -131,9 +140,8 @@ public class AStar {
 				maxStartTime = finishTime;
 			}
 		}
-		
-		int processorFinishTime = partialSolution.getProcessor(processorNumber).getFinishTime();
-		
+		//check if finish time of the processor is greater than greatest start time value of vertex v
+		int processorFinishTime = partialSolution.getProcessor(processorNumber).getFinishTime();		
 		if (processorFinishTime > maxStartTime) {
 			maxStartTime = processorFinishTime;
 		}
@@ -146,9 +154,10 @@ public class AStar {
 	 * Can get a simple upper bound by adding all vertices together (== running them all sequentially on one processor)
 	 * Should check if it exists in the exploredSolutions Set
 	 * @param partialSolution
-	 * @return
+	 * @return True - if the given ParticalSolution has a chance of being an optimal solution
 	 */
 	private boolean isViable(PartialSolution partialSolution) {
+		//Check if solution has already been explored or if the minimum time of solution is greater than the current time
 		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumTime() > sequentialTime ) {
 			solutionsPruned++;
 			return false;
