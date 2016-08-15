@@ -80,8 +80,6 @@ public class PartialSolution {
 		
 		//Update internal variables so we don't have to calculate them when getting them
 //		numAllocatedVertices = partialSolution.getNumberAllocatedVertices() + 1;
-		allocatedVertices = (HashSet<Vertex>) partialSolution.getAllocatedVertices().clone();
-		allocatedVertices.add(v);
 		
 		//Need to cast twice as a Set doesnt have a clone() method
 		unallocatedVertices = (HashSet<Vertex>) partialSolution.getUnallocatedVertices().clone();
@@ -96,7 +94,7 @@ public class PartialSolution {
 		return processors[i];
 	}
 	
-	//TODO optimisation. The bottom level heuristic should be calculated incrementally
+	//TODO optimisation. The bottom level + vertex heuristic should be calculated incrementally
 	public int getMinimumTime() {
 		int maxTimeToFinish = 0, totalIdleTime = 0;
 		for (int i = 0; i < numProcessors; i++) {
@@ -164,10 +162,6 @@ public class PartialSolution {
 		return null;
 	}
 	
-	public HashSet<Vertex> getAllocatedVertices() {
-		return allocatedVertices;
-	}
-	
 	public HashSet<Vertex> getUnallocatedVertices() {
 		return unallocatedVertices;
 	}
@@ -187,7 +181,7 @@ public class PartialSolution {
 	 * Used for debugging a solution
 	 */
 	public void printDetails() {
-		System.out.println(allocatedVertices.size() + " allocated vertices, " + unallocatedVertices.size() + " unallocated vertices.");
+		System.out.println(unallocatedVertices.size() + " unallocated vertices.");
 		for (int i = 0; i < numProcessors; i++) {
 			System.out.print("Processor " + i + " finishes at " + processors[i].getFinishTime());
 			for (ProcessorTask p : processors[i].tasks()) {

@@ -35,7 +35,7 @@ public class Main {
 		GraphInterface<Vertex, DefaultWeightedEdge> graph = GraphParser.parse(inputFileName);
 		BottomLevelCalculator.calculate(graph);
 		
-		new GraphVisualisation(GraphParser.getDisplayGraph());
+		//new GraphVisualisation(GraphParser.getDisplayGraph());
 		
 		AStar astar = new AStar(graph,  numProcessors);
 		PartialSolution p = astar.calculateOptimalSolution();

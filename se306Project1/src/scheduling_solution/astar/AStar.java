@@ -95,7 +95,7 @@ public class AStar {
 	 * @return
 	 */
 	public boolean isComplete(PartialSolution p) {
-		return p.getAllocatedVertices().size() == graph.vertexSet().size();
+		return p.getUnallocatedVertices().size() == 0;
 		
 	}
 	
