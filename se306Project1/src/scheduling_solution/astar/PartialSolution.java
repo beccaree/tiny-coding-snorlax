@@ -97,8 +97,14 @@ public class PartialSolution {
 	}
 	
 	//TODO optimisation. The bottom level heuristic should be calculated incrementally
+	/**
+	 * Finds an estimated minimum time taken to finish all tasks in all processors
+	 * @return min estimated total run time
+	 */
 	public int getMinimumTime() {
 		int maxTimeToFinish = 0, totalIdleTime = 0;
+		
+		//Gets the maximum time needed for all processors to finish
 		for (int i = 0; i < numProcessors; i++) {
 //			totalIdleTime += processors[i].getIdleTime();
 			for (ProcessorTask p : processors[i].tasks()) {
@@ -131,6 +137,10 @@ public class PartialSolution {
 	
 	//TODO candidate for optimisation. Maybe its better to maintain this between PartialSolutions, and just calculate new ones
 	//based on the vertex that is being added
+	/**
+	 * Gets a hashset of all the available unallocated vertex whose parents vertices are all allocated
+	 * @return
+	 */
 	public HashSet<Vertex> getAvailableVertices() {
 		HashSet<Vertex> availableVertices = new HashSet<>();
 		
