@@ -1,24 +1,30 @@
 package scheduling_solution.astar;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 
+//TODO dont pass graph in constructor, make it static and access it from elsewhere to save memory
 public class PartialSolution {
 	private GraphInterface<Vertex, DefaultWeightedEdge> graph;
 
-	private Processor[] processors;
 	private byte numProcessors;
 	
-	private HashSet<Vertex> allocatedVertices;
+	private int[] idleTimes;
+	private int[] finishTimes;
+	
+	private HashMap<Vertex, AllocationInfo> allocatedVertices;
+	private HashSet<Vertex> availableVertices;
 	private HashSet<Vertex> unallocatedVertices;
-//	private HashSet<Vertex> availableVertices;
-	//private int numAllocatedVertices;
-
+	
+	private int minimumFinishTime = 0;
+	
 	/**
 	 * Creates an new PartialSolution with an array for processors and their tasks
 	 * Adds the initial vertex 
@@ -27,31 +33,26 @@ public class PartialSolution {
 	 * @param v					Vertex to add to selected processor
 	 * @param processorNumber	Processor to allocate vertex to
 	 */
-	public PartialSolution(GraphInterface<Vertex, DefaultWeightedEdge> graph, byte numProcessors, Vertex v, int processorNumber) {
+	public PartialSolution(GraphInterface<Vertex, DefaultWeightedEdge> graph, byte numProcessors, Vertex v, byte processorNumber) {
 		//Brand new solution with a single vertex
 		this.graph = graph;
 		this.numProcessors = numProcessors;
 		
-		this.unallocatedVertices = new HashSet<>();
-		for (Vertex vertex : graph.vertexSet()) {
-			unallocatedVertices.add(vertex);
-		}
+		idleTimes = new int[numProcessors];
+		finishTimes = new int[numProcessors];
+		finishTimes[processorNumber] = v.getWeight();
 		
-		//Array of processors
-		processors = new Processor [numProcessors];
+		allocatedVertices = new HashMap<>();
+		allocatedVertices.put(v, new AllocationInfo(processorNumber, 0));
 		
-		//intialise each processor object in array
-		for (int i=0; i<numProcessors;i++){
-			processors[i]=new Processor();
-		}
-		
-		//add initial vertex into selected processor
-		processors[processorNumber].add(new ProcessorTask(v, 0, processorNumber));
-
-		allocatedVertices = new HashSet<>();
-		allocatedVertices.add(v);
-		
+		unallocatedVertices = new HashSet<>();
+		unallocatedVertices.addAll(graph.vertexSet());
 		unallocatedVertices.remove(v);
+		
+		availableVertices = new HashSet<>();
+		updateAvailableVertices(v);
+		
+		minimumFinishTime = v.getBottomLevel();
 	}
 	
 
@@ -63,118 +64,101 @@ public class PartialSolution {
 	 * @param processorNumber	Processor to add vertex to
 	 * @param startTime			Start time of vertex that is to be added
 	 */
-	public PartialSolution(GraphInterface<Vertex, DefaultWeightedEdge> graph, PartialSolution partialSolution, Vertex v, int processorNumber, int startTime) {
+	public PartialSolution(GraphInterface<Vertex, DefaultWeightedEdge> graph, PartialSolution partialSolution, Vertex v, byte processorNumber) {
 		this.graph = graph;
 		this.numProcessors = partialSolution.numProcessors;//TODO getter
 		
-		//add the vertex to the new processor
-		processors = new Processor [numProcessors];
-		
-		//clones all the existing processors and their tasks
-		for (int i=0; i<numProcessors;i++){
-			processors[i] = partialSolution.getProcessor(i).clone();
-		}
-		
-		//adds in the new task into the given processor
-		processors[processorNumber].add(new ProcessorTask(v, startTime, processorNumber));
-		
-		//Update internal variables so we don't have to calculate them when getting them
-//		numAllocatedVertices = partialSolution.getNumberAllocatedVertices() + 1;
-		
-		//Need to cast twice as a Set doesnt have a clone() method
+		allocatedVertices = (HashMap<Vertex, AllocationInfo>) partialSolution.getAllocatedVertices().clone();
 		unallocatedVertices = (HashSet<Vertex>) partialSolution.getUnallocatedVertices().clone();
-		unallocatedVertices.remove(v);
-	}
-	
-	public Processor[] getProcessors() {
-		return processors;
-	}
-	
-	public Processor getProcessor(int i) {
-		return processors[i];
-	}
-	
-	//TODO optimisation. The bottom level + vertex heuristic should be calculated incrementally
-	public int getMinimumTime() {
-		int maxTimeToFinish = 0, totalIdleTime = 0;
-		for (int i = 0; i < numProcessors; i++) {
-//			totalIdleTime += processors[i].getIdleTime();
-			for (ProcessorTask p : processors[i].tasks()) {
-				int timeToFinish = p.getStartTime() + p.getVertex().getBottomLevel();
-				if (timeToFinish > maxTimeToFinish) {
-					maxTimeToFinish = timeToFinish;
-				}
-			}
-		}
-		return maxTimeToFinish;
-		//Perfect load balance slows Nodes_11 down by ~40%
-//		return Math.max(maxTimeToFinish, (AStar.getSequentialTime() + totalIdleTime) / numProcessors);
-	}
-	
-	
-	/**
-	 * Returns that maximum total run time of all processors
-	 * @return
-	 */
-	public int getTimeLength(){
-		int maxTime = 0;
-		for (int i = 0; i < numProcessors; i++) {
-			int processorTime = processors[i].getFinishTime();
-			if (processorTime > maxTime) {
-				maxTime = processorTime;
-			}
-		}
-		return maxTime;
-	}
-	
-	//TODO candidate for optimisation. Maybe its better to maintain this between PartialSolutions, and just calculate new ones
-	//based on the vertex that is being added
-	public HashSet<Vertex> getAvailableVertices() {
-		HashSet<Vertex> availableVertices = new HashSet<>();
+		availableVertices = (HashSet<Vertex>) partialSolution.getAvailableVertices().clone();
+		idleTimes = partialSolution.getIdleTimes().clone();
+		finishTimes = partialSolution.getFinishTimes().clone();
 		
-		outerloop:
-		for (Vertex v : unallocatedVertices) {
-			for (DefaultWeightedEdge e : graph.incomingEdgesOf(v)) {
-				if (unallocatedVertices.contains(graph.getEdgeSource(e))) {//If any parent is unallocated
-					continue outerloop;
-				}
-			}
-			availableVertices.add(v); // Only make it here if we don't find an unallocated parent
-			
-		}
-		return availableVertices;
+		int startTime = calculateStartTime(v, processorNumber);
+		
+		allocatedVertices.put(v, new AllocationInfo(processorNumber, startTime));
+		unallocatedVertices.remove(v);
+		
+		updateAvailableVertices(v);
+		availableVertices.remove(v);
+		
+		idleTimes[processorNumber] += (startTime - finishTimes[processorNumber]);
+		
+		finishTimes[processorNumber] = (startTime + v.getWeight());
+		
+		calculateMinimumFinishTime(partialSolution, v);
+		
 	}
 	
-	/**
-	 * Gets the ProcessorTask storing the given vertex
-	 * @param v	Vertex 
-	 * @return
-	 */
-	public ProcessorTask getTask(Vertex v){
-		for (int i=0; i < numProcessors; i++){
-			for (ProcessorTask p : processors[i].tasks()) {
-				if (p.isForVertex(v)) {
-					return p;
-				}
-			}
-		}
-		//Shouldn't occur
-		return null;
+	//Could implement a clone() method and return a new object instead of all this stuff?
+	public int[] getIdleTimes() {
+		return idleTimes;
+	}
+	
+	public int[] getFinishTimes() {
+		return finishTimes;
+	}
+	
+	public int getMinimumFinishTime() {
+		return minimumFinishTime;
+	}
+	
+	public HashMap<Vertex, AllocationInfo> getAllocatedVertices() {
+		return allocatedVertices;
+	}
+	
+	public HashSet<Vertex> getAvailableVertices() {
+		return availableVertices;
 	}
 	
 	public HashSet<Vertex> getUnallocatedVertices() {
 		return unallocatedVertices;
 	}
 	
+	
+	private void updateAvailableVertices(Vertex vertexToBeAdded) {
+		for (DefaultWeightedEdge e1 : graph.outgoingEdgesOf(vertexToBeAdded)) {
+			Vertex targetVertex = graph.getEdgeTarget(e1);
+			for(DefaultWeightedEdge e2 : graph.incomingEdgesOf(targetVertex)) {
+				if (unallocatedVertices.contains(graph.getEdgeSource(e2))){
+					return;
+				}
+			}
+			availableVertices.add(targetVertex);
+		}
+	}
+	
+	private int calculateStartTime(Vertex vertexToAdd, byte processorNumber) {
+		int maxStartTime = 0;
+		for (DefaultWeightedEdge e : graph.incomingEdgesOf(vertexToAdd)) {
+			Vertex sourceVertex = graph.getEdgeSource(e);
+			AllocationInfo sourceVertexInfo = allocatedVertices.get(sourceVertex);
+			int finishTime = sourceVertexInfo.getStartTime() + sourceVertex.getWeight();
+			
+			if (processorNumber != sourceVertexInfo.getProcessorNumber()) {
+				finishTime += graph.getEdgeWeight(e);
+			}
+			
+			maxStartTime = Math.max(maxStartTime, finishTime);
+		}
+		
+		return Math.max(maxStartTime, finishTimes[processorNumber]);
+	}
+	
+	public void calculateMinimumFinishTime(PartialSolution p, Vertex v) {
+		int a = Math.max(p.getMinimumFinishTime(), allocatedVertices.get(v).getStartTime() + v.getBottomLevel());
+		minimumFinishTime = a;//TODO use load balance here as well
+	}
+	
 	@Override
 	public int hashCode() {
 		//This is cachable I think, as a partialSolution shouldn't change. would it help though?
-		return Arrays.hashCode(processors);
+		return allocatedVertices.hashCode();
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		return Arrays.equals(processors, ((PartialSolution) obj).getProcessors());
+		return allocatedVertices.equals( ((PartialSolution) obj).getAllocatedVertices()); 
 	}	
 	
 	/**
@@ -182,14 +166,11 @@ public class PartialSolution {
 	 */
 	public void printDetails() {
 		System.out.println(unallocatedVertices.size() + " unallocated vertices.");
-		for (int i = 0; i < numProcessors; i++) {
-			System.out.print("Processor " + i + " finishes at " + processors[i].getFinishTime());
-			for (ProcessorTask p : processors[i].tasks()) {
-				System.out.print(" || " + p.toString());
-			}
-			System.out.println();
+		for (Map.Entry<Vertex, AllocationInfo> entry : allocatedVertices.entrySet()) {
+			Vertex v = entry.getKey();
+			AllocationInfo a = entry.getValue();
+			System.out.println("Task: " + v.getName() + " starts at " + a.getStartTime() + " on processor " + a.getProcessorNumber() + " and finished at " + (a.getStartTime() + v.getWeight()));
 		}
-		
 	}
 	
 }

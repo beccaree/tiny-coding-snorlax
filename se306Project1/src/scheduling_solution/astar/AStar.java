@@ -10,7 +10,7 @@ import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 
 public class AStar {
-	private GraphInterface<Vertex, DefaultWeightedEdge> graph;
+	public static GraphInterface<Vertex, DefaultWeightedEdge> graph;
 	PriorityQueue<PartialSolution> unexploredSolutions;
 	Set<PartialSolution> exploredSolutions;
 	final byte numProcessors;
@@ -36,6 +36,7 @@ public class AStar {
 	 */
 	public PartialSolution calculateOptimalSolution() {
 		
+		// Create a crude upper bound for pruning
 		for (Vertex v : graph.vertexSet()) {
 			sequentialTime += v.getWeight();
 		}
@@ -45,6 +46,9 @@ public class AStar {
 		 
 		 while (true) {
 			solutionsPopped++;
+			if (solutionsPopped == 4) {
+				System.out.println();
+			}
 			
 			 //priority list of unexplored solutions
 			PartialSolution currentSolution = unexploredSolutions.poll();
@@ -54,18 +58,21 @@ public class AStar {
 				return currentSolution;
 			} else {
 				for (Vertex v : currentSolution.getAvailableVertices()) {
-					for (int processor= 0; processor < numProcessors; processor++) {
+					for (byte processor= 0; processor < numProcessors; processor++) {
 						//Get the start time of the new vertex that is too be added to solution
-						int startTime = calculateStartTime(currentSolution, v, processor);
+//						int startTime = calculateStartTime(currentSolution, v, processor);
 						
 						//add vertex into solution
-						PartialSolution newSolution = new PartialSolution(graph, currentSolution, v, processor, startTime);
+						PartialSolution newSolution = new PartialSolution(graph, currentSolution, v, processor);
 						
+						/*Log memory for optimisation purposes */
 						long mem = Runtime.getRuntime().totalMemory();
 						if (mem > maxMemory) {
 							maxMemory = mem;
 						}
 						solutionsCreated++;
+						
+						//Only add the solution to the priority queue if it passes the pruning check
 						if (isViable(newSolution)) {
 							unexploredSolutions.add(newSolution);
 						}
@@ -83,10 +90,9 @@ public class AStar {
 	public void getStartStates() {
 		for (Vertex v : graph.vertexSet()) {
 			if (graph.inDegreeOf(v) == 0) {
-				unexploredSolutions.add(new PartialSolution(graph, numProcessors, v, 0));//TODO is it ok to add them all to processor 1?
+				unexploredSolutions.add(new PartialSolution(graph, numProcessors, v, (byte)0));//TODO is it ok to add them all to processor 0? Pretty sure it is
 			}
 		}
-		
 	}
 	
 	/**
@@ -96,7 +102,6 @@ public class AStar {
 	 */
 	public boolean isComplete(PartialSolution p) {
 		return p.getUnallocatedVertices().size() == 0;
-		
 	}
 	
 	public PriorityQueue<PartialSolution> getUnexploredSolutions() {
@@ -107,40 +112,7 @@ public class AStar {
 	public static int getSequentialTime() {
 		return sequentialTime;
 	}
-	
-	
-	/**
-	 * Calculates the start time of the given Vertex in the allocated processor
-	 * Checks all parent nodes of the vertex and calculates when it would be able to start after that vertex.
-	 * The maximum value is returned.
-	 * @param partialSolution	Solution thus far
-	 * @param v					Vertex to find start time for
-	 * @param processorNumber	Processor allocated to
-	 * @return
-	 */
-	public int calculateStartTime(PartialSolution partialSolution, Vertex v, int processorNumber) {
-		int maxStartTime = 0;
-		for (DefaultWeightedEdge e : graph.incomingEdgesOf(v)) {
-			Vertex sourceVertex = graph.getEdgeSource(e);
-			ProcessorTask processorTask = partialSolution.getTask(sourceVertex);
-			int finishTime = processorTask.getStartTime() + sourceVertex.getWeight();
-			if (processorTask.getProcessorNumber() != processorNumber) {
-				finishTime += graph.getEdgeWeight(e);
-			}
-			if (finishTime > maxStartTime) {
-				maxStartTime = finishTime;
-			}
-		}
-		
-		int processorFinishTime = partialSolution.getProcessor(processorNumber).getFinishTime();
-		
-		if (processorFinishTime > maxStartTime) {
-			maxStartTime = processorFinishTime;
-		}
-		
-		return maxStartTime;
-	}
-	
+
 	/**
 	 * Checks to see if a solution has no chance of being an optimal solution, using all pruning/bound checks
 	 * Can get a simple upper bound by adding all vertices together (== running them all sequentially on one processor)
@@ -149,10 +121,10 @@ public class AStar {
 	 * @return
 	 */
 	private boolean isViable(PartialSolution partialSolution) {
-		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumTime() > sequentialTime ) {
-			solutionsPruned++;
-			return false;
-		}
+//		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumTime() > sequentialTime ) {
+//			solutionsPruned++;
+//			return false;
+//		}
 
 		return true;
 	}
