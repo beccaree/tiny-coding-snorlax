@@ -49,7 +49,7 @@ public class PartialSolution {
 		unallocatedVertices.addAll(graph.vertexSet());
 		unallocatedVertices.remove(v);
 		
-		availableVertices = (HashSet<Vertex>) AStar.startingVertices.clone();
+		availableVertices = (HashSet<Vertex>) AStar.startingVertices.clone(); //Not very object oriented either
 		availableVertices.remove(v);
 		updateAvailableVertices(v);
 		
@@ -85,7 +85,6 @@ public class PartialSolution {
 		
 		idleTimes[processorNumber] += (startTime - finishTimes[processorNumber]);
 		
-		assert (finishTimes[processorNumber] > startTime);
 		finishTimes[processorNumber] = (startTime + v.getWeight());
 		
 		calculateMinimumFinishTime(partialSolution, v);
@@ -118,16 +117,26 @@ public class PartialSolution {
 	}
 	
 	
+	/**
+	 * Adds any children of the vertex to be added which have all of their parents allocated
+	 * @param vertexToBeAdded : should not be in unallocated at the time of this method call
+	 */
 	private void updateAvailableVertices(Vertex vertexToBeAdded) {
-		outerloop:
+		
 		for (DefaultWeightedEdge e1 : graph.outgoingEdgesOf(vertexToBeAdded)) {
+			
 			Vertex targetVertex = graph.getEdgeTarget(e1);
+			boolean hasAllocatedParent = false;
+			
 			for(DefaultWeightedEdge e2 : graph.incomingEdgesOf(targetVertex)) {
 				if (unallocatedVertices.contains(graph.getEdgeSource(e2))){
-					continue outerloop;
+					hasAllocatedParent = true;
+					break;
 				}
 			}
-			availableVertices.add(targetVertex);
+			if (!hasAllocatedParent) {
+				availableVertices.add(targetVertex);
+			}
 		}
 	}
 	
@@ -197,6 +206,21 @@ public class PartialSolution {
 			Vertex v = entry.getKey();
 			AllocationInfo a = entry.getValue();
 			System.out.println("Task: " + v.getName() + " starts at " + a.getStartTime() + " on processor " + a.getProcessorNumber() + " and finished at " + (a.getStartTime() + v.getWeight()));
+		}
+	}
+	
+	public void verify() {
+		for (Map.Entry<Vertex, AllocationInfo> entry : allocatedVertices.entrySet()) {
+			Vertex vertex = entry.getKey();
+			AllocationInfo info = entry.getValue();
+			for (DefaultWeightedEdge e : graph.incomingEdgesOf(vertex)) {
+				Vertex parent = graph.getEdgeSource(e);
+				AllocationInfo parentInfo = allocatedVertices.get(parent);
+				if(info.getStartTime() < parentInfo.getStartTime() + parent.getWeight()) {
+					System.out.println("===== Solution is incorrect! =====");
+					System.out.println("Vertex " + vertex.getName() + " starts at " + info.getStartTime() + " but parent "  + parent.getName() + " finished at " + (parentInfo.getStartTime() + parent.getWeight()));
+				}
+			}
 		}
 	}
 	

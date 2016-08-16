@@ -27,7 +27,7 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/Nodes_11_OutTree.dot", "2"};
+		args = new String[]{"tests/Nodes_11_OutTree.dot", "4"};
 		
 		long startTime = System.currentTimeMillis();
 
@@ -47,6 +47,9 @@ public class Main {
 		System.out.println("Max memory (MB): " + astar.maxMemory /1024/1024);
 		long finishTime = System.currentTimeMillis();
 		System.out.println("Time taken: " + (finishTime - startTime));
+		
+		p.verify();//TODO remove
+		
 		//Basic milestone: Produce any schedule
 //		List<Vertex> topologicalSort = TopologicalSortGenerator.calculate(graph);
 //		
