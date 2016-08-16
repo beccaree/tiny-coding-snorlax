@@ -11,6 +11,8 @@ import scheduling_solution.graph.Vertex;
 
 public class AStar {
 	public static GraphInterface<Vertex, DefaultWeightedEdge> graph;
+	public static HashSet<Vertex> startingVertices;
+	
 	PriorityQueue<PartialSolution> unexploredSolutions;
 	Set<PartialSolution> exploredSolutions;
 	final byte numProcessors;
@@ -26,6 +28,7 @@ public class AStar {
 		AStar.graph = graph;
 		unexploredSolutions = new PriorityQueue<>(new PartialSolutionComparator());
 		exploredSolutions = new HashSet<>();
+		startingVertices = new HashSet<>();
 		this.numProcessors = numProcessors;
 	}
 	
@@ -42,7 +45,8 @@ public class AStar {
 		}
 		
 		//Get initial vertices of solution
-		getStartStates();
+		initialiseStartingVertices();
+		initialiseStartStates();
 		 
 		 while (true) {
 			solutionsPopped++;
@@ -84,10 +88,16 @@ public class AStar {
 	/**
 	 * Initialises the PriorityQueue with the possible starting states
 	 */
-	public void getStartStates() {
+	public void initialiseStartStates() {
+		for (Vertex v : startingVertices) {
+			unexploredSolutions.add(new PartialSolution(graph, numProcessors, v, (byte)0));//TODO is it ok to add them all to processor 0? Pretty sure it is
+		}
+	}
+	
+	private void initialiseStartingVertices() {
 		for (Vertex v : graph.vertexSet()) {
 			if (graph.inDegreeOf(v) == 0) {
-				unexploredSolutions.add(new PartialSolution(graph, numProcessors, v, (byte)0));//TODO is it ok to add them all to processor 0? Pretty sure it is
+				startingVertices.add(v);
 			}
 		}
 	}
@@ -118,10 +128,10 @@ public class AStar {
 	 * @return
 	 */
 	private boolean isViable(PartialSolution partialSolution) {
-//		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumTime() > sequentialTime ) {
-//			solutionsPruned++;
-//			return false;
-//		}
+		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumFinishTime() > sequentialTime ) {
+			solutionsPruned++;
+			return false;
+		}
 
 		return true;
 	}

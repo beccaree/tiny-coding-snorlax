@@ -27,7 +27,7 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/Nodes_10_Random.dot", "2"};
+		args = new String[]{"tests/Nodes_11_OutTree.dot", "2"};
 		
 		long startTime = System.currentTimeMillis();
 

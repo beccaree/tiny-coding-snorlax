@@ -61,7 +61,7 @@ public class TestAStar extends TestCase {
 		AStar astar = new AStar(graph, (byte) 2);
 		
 		//Checks if the number of start states is what is expected
-		astar.getStartStates();
+		astar.initialiseStartStates();
 		unexploredSolutions = astar.getUnexploredSolutions();
 		assertEquals("Number of start states is different than what was expected", 1, unexploredSolutions.size());
 		
@@ -105,7 +105,7 @@ public class TestAStar extends TestCase {
 		AStar astar = new AStar(graph, (byte) 2);
 		
 		//Checks if the number of start states is what is expected
-		astar.getStartStates();
+		astar.initialiseStartStates();
 		unexploredSolutions = astar.getUnexploredSolutions();
 		assertEquals("Number of start states is different than what was expected", 10, unexploredSolutions.size());
 		
@@ -163,7 +163,7 @@ public class TestAStar extends TestCase {
 		AStar astar = new AStar(graph, (byte) 3);
 		
 		//Checks if the number of start states is what is expected
-		astar.getStartStates();
+		astar.initialiseStartStates();
 		unexploredSolutions = astar.getUnexploredSolutions();
 		assertEquals("Number of start states is different than what was expected", 4, unexploredSolutions.size());
 		

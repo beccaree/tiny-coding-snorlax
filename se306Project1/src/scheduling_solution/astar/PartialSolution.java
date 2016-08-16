@@ -49,7 +49,8 @@ public class PartialSolution {
 		unallocatedVertices.addAll(graph.vertexSet());
 		unallocatedVertices.remove(v);
 		
-		availableVertices = new HashSet<>();
+		availableVertices = (HashSet<Vertex>) AStar.startingVertices.clone();
+		availableVertices.remove(v);
 		updateAvailableVertices(v);
 		
 		minimumFinishTime = v.getBottomLevel();
@@ -84,6 +85,7 @@ public class PartialSolution {
 		
 		idleTimes[processorNumber] += (startTime - finishTimes[processorNumber]);
 		
+		assert (finishTimes[processorNumber] > startTime);
 		finishTimes[processorNumber] = (startTime + v.getWeight());
 		
 		calculateMinimumFinishTime(partialSolution, v);
@@ -129,6 +131,12 @@ public class PartialSolution {
 		}
 	}
 	
+	/**
+	 * Calculates the earliest time a vertex can be added to a processor
+	 * @param vertexToAdd
+	 * @param processorNumber
+	 * @return
+	 */
 	private int calculateStartTime(Vertex vertexToAdd, byte processorNumber) {
 		int maxStartTime = 0;
 		for (DefaultWeightedEdge e : graph.incomingEdgesOf(vertexToAdd)) {
@@ -146,9 +154,27 @@ public class PartialSolution {
 		return Math.max(maxStartTime, finishTimes[processorNumber]);
 	}
 	
+	/**
+	 * Calculates the largest underestimate of when a solution could finish for use in the comparator.
+	 * It is the maximum of the parent solutions finish time and the finish time of the last allocated vertex
+	 * @param p
+	 * @param v
+	 */
 	public void calculateMinimumFinishTime(PartialSolution p, Vertex v) {
-		int a = Math.max(p.getMinimumFinishTime(), allocatedVertices.get(v).getStartTime() + v.getBottomLevel());
-		minimumFinishTime = a;//TODO use load balance here as well
+		int j = Math.max(p.getMinimumFinishTime(), allocatedVertices.get(v).getStartTime() + v.getBottomLevel());
+//		minimumFinishTime = a;//TODO use load balance here as well
+//		int i = 0;
+//		
+//		for (Map.Entry<Vertex, AllocationInfo> entry : allocatedVertices.entrySet()) {
+//			Vertex vertex = entry.getKey();
+//			AllocationInfo a = entry.getValue();
+//			i = Math.max(i, a.getStartTime() + vertex.getBottomLevel());
+//		}
+//		if (i != j) {
+//			System.out.println("i != j");
+//		}
+		
+		minimumFinishTime = j;
 	}
 	
 	@Override
