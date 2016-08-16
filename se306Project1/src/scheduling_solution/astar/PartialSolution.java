@@ -117,11 +117,12 @@ public class PartialSolution {
 	
 	
 	private void updateAvailableVertices(Vertex vertexToBeAdded) {
+		outerloop:
 		for (DefaultWeightedEdge e1 : graph.outgoingEdgesOf(vertexToBeAdded)) {
 			Vertex targetVertex = graph.getEdgeTarget(e1);
 			for(DefaultWeightedEdge e2 : graph.incomingEdgesOf(targetVertex)) {
 				if (unallocatedVertices.contains(graph.getEdgeSource(e2))){
-					return;
+					continue outerloop;
 				}
 			}
 			availableVertices.add(targetVertex);

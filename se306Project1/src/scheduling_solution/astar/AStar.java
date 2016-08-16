@@ -23,7 +23,7 @@ public class AStar {
 	public long maxMemory = 0;
 	
 	public AStar(GraphInterface<Vertex, DefaultWeightedEdge> graph, byte numProcessors) {
-		this.graph = graph;
+		AStar.graph = graph;
 		unexploredSolutions = new PriorityQueue<>(new PartialSolutionComparator());
 		exploredSolutions = new HashSet<>();
 		this.numProcessors = numProcessors;
@@ -46,9 +46,6 @@ public class AStar {
 		 
 		 while (true) {
 			solutionsPopped++;
-			if (solutionsPopped == 4) {
-				System.out.println();
-			}
 			
 			 //priority list of unexplored solutions
 			PartialSolution currentSolution = unexploredSolutions.poll();
