@@ -31,7 +31,7 @@ public class GraphVisualisation extends JFrame {
 	JLabel minCost = new JLabel("0");
 	JLabel numbThreads = new JLabel("0");
 	
-	public GraphVisualisation(Graph gsGraph, long startTime, int numbProc) {
+	public GraphVisualisation(Graph gsGraph, final long startTime, int numbProc) {
 		setTitle("Process Visualisation");
 		setBounds(50, 50, 900, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -24,7 +24,7 @@ public class AStar {
 	
 	public AStar(GraphInterface<Vertex, DefaultWeightedEdge> graph, byte numProcessors) {
 		this.graph = graph;
-		unexploredSolutions = new PriorityQueue<>(new PartialSolutionComparator());
+		unexploredSolutions = new PriorityQueue<>(1000, new PartialSolutionComparator());
 		exploredSolutions = new HashSet<>();
 		this.numProcessors = numProcessors;
 	}
