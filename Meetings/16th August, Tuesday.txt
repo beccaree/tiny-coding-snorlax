@@ -1,1 +1,19 @@
 Meeting 11 - All members present
+
+- Meeting in Leech
+
+- Delegated tasks to complete for final project
+	- Sabrina and Kristy to debug code written by Stefan in order to write unit tests
+	- Rebecca to continue working on visualisation - Formatting final JFame
+	- Isabel to start report writing
+
+- Progress:
+	- A* implemented but not fully functioning for large graphs
+	- JFrame with GraphStream displays
+
+- Todo:
+	- Debug A*
+	- Create new unit tests
+	- Research about parallelisation
+	- Finish visualisation
+	

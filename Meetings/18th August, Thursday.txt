@@ -1,0 +1,14 @@
+Meeting 12 - All members present
+
+- Meeting Leech 
+
+Todo:
+	- Fix AStar test : Stefan, Sabrina and Isabel
+	- Sabrina to try brute force if A* is fixed
+	- Kristy to test A* start to finish
+	- Isabel to continue on report
+	- Rebecca continue of visualisation
+
+	- Once A* fully implemented
+		-Start paralellisation:
+			Swing worker threads?
