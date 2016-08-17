@@ -94,7 +94,7 @@ public class AStar {
 		}
 	}
 	
-	private void initialiseStartingVertices() {
+	public void initialiseStartingVertices() {
 		for (Vertex v : graph.vertexSet()) {
 			if (graph.inDegreeOf(v) == 0) {
 				startingVertices.add(v);
