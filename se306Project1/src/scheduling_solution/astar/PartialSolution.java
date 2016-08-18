@@ -1,6 +1,5 @@
 package scheduling_solution.astar;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -10,14 +9,16 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 
-//TODO dont pass graph in constructor, make it static and access it from elsewhere to save memory
+@SuppressWarnings("unchecked")
 public class PartialSolution {
 	private GraphInterface<Vertex, DefaultWeightedEdge> graph;
 
 	private byte numProcessors;
 	
-	private int[] idleTimes;
+	private int totalIdleTime;
 	private int[] finishTimes;
+	
+	private Integer hashcode = null;
 	
 	private HashMap<Vertex, AllocationInfo> allocatedVertices;
 	private HashSet<Vertex> availableVertices;
@@ -38,7 +39,7 @@ public class PartialSolution {
 		this.graph = graph;
 		this.numProcessors = numProcessors;
 		
-		idleTimes = new int[numProcessors];
+		totalIdleTime = 0;
 		finishTimes = new int[numProcessors];
 		finishTimes[processorNumber] = v.getWeight();
 		
@@ -68,11 +69,12 @@ public class PartialSolution {
 	public PartialSolution(GraphInterface<Vertex, DefaultWeightedEdge> graph, PartialSolution partialSolution, Vertex v, byte processorNumber) {
 		this.graph = graph;
 		this.numProcessors = partialSolution.numProcessors;//TODO getter
-		
+
+		totalIdleTime = partialSolution.getTotalIdleTime();
 		allocatedVertices = (HashMap<Vertex, AllocationInfo>) partialSolution.getAllocatedVertices().clone();
 		unallocatedVertices = (HashSet<Vertex>) partialSolution.getUnallocatedVertices().clone();
 		availableVertices = (HashSet<Vertex>) partialSolution.getAvailableVertices().clone();
-		idleTimes = partialSolution.getIdleTimes().clone();
+
 		finishTimes = partialSolution.getFinishTimes().clone();
 		
 		int startTime = calculateStartTime(v, processorNumber);
@@ -83,17 +85,15 @@ public class PartialSolution {
 		updateAvailableVertices(v);
 		availableVertices.remove(v);
 		
-		idleTimes[processorNumber] += (startTime - finishTimes[processorNumber]);
+		totalIdleTime += (startTime - finishTimes[processorNumber]);
 		
 		finishTimes[processorNumber] = (startTime + v.getWeight());
 		
 		calculateMinimumFinishTime(partialSolution, v);
-		
 	}
 	
-	//Could implement a clone() method and return a new object instead of all this stuff?
-	public int[] getIdleTimes() {
-		return idleTimes;
+	public int getTotalIdleTime() {
+		return totalIdleTime;
 	}
 	
 	public int[] getFinishTimes() {
@@ -115,8 +115,7 @@ public class PartialSolution {
 	public HashSet<Vertex> getUnallocatedVertices() {
 		return unallocatedVertices;
 	}
-	
-	
+		
 	/**
 	 * Adds any children of the vertex to be added which have all of their parents allocated
 	 * @param vertexToBeAdded : should not be in unallocated at the time of this method call
@@ -171,25 +170,19 @@ public class PartialSolution {
 	 */
 	public void calculateMinimumFinishTime(PartialSolution p, Vertex v) {
 		int j = Math.max(p.getMinimumFinishTime(), allocatedVertices.get(v).getStartTime() + v.getBottomLevel());
-//		minimumFinishTime = a;//TODO use load balance here as well
-//		int i = 0;
-//		
-//		for (Map.Entry<Vertex, AllocationInfo> entry : allocatedVertices.entrySet()) {
-//			Vertex vertex = entry.getKey();
-//			AllocationInfo a = entry.getValue();
-//			i = Math.max(i, a.getStartTime() + vertex.getBottomLevel());
-//		}
-//		if (i != j) {
-//			System.out.println("i != j");
-//		}
-		
+		j = Math.max(j, ((AStar.getSequentialTime() + totalIdleTime) / numProcessors));
 		minimumFinishTime = j;
 	}
 	
 	@Override
 	public int hashCode() {
-		//This is cachable I think, as a partialSolution shouldn't change. would it help though?
-		return allocatedVertices.hashCode();
+		//I'm not sure if caching it actually helps, as this should only get called once.
+		//This technically uses more memory
+		if (hashcode == null) {
+			hashcode = allocatedVertices.hashCode();
+		}
+		
+		return hashcode;
 	}
 	
 	@Override
