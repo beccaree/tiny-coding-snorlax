@@ -47,36 +47,33 @@ public class AStar {
 		//Get initial vertices of solution
 		initialiseStartingVertices();
 		initialiseStartStates();
-		 
-		 while (true) {
+
+		while (true) {
 			solutionsPopped++;
-			
-			if (solutionsPopped % 10000 == 0) {
-				System.out.println(solutionsPopped);
-			}
-			 //priority list of unexplored solutions
+
+			// priority list of unexplored solutions
 			PartialSolution currentSolution = unexploredSolutions.poll();
-			
-			//check partial solution has all vertices allocated
+
+			// check partial solution has all vertices allocated
 			if (isComplete(currentSolution)) {
 				return currentSolution;
 			} else {
 				for (Vertex v : currentSolution.getAvailableVertices()) {
-					for (byte processor= 0; processor < numProcessors; processor++) {
-						//Get the start time of the new vertex that is too be added to solution
-//						int startTime = calculateStartTime(currentSolution, v, processor);
-						
-						//add vertex into solution
-						PartialSolution newSolution = new PartialSolution(graph, currentSolution, v, processor);
-						
-						/*Log memory for optimisation purposes */
+					for (byte processor = 0; processor < numProcessors; processor++) {
+
+						// add vertex into solution
+						PartialSolution newSolution = new PartialSolution(
+								graph, currentSolution, v, processor);
+
+						/* Log memory for optimisation purposes */
 						long mem = Runtime.getRuntime().totalMemory();
 						if (mem > maxMemory) {
 							maxMemory = mem;
 						}
 						solutionsCreated++;
-						
-						//Only add the solution to the priority queue if it passes the pruning check
+
+						// Only add the solution to the priority queue if it
+						// passes the pruning check
 						if (isViable(newSolution)) {
 							unexploredSolutions.add(newSolution);
 						}
@@ -84,8 +81,8 @@ public class AStar {
 				}
 				exploredSolutions.add(currentSolution);
 			}
-			
-		 }
+
+		}
 	}
 
 	/**
@@ -118,7 +115,7 @@ public class AStar {
 		return unexploredSolutions;
 	}
 	
-	/*Not very object-oriented*/
+	/*Not very object-oriented, but saves time due to not having to calculate it multiple times*/
 	public static int getSequentialTime() {
 		return sequentialTime;
 	}
@@ -138,6 +135,5 @@ public class AStar {
 
 		return true;
 	}
-	
 }
 
