@@ -36,7 +36,7 @@ public class Main {
 		BottomLevelCalculator.calculate(graph);
 		
 		GraphVisualisation display = new GraphVisualisation(GraphParser.getDisplayGraph());
-		
+
 		AStar astar = new AStar(graph,  numProcessors);
 		PartialSolution p = astar.calculateOptimalSolution();
 		
@@ -47,6 +47,9 @@ public class Main {
 		System.out.println("Max memory (MB): " + astar.maxMemory /1024/1024);
 		long finishTime = System.currentTimeMillis();
 		System.out.println("Time taken: " + (finishTime - startTime));
+		
+		p.verify();//TODO remove
+		
 		//Basic milestone: Produce any schedule
 //		List<Vertex> topologicalSort = TopologicalSortGenerator.calculate(graph);
 //		

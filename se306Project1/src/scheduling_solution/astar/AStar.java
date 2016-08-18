@@ -10,7 +10,9 @@ import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 
 public class AStar {
-	private GraphInterface<Vertex, DefaultWeightedEdge> graph;
+	public static GraphInterface<Vertex, DefaultWeightedEdge> graph;
+	public static HashSet<Vertex> startingVertices;
+	
 	PriorityQueue<PartialSolution> unexploredSolutions;
 	Set<PartialSolution> exploredSolutions;
 	final byte numProcessors;
@@ -23,9 +25,10 @@ public class AStar {
 	public long maxMemory = 0;
 	
 	public AStar(GraphInterface<Vertex, DefaultWeightedEdge> graph, byte numProcessors) {
-		this.graph = graph;
-		unexploredSolutions = new PriorityQueue<>(new PartialSolutionComparator());
+		AStar.graph = graph;
+		unexploredSolutions = new PriorityQueue<>(1000, new PartialSolutionComparator());
 		exploredSolutions = new HashSet<>();
+		startingVertices = new HashSet<>();
 		this.numProcessors = numProcessors;
 	}
 	
@@ -36,39 +39,41 @@ public class AStar {
 	 */
 	public PartialSolution calculateOptimalSolution() {
 		
+		// Create a crude upper bound for pruning
 		for (Vertex v : graph.vertexSet()) {
 			sequentialTime += v.getWeight();
 		}
 		
 		//Get initial vertices of solution
-		getStartStates();
-		 
-		 while (true) {
+		initialiseStartingVertices();
+		initialiseStartStates();
+
+		while (true) {
 			solutionsPopped++;
-			
-			 //priority list of unexplored solutions
+
+			// priority list of unexplored solutions
 			PartialSolution currentSolution = unexploredSolutions.poll();
-			
-			//check partial solution has all vertices allocated
+
+			// check partial solution has all vertices allocated
 			if (isComplete(currentSolution)) {
 				return currentSolution;
 			} else {
 				for (Vertex v : currentSolution.getAvailableVertices()) {
-					for (int processor= 0; processor < numProcessors; processor++) {
-						//Get the start time of the new vertex that is too be added to solution
-						int startTime = calculateStartTime(currentSolution, v, processor);
-						
-						//add vertex into solution
-						PartialSolution newSolution = new PartialSolution(graph, currentSolution, v, processor, startTime);
-						
-						//Store the greatest total amount of memory 
+					for (byte processor = 0; processor < numProcessors; processor++) {
+						// add vertex into solution
+						PartialSolution newSolution = new PartialSolution(
+								graph, currentSolution, v, processor);
+
+						/* Log memory for optimisation purposes */
 						long mem = Runtime.getRuntime().totalMemory();
 						if (mem > maxMemory) {
 							maxMemory = mem;
 						}
 						solutionsCreated++;
-						
-						//Check if new solution is worth further exploring
+
+						// Only add the solution to the priority queue if it
+						// passes the pruning check
+
 						if (isViable(newSolution)) {
 							unexploredSolutions.add(newSolution);
 						}
@@ -76,20 +81,25 @@ public class AStar {
 				}
 				exploredSolutions.add(currentSolution);
 			}
-			
-		 }
+
+		}
 	}
 
 	/**
 	 * Initialises the PriorityQueue with the possible starting states
 	 */
-	public void getStartStates() {
+	public void initialiseStartStates() {
+		for (Vertex v : startingVertices) {
+			unexploredSolutions.add(new PartialSolution(graph, numProcessors, v, (byte)0));//TODO is it ok to add them all to processor 0? Pretty sure it is
+		}
+	}
+	
+	public void initialiseStartingVertices() {
 		for (Vertex v : graph.vertexSet()) {
 			if (graph.inDegreeOf(v) == 0) {
-				unexploredSolutions.add(new PartialSolution(graph, numProcessors, v, 0));//TODO is it ok to add them all to processor 1?
+				startingVertices.add(v);
 			}
 		}
-		
 	}
 	
 	/**
@@ -98,18 +108,18 @@ public class AStar {
 	 * @return	True - all vertices have been allocated
 	 */
 	public boolean isComplete(PartialSolution p) {
-		return p.getAllocatedVertices().size() == graph.vertexSet().size();
-		
+		return p.getUnallocatedVertices().size() == 0;
 	}
 	
 	public PriorityQueue<PartialSolution> getUnexploredSolutions() {
 		return unexploredSolutions;
 	}
 	
-	/*Not very object-oriented*/
+	/*Not very object-oriented, but saves time due to not having to calculate it multiple times*/
 	public static int getSequentialTime() {
 		return sequentialTime;
 	}
+<<<<<<< HEAD
 	
 	
 	/**
@@ -149,6 +159,9 @@ public class AStar {
 		return maxStartTime;
 	}
 	
+=======
+
+>>>>>>> refs/remotes/origin/memory-optimisation
 	/**
 	 * Checks to see if a solution has no chance of being an optimal solution, using all pruning/bound checks
 	 * Can get a simple upper bound by adding all vertices together (== running them all sequentially on one processor)
@@ -157,14 +170,17 @@ public class AStar {
 	 * @return True - if the given ParticalSolution has a chance of being an optimal solution
 	 */
 	private boolean isViable(PartialSolution partialSolution) {
+<<<<<<< HEAD
 		//Check if solution has already been explored or if the minimum time of solution is greater than the current time
 		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumTime() > sequentialTime ) {
+=======
+		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumFinishTime() > sequentialTime ) {
+>>>>>>> refs/remotes/origin/memory-optimisation
 			solutionsPruned++;
 			return false;
 		}
 
 		return true;
 	}
-	
 }
 

@@ -1,4 +1,4 @@
-package scheduling_solution.astar;
+ package scheduling_solution.astar;
 
 import java.util.HashSet;
 

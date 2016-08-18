@@ -12,8 +12,8 @@ public class PartialSolutionComparator implements Comparator<PartialSolution> {
 	 * 			0 - Both  partialSolution are equal
 	 */
 	public int compare(PartialSolution p1, PartialSolution p2) {
-		int t1 = p1.getMinimumTime();
-		int t2 = p2.getMinimumTime();
+		int t1 = p1.getMinimumFinishTime();
+		int t2 = p2.getMinimumFinishTime();
 		
 		if (t1 > t2) {
 			return 1;
