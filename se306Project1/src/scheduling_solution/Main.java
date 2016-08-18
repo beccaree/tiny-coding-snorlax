@@ -27,7 +27,7 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/Nodes_11_OutTree.dot", "2"};
+		args = new String[]{"tests/Nodes_11_OutTree.dot", "4"};
 		
 		long startTime = System.currentTimeMillis();
 
@@ -35,7 +35,7 @@ public class Main {
 		GraphInterface<Vertex, DefaultWeightedEdge> graph = GraphParser.parse(inputFileName);
 		BottomLevelCalculator.calculate(graph);
 		
-		//new GraphVisualisation(GraphParser.getDisplayGraph());
+//		new GraphVisualisation(GraphParser.getDisplayGraph());
 		
 		AStar astar = new AStar(graph,  numProcessors);
 		PartialSolution p = astar.calculateOptimalSolution();

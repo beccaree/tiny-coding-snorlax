@@ -173,7 +173,11 @@ public class PartialSolution {
 //		if (i != j) {
 //			System.out.println("i != j");
 //		}
-		
+		int totalIdleTime = 0;
+		for (int i = 0; i < numProcessors; i++) {
+			totalIdleTime += idleTimes[i];
+		}
+		j = Math.max(j, ((AStar.getSequentialTime() + totalIdleTime) / numProcessors));
 		minimumFinishTime = j;
 	}
 	
