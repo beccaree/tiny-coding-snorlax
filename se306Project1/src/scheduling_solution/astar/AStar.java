@@ -10,7 +10,7 @@ import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 
 public class AStar {
-	public static GraphInterface<Vertex, DefaultWeightedEdge> graph;
+	public GraphInterface<Vertex, DefaultWeightedEdge> graph;
 	public static HashSet<Vertex> startingVertices;
 	
 	PriorityQueue<PartialSolution> unexploredSolutions;
@@ -25,7 +25,7 @@ public class AStar {
 	public long maxMemory = 0;
 	
 	public AStar(GraphInterface<Vertex, DefaultWeightedEdge> graph, byte numProcessors) {
-		AStar.graph = graph;
+		this.graph = graph;
 		unexploredSolutions = new PriorityQueue<>(1000, new PartialSolutionComparator());
 		exploredSolutions = new HashSet<>();
 		startingVertices = new HashSet<>();
@@ -119,49 +119,8 @@ public class AStar {
 	public static int getSequentialTime() {
 		return sequentialTime;
 	}
-<<<<<<< HEAD
 	
 	
-	/**
-	 * Calculates the start time of the given Vertex in the allocated processor
-	 * Checks all parent nodes of the vertex and calculates when it would be able to start after that vertex.
-	 * The maximum value is returned.
-	 * @param partialSolution	Solution thus far
-	 * @param v					Vertex to find start time for
-	 * @param processorNumber	Processor allocated to
-	 * @return start time of the given vertex
-	 */
-	public int calculateStartTime(PartialSolution partialSolution, Vertex v, int processorNumber) {
-		//great start time value for vertex v
-		int maxStartTime = 0;
-		
-		//Go through all the Source vertex (vertices that vertex v must be executed after)
-		for (DefaultWeightedEdge e : graph.incomingEdgesOf(v)) {
-			Vertex sourceVertex = graph.getEdgeSource(e);
-			
-			//Find the greatest finish time of out of all the source vertices
-			ProcessorTask processorTask = partialSolution.getTask(sourceVertex);
-			int finishTime = processorTask.getStartTime() + sourceVertex.getWeight();	
-			//If the process to be added is not on the same processor, add the edge weight
-			if (processorTask.getProcessorNumber() != processorNumber) {
-				finishTime += graph.getEdgeWeight(e);
-			}
-			if (finishTime > maxStartTime) {
-				maxStartTime = finishTime;
-			}
-		}
-		//check if finish time of the processor is greater than greatest start time value of vertex v
-		int processorFinishTime = partialSolution.getProcessor(processorNumber).getFinishTime();		
-		if (processorFinishTime > maxStartTime) {
-			maxStartTime = processorFinishTime;
-		}
-		
-		return maxStartTime;
-	}
-	
-=======
-
->>>>>>> refs/remotes/origin/memory-optimisation
 	/**
 	 * Checks to see if a solution has no chance of being an optimal solution, using all pruning/bound checks
 	 * Can get a simple upper bound by adding all vertices together (== running them all sequentially on one processor)
@@ -170,12 +129,7 @@ public class AStar {
 	 * @return True - if the given ParticalSolution has a chance of being an optimal solution
 	 */
 	private boolean isViable(PartialSolution partialSolution) {
-<<<<<<< HEAD
-		//Check if solution has already been explored or if the minimum time of solution is greater than the current time
-		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumTime() > sequentialTime ) {
-=======
 		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumFinishTime() > sequentialTime ) {
->>>>>>> refs/remotes/origin/memory-optimisation
 			solutionsPruned++;
 			return false;
 		}
