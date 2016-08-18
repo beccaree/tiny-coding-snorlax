@@ -173,10 +173,77 @@ public class PartialSolution {
 	 * @param v
 	 */
 	public void calculateMinimumFinishTime(PartialSolution p, Vertex v) {
-		int j = Math.max(p.getMinimumFinishTime(), allocatedVertices.get(v).getStartTime() + v.getBottomLevel());
-		j = Math.max(j, ((AStar.getSequentialTime() + totalIdleTime) / numProcessors));
-		minimumFinishTime = j;
+		int maxHeuristic = Math.max(p.getMinimumFinishTime(), allocatedVertices.get(v).getStartTime() + v.getBottomLevel());
+		maxHeuristic = Math.max(maxHeuristic, ((AStar.getSequentialTime() + totalIdleTime) / numProcessors));
+		//maxHeuristic = Math.max(maxHeuristic, calculateEarliestUnallocatedVertexFinishTime());
+		minimumFinishTime = maxHeuristic;
 	}
+	
+	/**
+	 * This function calculates the earliest time that an unallocated node can finish.
+	 * It must take into account all allocated parents.
+	 * @return
+	 */
+	private int calculateEarliestUnallocatedVertexFinishTime() {
+		
+		int minDataReadyTime = Integer.MAX_VALUE;
+		
+		
+		//Triple nested for loop may slow down program
+		//Get the MINIMUM for all nodes
+		for (Vertex v : unallocatedVertices) {
+			int minVertexStartTime = Integer.MAX_VALUE;
+			
+			
+			//Pretend we will allocate the vertex on proc, get the MINIMUM for all processors
+			for (byte proc = 0; proc < numProcessors; proc++) {
+				int minVertexStartTimeOnProcessor = 0;
+			
+				//Get the MAXIMUM start time based on all parents
+				for (DefaultWeightedEdge e : graph.incomingEdgesOf(v)) {
+					Vertex parentVertex = graph.getEdgeSource(e); 
+					if (!unallocatedVertices.contains(parentVertex)) {
+						AllocationInfo parentInfo = allocatedVertices.get(parentVertex);
+						int parentFinishTime = parentInfo.getStartTime() + parentVertex.getWeight();
+						
+						if (parentInfo.getProcessorNumber() != proc) {
+							parentFinishTime += graph.getEdgeWeight(e);
+						}
+						
+						minVertexStartTimeOnProcessor = Math.max(minVertexStartTimeOnProcessor, parentFinishTime);
+					}
+
+				}
+
+				minVertexStartTime = Math.min(minVertexStartTime, finishTimes[proc]);
+			}
+			
+			minDataReadyTime = Math.min(minDataReadyTime, minVertexStartTime);
+
+		}
+
+		return minDataReadyTime;
+	}
+//			int minVertexStartTime = Integer.MAX_VALUE;
+//			
+//			//First get the earliest finish time based on all parents.
+//			for (DefaultWeightedEdge e : graph.incomingEdgesOf(v)) {
+//				Vertex sourceVertex = graph.getEdgeSource(e); 
+//				
+//				if (!unallocatedVertices.contains(sourceVertex)) {
+//					minVertexStartTime = Math.min(minVertexStartTime, allocatedVertices.get(sourceVertex).getStartTime() + sourceVertex.getWeight());
+//				}
+//				
+//			}
+//			
+//			//Then get the earliest processor finish time
+//			for (byte proc = 0; proc < numProcessors; proc++) {
+//				minVertexStartTime = Math.min(minVertexStartTime, finishTimes[proc]);
+//			}
+//			
+//			minDataReadyTime = Math.max(minDataReadyTime, minVertexStartTime + v.getBottomLevel());
+			
+	
 	
 	@Override
 	public int hashCode() {
