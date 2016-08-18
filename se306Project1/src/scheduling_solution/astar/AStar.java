@@ -8,6 +8,7 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
+import scheduling_solution.visualisation.GraphVisualisation;
 
 public class AStar {
 	public GraphInterface<Vertex, DefaultWeightedEdge> graph;
@@ -80,8 +81,8 @@ public class AStar {
 					}
 				}
 				exploredSolutions.add(currentSolution);
+				GraphVisualisation.updateQueueSize(unexploredSolutions.size(), exploredSolutions.size());
 			}
-
 		}
 	}
 

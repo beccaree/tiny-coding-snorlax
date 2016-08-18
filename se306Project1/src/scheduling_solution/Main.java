@@ -35,12 +35,14 @@ public class Main {
 		GraphInterface<Vertex, DefaultWeightedEdge> graph = GraphParser.parse(inputFileName);
 		BottomLevelCalculator.calculate(graph);
 		
-		GraphVisualisation display = new GraphVisualisation(GraphParser.getDisplayGraph(), startTime, numProcessors);
+		//if (isVisualised) {
+			new GraphVisualisation(GraphParser.getDisplayGraph(), startTime, numProcessors, Integer.toString(numThreads));
+		//}
 		
 		AStar astar = new AStar(graph,  numProcessors);
 		PartialSolution p = astar.calculateOptimalSolution();
 		
-		display.stopTimer();
+		GraphVisualisation.stopTimer();
 		p.printDetails();
 		System.out.println("Solutions created: " + astar.solutionsCreated);
 		System.out.println("Solutions popped: " + astar.solutionsPopped);
