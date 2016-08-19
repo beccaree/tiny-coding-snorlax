@@ -1,0 +1,12 @@
+Meeting 13 - All members present
+
+UG4 Labs
+
+Tasks Allocated:
+	- Stefan to research parallelisation
+	- Rebecca and Sabrina to work on visualisation
+	- Isabel and Kristy to create additional tests to validate B&B with A*
+	- Isabel to carry on with report writing
+
+Further tasks:
+	- Implement more pruning with A*

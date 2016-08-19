@@ -10,5 +10,5 @@ Todo:
 	- Rebecca continue of visualisation
 
 	- Once A* fully implemented
-		-Start paralellisation:
-			Swing worker threads?
+		-Start parallelisation:
+		Swing worker threads?
