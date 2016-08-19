@@ -175,18 +175,17 @@ public class PartialSolution {
 	public void calculateMinimumFinishTime(PartialSolution p, Vertex v) {
 		int maxHeuristic = Math.max(p.getMinimumFinishTime(), allocatedVertices.get(v).getStartTime() + v.getBottomLevel());
 		maxHeuristic = Math.max(maxHeuristic, ((AStar.getSequentialTime() + totalIdleTime) / numProcessors));
-		//maxHeuristic = Math.max(maxHeuristic, calculateEarliestUnallocatedVertexFinishTime());
+//		maxHeuristic = Math.max(maxHeuristic, calculateEarliestUnallocatedVertexFinishTime());
 		minimumFinishTime = maxHeuristic;
 	}
 	
 	/**
-	 * This function calculates the earliest time that an unallocated node can finish.
-	 * It must take into account all allocated parents.
+	 * This function calculates the maximum finish time of the currently available vertices..
+	 * Doesn't appear to prune any solutions for any graph, so it is commented out above.
 	 * @return
 	 */
 	private int calculateEarliestUnallocatedVertexFinishTime() {
-		
-		int minDataReadyTime = Integer.MAX_VALUE;
+		int minDataReadyTime = 0;
 		
 		
 		//Triple nested for loop may slow down program
