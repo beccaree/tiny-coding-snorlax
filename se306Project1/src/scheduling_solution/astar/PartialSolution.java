@@ -11,20 +11,20 @@ import scheduling_solution.graph.Vertex;
 
 @SuppressWarnings("unchecked")
 public class PartialSolution {
-	private GraphInterface<Vertex, DefaultWeightedEdge> graph;
+	protected GraphInterface<Vertex, DefaultWeightedEdge> graph;
 
-	private byte numProcessors;
+	protected byte numProcessors;
 	
-	private int totalIdleTime;
-	private int[] finishTimes;
+	protected int totalIdleTime;
+	protected int[] finishTimes;
 	
-	private Integer hashcode = null;
+	protected Integer hashcode = null;
 	
-	private HashMap<Vertex, AllocationInfo> allocatedVertices;
-	private HashSet<Vertex> availableVertices;
-	private HashSet<Vertex> unallocatedVertices;
+	protected HashMap<Vertex, AllocationInfo> allocatedVertices;
+	protected HashSet<Vertex> availableVertices;
+	protected HashSet<Vertex> unallocatedVertices;
 	
-	private int minimumFinishTime = 0;
+	protected int minimumFinishTime = 0;
 	
 	/**
 	 * Creates an new PartialSolution with an array for processors and their tasks
@@ -50,7 +50,7 @@ public class PartialSolution {
 		unallocatedVertices.addAll(graph.vertexSet());
 		unallocatedVertices.remove(v);
 		
-		availableVertices = (HashSet<Vertex>) AStar.startingVertices.clone(); //Not very object oriented either
+		getStartingVertices();
 		availableVertices.remove(v);
 		updateAvailableVertices(v);
 		
@@ -124,7 +124,7 @@ public class PartialSolution {
 	 * Adds any children of the vertex to be added which have all of their parents allocated
 	 * @param vertexToBeAdded : should not be in unallocated at the time of this method call
 	 */
-	private void updateAvailableVertices(Vertex vertexToBeAdded) {
+	protected void updateAvailableVertices(Vertex vertexToBeAdded) {
 		
 		for (DefaultWeightedEdge e1 : graph.outgoingEdgesOf(vertexToBeAdded)) {
 			
@@ -149,7 +149,7 @@ public class PartialSolution {
 	 * @param processorNumber
 	 * @return
 	 */
-	private int calculateStartTime(Vertex vertexToAdd, byte processorNumber) {
+	protected int calculateStartTime(Vertex vertexToAdd, byte processorNumber) {
 		int maxStartTime = 0;
 		for (DefaultWeightedEdge e : graph.incomingEdgesOf(vertexToAdd)) {
 			Vertex sourceVertex = graph.getEdgeSource(e);
@@ -212,6 +212,10 @@ public class PartialSolution {
 	public boolean equals(Object obj) {
 		return allocatedVertices.equals( ((PartialSolution) obj).getAllocatedVertices()); 
 	}	
+	
+	protected void getStartingVertices() {
+		availableVertices = (HashSet<Vertex>) AStar.startingVertices.clone(); //Not very object oriented either
+	}
 	
 	/**
 	 * Used for debugging a solution

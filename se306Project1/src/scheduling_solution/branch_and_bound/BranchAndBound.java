@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
+import scheduling_solution.branch_and_bound.PartialSolution;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 
