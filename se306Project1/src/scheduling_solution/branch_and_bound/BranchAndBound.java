@@ -3,7 +3,6 @@ package scheduling_solution.branch_and_bound;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
@@ -16,13 +15,15 @@ public class BranchAndBound {
 	
 	public static GraphInterface<Vertex, DefaultWeightedEdge> graph;
 	private static int numProcessors = 1;
-	private static int bestBound = 1000;//TODO infinity
+	private static int bestBound = 10000;//TODO infinity
 	private static PartialSolution currentBest = null;
 	private static Queue<PartialSolution> activeStates;
+	private static HashSet<Vertex> startVertices;
 	
 	public static PartialSolution calculateOptimalSolution(GraphInterface<Vertex, DefaultWeightedEdge> graph, int numProcessors) {
 		BranchAndBound.graph = graph;
 		BranchAndBound.numProcessors = numProcessors;
+		activeStates = new LinkedList<PartialSolution>();
 		
 		getStartStates();
 		
@@ -58,7 +59,7 @@ public class BranchAndBound {
 	//Gets starting partial solutions
 	public static void getStartStates() {
 		
-		ArrayList<Vertex> startVertices = new ArrayList<Vertex>();
+		startVertices = new HashSet<Vertex>();
 		Set<Vertex> vertices = graph.vertexSet();
 		
 		//Add vertices in graph with no parents to startVertices
@@ -78,7 +79,15 @@ public class BranchAndBound {
 	}
 	
 	public static int getFinishTime(PartialSolution p) {
-		return p.getFinishTime();
+		int[] processorFinishTimes = p.getFinishTimes();
+		
+		int finishTime = 0;
+		
+		for (int i=0; i < processorFinishTimes.length; i++) {
+			finishTime = Math.max(finishTime, processorFinishTimes[i]);
+		}
+		
+		return finishTime;
 	}
 	
 	public static int getMinimumFinishTime(PartialSolution p) {
@@ -86,26 +95,11 @@ public class BranchAndBound {
 	}
 
 	public static ArrayList<PartialSolution> getChildren(PartialSolution p) {
+		
 		ArrayList<PartialSolution> children = new ArrayList<PartialSolution>();
-		ArrayList<Vertex> nextVertices = new ArrayList<Vertex>();
+		HashSet<Vertex> availableVertices = p.getAvailableVertices();
 		
-		Vertex lastVertex = p.getLastVertex();
-		
-		if (graph.outDegreeOf(lastVertex) != 0) {
-			outerloop:
-			for (DefaultWeightedEdge e1 : graph.outgoingEdgesOf(lastVertex)) {
-				Vertex childVertex = graph.getEdgeTarget(e1);
-				for (DefaultWeightedEdge e2 : graph.incomingEdgesOf(childVertex)) {
-					Vertex parentVertex = graph.getEdgeSource(e2);
-					if (p.getUnAllocatedVertices().contains(parentVertex)) {
-						continue outerloop;
-					}
-				}
-				nextVertices.add(childVertex);
-			}
-		}
-		
-		for (Vertex v : nextVertices) {
+		for (Vertex v : availableVertices) {
 			for (int i = 0; i < numProcessors; i++) {
 				PartialSolution child = new PartialSolution(graph, p, v, (byte) i);
 				children.add(child);
@@ -117,7 +111,20 @@ public class BranchAndBound {
 	
 
 	public static boolean isComplete(PartialSolution p) {
-		return p.getUnAllocatedVertices().size() == 0;
+		return p.getUnallocatedVertices().size() == 0;
+	}
+	
+	public static HashSet<Vertex> getStartVertices() {
+		return BranchAndBound.startVertices;
+	}
+	
+	public static int getSequentialTime() {
+		int sequentialTime = 0;
+		
+		for (Vertex v : graph.vertexSet()) {
+			sequentialTime += v.getWeight();
+		}
+		return sequentialTime;
 	}
 
 }
