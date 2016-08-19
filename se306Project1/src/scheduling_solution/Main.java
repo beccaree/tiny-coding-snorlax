@@ -6,6 +6,7 @@ import org.jgrapht.traverse.TopologicalOrderIterator;
 import com.sun.jndi.toolkit.ctx.PartialCompositeContext;
 
 import scheduling_solution.astar.AStar;
+import scheduling_solution.astar.AStarVisuals;
 import scheduling_solution.astar.PartialSolution;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
@@ -36,13 +37,15 @@ public class Main {
 		BottomLevelCalculator.calculate(graph);
 		
 		//if (isVisualised) {
-			new GraphVisualisation(GraphParser.getDisplayGraph(), startTime, numProcessors, Integer.toString(numThreads));
+		//	GraphVisualisation visuals = new GraphVisualisation(GraphParser.getDisplayGraph(), startTime, numProcessors, Integer.toString(numThreads));
+		//	AStarVisuals astar = new AStarVisuals(graph,  numProcessors, visuals);
+		//	PartialSolution p = astar.calculateOptimalSolution();
 		//}
 		
 		AStar astar = new AStar(graph,  numProcessors);
 		PartialSolution p = astar.calculateOptimalSolution();
 		
-		GraphVisualisation.stopTimer();
+		//GraphVisualisation.stopTimer();
 		p.printDetails();
 		System.out.println("Solutions created: " + astar.solutionsCreated);
 		System.out.println("Solutions popped: " + astar.solutionsPopped);

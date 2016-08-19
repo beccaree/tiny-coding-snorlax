@@ -96,7 +96,7 @@ public class GraphVisualisation extends JFrame {
 		programEnded = true;
 	}
 
-	public static void updateQueueSize(int openSize, int closedSize) {
+	public void updateQueueSize(int openSize, int closedSize) {
 		// updates the labels in the display for open queue and closed queue
 		lblOpenQ.setText(Integer.toString(openSize));
 		lblClosedQ.setText(Integer.toString(closedSize));		

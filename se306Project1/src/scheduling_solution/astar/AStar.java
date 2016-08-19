@@ -18,7 +18,7 @@ public class AStar {
 	Set<PartialSolution> exploredSolutions;
 	final byte numProcessors;
 	
-	private static int sequentialTime = 0;
+	public static int sequentialTime = 0;
 	
 	public int solutionsPopped = 0;
 	public int solutionsCreated = 0;
@@ -81,7 +81,6 @@ public class AStar {
 					}
 				}
 				exploredSolutions.add(currentSolution);
-				GraphVisualisation.updateQueueSize(unexploredSolutions.size(), exploredSolutions.size());
 			}
 		}
 	}
@@ -129,7 +128,7 @@ public class AStar {
 	 * @param partialSolution
 	 * @return True - if the given ParticalSolution has a chance of being an optimal solution
 	 */
-	private boolean isViable(PartialSolution partialSolution) {
+	public boolean isViable(PartialSolution partialSolution) {
 		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumFinishTime() > sequentialTime ) {
 			solutionsPruned++;
 			return false;
