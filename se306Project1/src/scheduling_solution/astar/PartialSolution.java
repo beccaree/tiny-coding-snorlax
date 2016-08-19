@@ -100,6 +100,18 @@ public class PartialSolution {
 		return finishTimes;
 	}
 	
+	/**
+	 * Gets the actual finishing time 
+	 * @return
+	 */
+	public int getFinishTime() {
+		int finishTime = 0;
+		for (int i = 0; i < numProcessors; i++) {
+			finishTime = Math.max(finishTime, finishTimes[i]);
+		}
+		return finishTime;
+	}
+	
 	public int getMinimumFinishTime() {
 		return minimumFinishTime;
 	}
@@ -223,26 +235,6 @@ public class PartialSolution {
 
 		return minDataReadyTime;
 	}
-//			int minVertexStartTime = Integer.MAX_VALUE;
-//			
-//			//First get the earliest finish time based on all parents.
-//			for (DefaultWeightedEdge e : graph.incomingEdgesOf(v)) {
-//				Vertex sourceVertex = graph.getEdgeSource(e); 
-//				
-//				if (!unallocatedVertices.contains(sourceVertex)) {
-//					minVertexStartTime = Math.min(minVertexStartTime, allocatedVertices.get(sourceVertex).getStartTime() + sourceVertex.getWeight());
-//				}
-//				
-//			}
-//			
-//			//Then get the earliest processor finish time
-//			for (byte proc = 0; proc < numProcessors; proc++) {
-//				minVertexStartTime = Math.min(minVertexStartTime, finishTimes[proc]);
-//			}
-//			
-//			minDataReadyTime = Math.max(minDataReadyTime, minVertexStartTime + v.getBottomLevel());
-			
-	
 	
 	@Override
 	public int hashCode() {

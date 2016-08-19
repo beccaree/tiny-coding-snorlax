@@ -1,5 +1,10 @@
 package scheduling_solution;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.traverse.TopologicalOrderIterator;
 
@@ -30,6 +35,13 @@ public class Main {
 	public static void main(String[] args) {
 		args = new String[]{"tests/Nodes_11_OutTree.dot", "4"};
 		
+		//TODO remve
+		try {
+			System.setErr(new PrintStream(new FileOutputStream(new File("errlog.txt"))));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 		long startTime = System.currentTimeMillis();
 
 		parseArgs(args);
@@ -43,7 +55,7 @@ public class Main {
 		//}
 		
 		AStar astar = new AStar(graph,  numProcessors);
-		PartialSolution p = astar.calculateOptimalSolution();
+		PartialSolution p = astar.calculateOptimalSolution(4);
 		
 		//GraphVisualisation.stopTimer();
 		p.printDetails();
@@ -53,6 +65,9 @@ public class Main {
 		System.out.println("Max memory (MB): " + astar.maxMemory /1024/1024);
 		long finishTime = System.currentTimeMillis();
 		System.out.println("Time taken: " + (finishTime - startTime));
+		
+		
+		
 		
 		p.verify();//TODO remove
 		

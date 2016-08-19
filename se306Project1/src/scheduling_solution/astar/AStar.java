@@ -1,8 +1,10 @@
 package scheduling_solution.astar;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
@@ -14,8 +16,8 @@ public class AStar {
 	public GraphInterface<Vertex, DefaultWeightedEdge> graph;
 	public static HashSet<Vertex> startingVertices;
 	
-	PriorityQueue<PartialSolution> unexploredSolutions;
-	Set<PartialSolution> exploredSolutions;
+	PriorityBlockingQueue<PartialSolution> unexploredSolutions;
+	Set<PartialSolution> exploredSolutions = Collections.synchronizedSet(new HashSet<PartialSolution>());
 	final byte numProcessors;
 	
 	public static int sequentialTime = 0;
@@ -27,7 +29,7 @@ public class AStar {
 	
 	public AStar(GraphInterface<Vertex, DefaultWeightedEdge> graph, byte numProcessors) {
 		this.graph = graph;
-		unexploredSolutions = new PriorityQueue<>(1000, new PartialSolutionComparator());
+		unexploredSolutions = new PriorityBlockingQueue<>(1000, new PartialSolutionComparator());
 		exploredSolutions = new HashSet<>();
 		startingVertices = new HashSet<>();
 		this.numProcessors = numProcessors;
@@ -38,7 +40,9 @@ public class AStar {
 	 * @param graph - weighted digraph
 	 * @return optimal PartialSolution object
 	 */
-	public PartialSolution calculateOptimalSolution() {
+	public PartialSolution calculateOptimalSolution(int nThreads) {
+		
+		PartialSolution[] resultList = new PartialSolution[nThreads];
 		
 		// Create a crude upper bound for pruning
 		for (Vertex v : graph.vertexSet()) {
@@ -49,42 +53,47 @@ public class AStar {
 		initialiseStartingVertices();
 		initialiseStartStates();
 
-		while (true) {
-			solutionsPopped++;
-
-			// priority list of unexplored solutions
-			PartialSolution currentSolution = unexploredSolutions.poll();
-
-			// check partial solution has all vertices allocated
-			if (isComplete(currentSolution)) {
-				return currentSolution;
-			} else {
-				for (Vertex v : currentSolution.getAvailableVertices()) {
-					for (byte processor = 0; processor < numProcessors; processor++) {
-						// add vertex into solution
-						PartialSolution newSolution = new PartialSolution(
-								graph, currentSolution, v, processor);
-
-						/* Log memory for optimisation purposes */
-						long mem = Runtime.getRuntime().totalMemory();
-						if (mem > maxMemory) {
-							maxMemory = mem;
-						}
-						solutionsCreated++;
-
-						// Only add the solution to the priority queue if it
-						// passes the pruning check
-
-						if (isViable(newSolution)) {
-							unexploredSolutions.add(newSolution);
-						}
-					}
-				}
-				exploredSolutions.add(currentSolution);
+		//CREATE AND START THREADS HERE
+		AStarRunnable[] runnables = new AStarRunnable[nThreads];
+		Thread threads[] = new Thread[nThreads];
+		
+		for (int i = 1; i < nThreads; i++) {
+			runnables[i] = new AStarRunnable(i, graph, unexploredSolutions, resultList, exploredSolutions, numProcessors);
+			threads[i] = new Thread(runnables[i]);
+			threads[i].start();
+		}
+		
+		runnables[0] = new AStarRunnable(0, graph, unexploredSolutions, resultList, exploredSolutions, numProcessors);
+		runnables[0].run();
+		
+		for (int i = 1; i < nThreads; i++) {
+			try {
+				threads[i].join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
+		
+		PartialSolution bestSolution = resultList[0];
+		resultList[0].printDetails();
+		System.out.println("============");
+		for (int i = 1; i < nThreads; i++) {
+			resultList[i].printDetails();
+			System.out.println("============");
+			if (bestSolution.getFinishTime() < resultList[i].getFinishTime()) {
+				bestSolution = resultList[i];
+			}
+		}
+		
+		for(int i = 0; i < nThreads; i++ ) {
+			System.out.println("sol popped " + runnables[i].solutionsPopped);
+		}
+		
+		return bestSolution;
+		
 	}
-
+	
+	
 	/**
 	 * Initialises the PriorityQueue with the possible starting states
 	 */
@@ -102,16 +111,9 @@ public class AStar {
 		}
 	}
 	
-	/**
-	 * Checks if partial solution has allocated all vertices
-	 * @param Partical solution to check
-	 * @return	True - all vertices have been allocated
-	 */
-	public boolean isComplete(PartialSolution p) {
-		return p.getUnallocatedVertices().size() == 0;
-	}
 	
-	public PriorityQueue<PartialSolution> getUnexploredSolutions() {
+	
+	public PriorityBlockingQueue<PartialSolution> getUnexploredSolutions() {
 		return unexploredSolutions;
 	}
 	
@@ -128,13 +130,6 @@ public class AStar {
 	 * @param partialSolution
 	 * @return True - if the given ParticalSolution has a chance of being an optimal solution
 	 */
-	public boolean isViable(PartialSolution partialSolution) {
-		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumFinishTime() > sequentialTime ) {
-			solutionsPruned++;
-			return false;
-		}
-
-		return true;
-	}
+	
 }
 
