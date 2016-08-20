@@ -55,7 +55,7 @@ public class Main {
 		//}
 		
 		AStar astar = new AStar(graph,  numProcessors);
-		PartialSolution p = astar.calculateOptimalSolution(4);
+		PartialSolution p = astar.calculateOptimalSolution();
 		
 		//GraphVisualisation.stopTimer();
 		p.printDetails();
