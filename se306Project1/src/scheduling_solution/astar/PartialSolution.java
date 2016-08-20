@@ -199,43 +199,16 @@ public class PartialSolution {
 	private int calculateEarliestUnallocatedVertexFinishTime() {
 		int minDataReadyTime = 0;
 		
-		
-		//Triple nested for loop may slow down program
-		//Get the MINIMUM for all nodes
-		for (Vertex v : unallocatedVertices) {
-			int minVertexStartTime = Integer.MAX_VALUE;
-			
-			
-			//Pretend we will allocate the vertex on proc, get the MINIMUM for all processors
+		for (Vertex v : availableVertices) {
+			int minStartTime = Integer.MAX_VALUE;
 			for (byte proc = 0; proc < numProcessors; proc++) {
-				int minVertexStartTimeOnProcessor = 0;
-			
-				//Get the MAXIMUM start time based on all parents
-				for (DefaultWeightedEdge e : graph.incomingEdgesOf(v)) {
-					Vertex parentVertex = graph.getEdgeSource(e); 
-					if (!unallocatedVertices.contains(parentVertex)) {
-						AllocationInfo parentInfo = allocatedVertices.get(parentVertex);
-						int parentFinishTime = parentInfo.getStartTime() + parentVertex.getWeight();
-						
-						if (parentInfo.getProcessorNumber() != proc) {
-							parentFinishTime += graph.getEdgeWeight(e);
-						}
-						
-						minVertexStartTimeOnProcessor = Math.max(minVertexStartTimeOnProcessor, parentFinishTime);
-					}
-
-				}
-
-				minVertexStartTime = Math.min(minVertexStartTime, finishTimes[proc]);
+				minStartTime = Math.min(minStartTime, calculateStartTime(v, proc));
 			}
-			
-			minDataReadyTime = Math.min(minDataReadyTime, minVertexStartTime);
-
+			minDataReadyTime = Math.max(minDataReadyTime, minStartTime);
 		}
-
 		return minDataReadyTime;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		//I'm not sure if caching it actually helps, as this should only get called once.
