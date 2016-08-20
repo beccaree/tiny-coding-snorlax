@@ -6,7 +6,7 @@ import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 import scheduling_solution.visualisation.GraphVisualisation;
 
-public class AStarVisuals extends AStar {
+public class AStarVisuals extends AStarSeq {
 	
 	private GraphVisualisation visualisation;
 

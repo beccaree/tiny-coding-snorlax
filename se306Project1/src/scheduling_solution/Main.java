@@ -10,7 +10,9 @@ import org.jgrapht.traverse.TopologicalOrderIterator;
 
 import com.sun.jndi.toolkit.ctx.PartialCompositeContext;
 
-import scheduling_solution.astar.AStar;
+import pj.Pyjama;
+import scheduling_solution.astar.AStarSeq;
+//import scheduling_solution.astar.AStarSeq;
 import scheduling_solution.astar.AStarVisuals;
 import scheduling_solution.astar.PartialSolution;
 import scheduling_solution.graph.GraphInterface;
@@ -35,13 +37,6 @@ public class Main {
 	public static void main(String[] args) {
 		args = new String[]{"tests/Nodes_11_OutTree.dot", "4"};
 		
-		//TODO remve
-		try {
-			System.setErr(new PrintStream(new FileOutputStream(new File("errlog.txt"))));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
 		long startTime = System.currentTimeMillis();
 
 		parseArgs(args);
@@ -53,8 +48,7 @@ public class Main {
 		//	AStarVisuals astar = new AStarVisuals(graph,  numProcessors, visuals);
 		//	PartialSolution p = astar.calculateOptimalSolution();
 		//}
-		
-		AStar astar = new AStar(graph,  numProcessors);
+		AStarSeq astar = new AStarSeq(graph,  numProcessors);
 		PartialSolution p = astar.calculateOptimalSolution();
 		
 		//GraphVisualisation.stopTimer();

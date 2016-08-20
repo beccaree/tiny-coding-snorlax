@@ -79,7 +79,7 @@ public class AStarRunnable implements Runnable{
 	}
 	
 	public boolean isViable(PartialSolution partialSolution) {
-		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumFinishTime() > AStar.getSequentialTime()) {
+		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumFinishTime() > AStarSeq.getSequentialTime()) {
 //			solutionsPruned++;
 			return false;
 		}

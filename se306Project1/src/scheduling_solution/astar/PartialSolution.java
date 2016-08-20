@@ -50,7 +50,7 @@ public class PartialSolution {
 		unallocatedVertices.addAll(graph.vertexSet());
 		unallocatedVertices.remove(v);
 		
-		availableVertices = (HashSet<Vertex>) AStar.startingVertices.clone(); //Not very object oriented either
+		availableVertices = (HashSet<Vertex>) AStarSeq.startingVertices.clone(); //Not very object oriented either
 		availableVertices.remove(v);
 		updateAvailableVertices(v);
 		
@@ -186,7 +186,7 @@ public class PartialSolution {
 	 */
 	public void calculateMinimumFinishTime(PartialSolution p, Vertex v) {
 		int maxHeuristic = Math.max(p.getMinimumFinishTime(), allocatedVertices.get(v).getStartTime() + v.getBottomLevel());
-		maxHeuristic = Math.max(maxHeuristic, ((AStar.getSequentialTime() + totalIdleTime) / numProcessors));
+		maxHeuristic = Math.max(maxHeuristic, ((AStarSeq.getSequentialTime() + totalIdleTime) / numProcessors));
 //		maxHeuristic = Math.max(maxHeuristic, calculateEarliestUnallocatedVertexFinishTime());
 		minimumFinishTime = maxHeuristic;
 	}
