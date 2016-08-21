@@ -40,15 +40,7 @@ public class AStarSeq {
 	 */
 	public PartialSolution calculateOptimalSolution() {
 		
-		// Create a crude upper bound for pruning
-		sequentialTime = new Integer(0);
-		for (Vertex v : graph.vertexSet()) {
-			sequentialTime += v.getWeight();
-		}
-		
-		//Get initial vertices of solution
-		initialiseStartingVertices();
-		initialiseStartStates();
+		initialise();
 
 		while (true) {
 			solutionsPopped++;
@@ -82,6 +74,23 @@ public class AStarSeq {
 			}
 		}
 	}
+	
+	/**
+	 * Initialises a crude upper bound (sequentialTime) as well as the starting
+	 * vertices
+	 */
+	protected void initialise() {
+		// Create a crude upper bound for pruning
+		sequentialTime = new Integer(0);
+		for (Vertex v : graph.vertexSet()) {
+			sequentialTime += v.getWeight();
+		}
+		PartialSolution.setSequentialTime(sequentialTime);
+
+		// Get initial vertices of solution
+		initialiseStartingVertices();
+		initialiseStartStates();
+	}
 
 	/**
 	 * Initialises the PriorityQueue with the possible starting states
@@ -111,11 +120,6 @@ public class AStarSeq {
 	
 	public PriorityQueue<PartialSolution> getUnexploredSolutions() {
 		return unexploredSolutions;
-	}
-	
-	/*Not very object-oriented, but saves time due to not having to calculate it multiple times*/
-	public static Integer getSequentialTime() {
-		return sequentialTime;
 	}
 	
 	

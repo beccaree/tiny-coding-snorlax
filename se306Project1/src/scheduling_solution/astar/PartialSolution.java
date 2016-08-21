@@ -26,6 +26,9 @@ public class PartialSolution {
 	
 	private int minimumFinishTime = 0;
 	
+	private static Integer sequentialTime = null; //null to make sure that we initialise it
+	private static HashSet<Vertex> startingVertices;
+	
 	/**
 	 * Creates an new PartialSolution with an array for processors and their tasks
 	 * Adds the initial vertex 
@@ -50,7 +53,7 @@ public class PartialSolution {
 		unallocatedVertices.addAll(graph.vertexSet());
 		unallocatedVertices.remove(v);
 		
-		availableVertices = (HashSet<Vertex>) AStarSeq.startingVertices.clone(); //Not very object oriented either
+		availableVertices = (HashSet<Vertex>) AStarParallelThreads.startingVertices.clone(); //Not very object oriented either
 		availableVertices.remove(v);
 		updateAvailableVertices(v);
 		
@@ -186,7 +189,7 @@ public class PartialSolution {
 	 */
 	public void calculateMinimumFinishTime(PartialSolution p, Vertex v) {
 		int maxHeuristic = Math.max(p.getMinimumFinishTime(), allocatedVertices.get(v).getStartTime() + v.getBottomLevel());
-		maxHeuristic = Math.max(maxHeuristic, ((AStarSeq.getSequentialTime() + totalIdleTime) / numProcessors));
+		maxHeuristic = Math.max(maxHeuristic, ((PartialSolution.sequentialTime + totalIdleTime) / numProcessors));
 //		maxHeuristic = Math.max(maxHeuristic, calculateEarliestUnallocatedVertexFinishTime());
 		minimumFinishTime = maxHeuristic;
 	}
@@ -207,6 +210,19 @@ public class PartialSolution {
 			minDataReadyTime = Math.max(minDataReadyTime, minStartTime);
 		}
 		return minDataReadyTime;
+	}
+	
+	public static int getSequentialTime() {
+		return PartialSolution.sequentialTime;
+	}
+	
+	//Dont want to store a copy of this for all partial solutions
+	public static void setSequentialTime(int time) {
+		PartialSolution.sequentialTime = time;
+	}
+	
+	public static void setStartingVertices(HashSet<Vertex> startingVertices) {
+		PartialSolution.startingVertices = startingVertices;
 	}
 
 	@Override
