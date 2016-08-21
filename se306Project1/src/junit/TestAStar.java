@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import junit.framework.TestCase;
-import scheduling_solution.astar.AStar;
+import scheduling_solution.astar.AStarSeq;
 import scheduling_solution.astar.PartialSolution;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.JGraphTAdapter;
@@ -58,11 +58,11 @@ public class TestAStar extends TestCase {
 		graph.setEdgeWeight(edgecd, 1);
 		
 		//Runs Astar on the graph with 2 processors
-		AStar astar = new AStar(graph, (byte) 2);
+		AStarSeq astar = new AStarSeq(graph, (byte) 2);
 		
 		//Checks if the number of start states is what is expected
-		astar.initialiseStartStates();
-		unexploredSolutions = astar.getUnexploredSolutions();
+		astar.initialise();
+		unexploredSolutions = (PriorityQueue<PartialSolution>) astar.getUnexploredSolutions();
 		assertEquals("Number of start states is different than what was expected", 1, unexploredSolutions.size());
 		
 		//Checks that the start state is vertex "a"
@@ -102,11 +102,11 @@ public class TestAStar extends TestCase {
 		}
 		
 		//Runs Astar on the graph with 2 processors
-		AStar astar = new AStar(graph, (byte) 2);
+		AStarSeq astar = new AStarSeq(graph, (byte) 2);
 		
 		//Checks if the number of start states is what is expected
-		astar.initialiseStartStates();
-		unexploredSolutions = astar.getUnexploredSolutions();
+		astar.initialise();
+		unexploredSolutions = (PriorityQueue<PartialSolution>) astar.getUnexploredSolutions();
 		assertEquals("Number of start states is different than what was expected", 10, unexploredSolutions.size());
 		
 //		for (int i = 0; i < NUM_VERTICES; i++) {
@@ -160,11 +160,11 @@ public class TestAStar extends TestCase {
 		graph.setEdgeWeight(edge94, 1);
 		
 		//Runs Astar on the graph with 3 processors
-		AStar astar = new AStar(graph, (byte) 3);
+		AStarSeq astar = new AStarSeq(graph, (byte) 3);
 		
 		//Checks if the number of start states is what is expected
-		astar.initialiseStartStates();
-		unexploredSolutions = astar.getUnexploredSolutions();
+		astar.initialise();
+		unexploredSolutions = (PriorityQueue<PartialSolution>) astar.getUnexploredSolutions();
 		assertEquals("Number of start states is different than what was expected", 4, unexploredSolutions.size());
 		
 //		//Checks that the start state vertices are 0, 6, 8 and 9

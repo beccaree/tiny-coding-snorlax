@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
+import scheduling_solution.astar.threads.AStarParallelThreads;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 
@@ -29,6 +30,9 @@ public class PartialSolution {
 	protected ArrayList<ArrayList<String>> ganttChart;
 	
 	protected int minimumFinishTime = 0;
+	
+	private static Integer sequentialTime = null; //null to make sure that we initialise it
+	private static HashSet<Vertex> startingVertices;
 	
 	/**
 	 * Creates an new PartialSolution with an array for processors and their tasks
@@ -68,7 +72,7 @@ public class PartialSolution {
 		unallocatedVertices.addAll(graph.vertexSet());
 		unallocatedVertices.remove(v);
 		
-		getStartingVertices();
+		availableVertices = (HashSet<Vertex>) PartialSolution.startingVertices.clone(); 
 		availableVertices.remove(v);
 		updateAvailableVertices(v);
 		
@@ -120,6 +124,18 @@ public class PartialSolution {
 	
 	public int[] getFinishTimes() {
 		return finishTimes;
+	}
+	
+	/**
+	 * Gets the actual finishing time 
+	 * @return
+	 */
+	public int getFinishTime() {
+		int finishTime = 0;
+		for (int i = 0; i < numProcessors; i++) {
+			finishTime = Math.max(finishTime, finishTimes[i]);
+		}
+		return finishTime;
 	}
 	
 	public int getMinimumFinishTime() {
@@ -196,7 +212,7 @@ public class PartialSolution {
 	 */
 	public void calculateMinimumFinishTime(PartialSolution p, Vertex v) {
 		int maxHeuristic = Math.max(p.getMinimumFinishTime(), allocatedVertices.get(v).getStartTime() + v.getBottomLevel());
-		maxHeuristic = Math.max(maxHeuristic, ((AStar.getSequentialTime() + totalIdleTime) / numProcessors));
+		maxHeuristic = Math.max(maxHeuristic, ((PartialSolution.sequentialTime + totalIdleTime) / numProcessors));
 //		maxHeuristic = Math.max(maxHeuristic, calculateEarliestUnallocatedVertexFinishTime());
 		minimumFinishTime = maxHeuristic;
 	}
@@ -218,11 +234,24 @@ public class PartialSolution {
 		}
 		return minDataReadyTime;
 	}
-		
+	
+	public static int getSequentialTime() {
+		return PartialSolution.sequentialTime;
+	}
+	
+	//Dont want to store a copy of this for all partial solutions
+	public static void setSequentialTime(int time) {
+		PartialSolution.sequentialTime = time;
+	}
+	
+	public static void setStartingVertices(HashSet<Vertex> startingVertices) {
+		PartialSolution.startingVertices = startingVertices;
+	}
+
 	@Override
 	public int hashCode() {
 		//I'm not sure if caching it actually helps, as this should only get called once.
-		//This technically uses more memory
+		//This technically uses more memory because we are storing it
 		if (hashcode == null) {
 			hashcode = allocatedVertices.hashCode();
 		}
@@ -235,9 +264,6 @@ public class PartialSolution {
 		return allocatedVertices.equals( ((PartialSolution) obj).getAllocatedVertices()); 
 	}	
 	
-	protected void getStartingVertices() {
-		availableVertices = (HashSet<Vertex>) AStar.startingVertices.clone(); //Not very object oriented either
-	}
 	
 	/**
 	 * Used for debugging a solution

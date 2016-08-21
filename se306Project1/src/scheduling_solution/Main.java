@@ -1,13 +1,22 @@
 package scheduling_solution;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.traverse.TopologicalOrderIterator;
 
 import com.sun.jndi.toolkit.ctx.PartialCompositeContext;
 
-import scheduling_solution.astar.AStar;
+import pj.Pyjama;
+import scheduling_solution.astar.AStarSeq;
+//import scheduling_solution.astar.AStarSeq;
 import scheduling_solution.astar.AStarVisuals;
 import scheduling_solution.astar.PartialSolution;
+import scheduling_solution.astar.fullyparallel.AStarParallelThreadsSlow;
+import scheduling_solution.astar.threads.AStarParallelThreads;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 import scheduling_solution.input.GraphParser;
@@ -28,21 +37,21 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/Nodes_11_OutTree.dot", "4"};
+		args = new String[]{"tests/Nodes_11_OutTree.dot", "2"};
 		
 		long startTime = System.currentTimeMillis();
 
 		parseArgs(args);
 		GraphInterface<Vertex, DefaultWeightedEdge> graph = GraphParser.parse(inputFileName);
-		BottomLevelCalculator.calculate(graph);
+		
 		
 		//if (isVisualised) {
 		//	GraphVisualisation visuals = new GraphVisualisation(GraphParser.getDisplayGraph(), startTime, numProcessors, Integer.toString(numThreads));
 		//	AStarVisuals astar = new AStarVisuals(graph,  numProcessors, visuals);
 		//	PartialSolution p = astar.calculateOptimalSolution();
 		//}
-		
-		AStar astar = new AStar(graph,  numProcessors);
+//		AStarSeq astar = new AStarSeq(graph, numProcessors);
+		AStarParallelThreads astar = new AStarParallelThreads(graph,  numProcessors, 4);
 		PartialSolution p = astar.calculateOptimalSolution();
 		
 		//GraphVisualisation.stopTimer();
@@ -53,6 +62,9 @@ public class Main {
 		System.out.println("Max memory (MB): " + astar.maxMemory /1024/1024);
 		long finishTime = System.currentTimeMillis();
 		System.out.println("Time taken: " + (finishTime - startTime));
+		
+		
+		
 		
 		p.verify();//TODO remove
 		

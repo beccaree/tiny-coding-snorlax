@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import junit.framework.TestCase;
-import scheduling_solution.astar.AStar;
+import scheduling_solution.astar.AStarSeq;
 import scheduling_solution.astar.PartialSolution;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.JGraphTAdapter;
@@ -34,9 +34,9 @@ public class TestPartialSolution extends TestCase {
 		
 		Vertex v = new Vertex("1", 10);
 		/*PARTIALSOLUTION FAILS CONSTRUCTION BECAUSE IT HAS NO INCOMING/OUTGOING EDGES*/
-		
-		AStar astar = new AStar(graph, (byte) 2);
-		astar.initialiseStartingVertices();
+		graph.addVertex(v);
+		AStarSeq astar = new AStarSeq(graph, (byte) 2);
+		astar.initialise();
 		PartialSolution pSolution = new PartialSolution(graph, (byte)2, v, (byte)1);
 		
 		//The finish time of the current partial solution must be equal to the weight of the vertex
@@ -59,8 +59,8 @@ public class TestPartialSolution extends TestCase {
 		}
 		
 		/*Test the starting vertex*/
-		AStar astar = new AStar(graph, (byte) 3);
-		astar.initialiseStartingVertices();
+		AStarSeq astar = new AStarSeq(graph, (byte) 3);
+		astar.initialise();
 		PartialSolution pSolution = new PartialSolution(graph, (byte) 3, vertexArray[0], (byte) 0);
 		//Finishing time of the starting partial solution should be equal to its weight
 		assertEquals("Finish time of current partial solution is incorrect", 
@@ -114,8 +114,8 @@ public class TestPartialSolution extends TestCase {
 		graph.setEdgeWeight(edgecd, 1);
 		
 		/*Vertex A*/
-		AStar astar = new AStar(graph, (byte) 2);
-		astar.initialiseStartingVertices();
+		AStarSeq astar = new AStarSeq(graph, (byte) 2);
+		astar.initialise();
 		PartialSolution pSolution = new PartialSolution(graph, (byte) 2, vertexa, (byte) 0);
 		//Check the finish time of the current partial solution
 		System.out.println("Bottom Level of a "+vertexa.getBottomLevel());

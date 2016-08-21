@@ -6,7 +6,7 @@ import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 import scheduling_solution.visualisation.GraphVisualisation;
 
-public class AStarVisuals extends AStar {
+public class AStarVisuals extends AStarSeq {
 	
 	private GraphVisualisation visualisation;
 
@@ -15,16 +15,9 @@ public class AStarVisuals extends AStar {
 		this.visualisation = visualisation;
 	}
 	
-public PartialSolution calculateOptimalSolution() {
+	public PartialSolution calculateOptimalSolution() {
 		
-		// Create a crude upper bound for pruning
-		for (Vertex v : graph.vertexSet()) {
-			super.sequentialTime += v.getWeight();
-		}
-		
-		//Get initial vertices of solution
-		initialiseStartingVertices();
-		initialiseStartStates();
+		initialise();
 
 		while (true) {
 			solutionsPopped++;
