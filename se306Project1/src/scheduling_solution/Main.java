@@ -54,7 +54,7 @@ public class Main {
 		AStarParallelThreads astar = new AStarParallelThreads(graph,  numProcessors, 4);
 		PartialSolution p = astar.calculateOptimalSolution();
 		
-		//GraphVisualisation.stopTimer();
+		//GraphVisualisation.stopTimer(p, astar);
 		p.printDetails();
 		System.out.println("Solutions created: " + astar.solutionsCreated);
 		System.out.println("Solutions popped: " + astar.solutionsPopped);

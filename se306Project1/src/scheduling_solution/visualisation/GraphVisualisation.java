@@ -14,6 +14,9 @@ import org.graphstream.graph.Graph;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
 
+import scheduling_solution.astar.AStarVisuals;
+import scheduling_solution.astar.PartialSolution;
+
 /**
  * 
  * @author Team 8
@@ -29,11 +32,15 @@ public class GraphVisualisation extends JFrame {
 	static JLabel lblOpenQ = new JLabel("0");
 	static JLabel lblClosedQ = new JLabel("0");
 	JLabel lblNumbThreads = new JLabel("0");
+
+	private static long startTime;
 	
 	public GraphVisualisation(Graph gsGraph, final long startTime, byte numbProc, String numbThreads) {
 		setTitle("Process Visualisation");
 		setBounds(50, 50, 900, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		this.startTime = startTime;
 		
 		JPanel information = new JPanel();
 		information.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -92,8 +99,30 @@ public class GraphVisualisation extends JFrame {
 		setVisible(true);
 	}
 	
-	public static void stopTimer() {
+	public static void stopTimer(PartialSolution p, AStarVisuals astar) {
 		programEnded = true;
+		JFrame frame = new JFrame("A* Search Details");
+		frame.setBounds(200, 150, 500, 300);
+		
+		// Show details of the search after it is complete
+		JPanel solutionDetails = new JPanel();
+		solutionDetails.setBorder(new EmptyBorder(20, 20, 20, 20));
+		BoxLayout b = new BoxLayout(solutionDetails, BoxLayout.Y_AXIS);
+		
+		solutionDetails.setLayout(b);
+		
+		
+		// Add gantt chart here to display p
+		
+		solutionDetails.add(new JLabel("Solutions created: " + astar.solutionsCreated));
+		solutionDetails.add(new JLabel("Solutions popped: " + astar.solutionsPopped));
+		solutionDetails.add(new JLabel("Solutions pruned: " + astar.solutionsPruned));
+		solutionDetails.add(new JLabel("Max memory (MB): " + astar.maxMemory /1024/1024));
+		long finishTime = System.currentTimeMillis();
+		solutionDetails.add(new JLabel("Time taken: " + (finishTime - startTime)));
+		
+		frame.add(solutionDetails);
+		frame.setVisible(true);
 	}
 
 	public void updateQueueSize(int openSize, int closedSize) {
