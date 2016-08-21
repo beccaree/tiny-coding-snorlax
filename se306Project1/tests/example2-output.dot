@@ -1,18 +1,18 @@
-digraph "example1" {
-	a		[Weight=2, Start=0, Processor=1];
-	b		[Weight=3, Start=2, Processor=1];
+digraph "outputExample1" {
+	a		[Weight=2, Start=0, Processor=0];
+	b		[Weight=3, Start=2, Processor=0];
 	a -> b 	[Weight=1];
-	c		[Weight=5, Start=5, Processor=1];
+	c		[Weight=5, Start=5, Processor=0];
 	a -> c	[Weight=3];
-	d		[Weight=1, Start=14, Processor=1];
+	d		[Weight=1, Start=14, Processor=0];
 	b -> d	[Weight=4];
 	c -> d	[Weight=4];
-	e		[Weight=2, Start=10, Processor=1];
+	e		[Weight=2, Start=12, Processor=0];
 	c -> e	[Weight=2];
-	f		[Weight=2, Start=12, Processor=1];
+	f		[Weight=2, Start=10, Processor=0];
 	c -> f	[Weight=1];
-	g		[Weight=5, Start=15, Processor=1];
+	g		[Weight=5, Start=15, Processor=0];
 	d -> g	[Weight=1];
-	h		[Weight=2, Start=20, Processor=1];
+	h		[Weight=2, Start=20, Processor=0];
 	d -> h	[Weight=2];	
 }

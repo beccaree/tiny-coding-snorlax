@@ -37,7 +37,7 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/Nodes_11_OutTree.dot", "4"};
+		args = new String[]{"tests/example2.dot", "1"};
 		
 		long startTime = System.currentTimeMillis();
 
@@ -63,7 +63,7 @@ public class Main {
 		long finishTime = System.currentTimeMillis();
 		System.out.println("Time taken: " + (finishTime - startTime));
 		
-		
+		OutputFileCreator.create(outputFileName, inputFileName, p);
 		
 		
 		p.verify();//TODO remove

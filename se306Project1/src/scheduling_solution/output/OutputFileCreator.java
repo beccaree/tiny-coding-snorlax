@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import scheduling_solution.astar.AllocationInfo;
+import scheduling_solution.astar.PartialSolution;
 import scheduling_solution.graph.Vertex;
 import scheduling_solution.input.GraphParser;
 import scheduling_solution.solver.VertexInfo;
@@ -22,7 +24,7 @@ public class OutputFileCreator {
 	 * This method creates the output file and writes to it by analyzing the solution
 	 * as well as the input file.
 	 */
-	public static void create(String outputFileName, String inputFileName, Solution solution) {
+	public static void create(String outputFileName, String inputFileName, PartialSolution solution) {
 			
 		BufferedReader br;
 		
@@ -48,15 +50,32 @@ public class OutputFileCreator {
 						//Store line of input as "substring"
 						String substring = line.substring(0,line.lastIndexOf("]"));
 						//Get vertex name
-						String vertex = line.substring(0, line.indexOf("[")).trim();
+						String vertexName = line.substring(0, line.indexOf("[")).trim();
 						
-						Vertex v = GraphParser.getVertexMap().get(vertex);
-						//Get solution of the vertex 
-						//i.e. the string that appears after each vertex/edge in the output file
-						VertexInfo vInfo = solution.getVertexInfo(v);
-	
-						//Rewrite vertex output to include solution
-						bw.write(substring+vInfo.toString()+"];");
+						//Get corresponding vertex object based on the vertex name
+						Vertex vertex = null;						
+						for (Vertex v : solution.getAllocatedVertices().keySet()) {
+							if(v.getName().equals(vertexName)){
+								vertex = v;
+								break;
+							}
+						}
+						//Get vertex information of the vertex
+						AllocationInfo vertexInfo  = solution.getAllocatedVertices().get(vertex);
+						
+						//Write to file
+						System.out.println(substring+", Start="+vertexInfo.getStartTime()+", Processor="+vertexInfo.getProcessorNumber()+"];");
+						bw.write(substring+", Start="+vertexInfo.getStartTime()+", Processor="+vertexInfo.getProcessorNumber()+"];");
+						
+						
+						
+//						Vertex v = GraphParser.getVertexMap().get(vertex);
+//						//Get solution of the vertex 
+//						//i.e. the string that appears after each vertex/edge in the output file
+//						VertexInfo vInfo = solution.getVertexInfo(v);
+//	
+//						//Rewrite vertex output to include solution
+//						bw.write(substring+vInfo.toString()+"];");
 						bw.newLine();						
 					
 					} else if(line.contains("}")) { //Rewrites last line without newline
