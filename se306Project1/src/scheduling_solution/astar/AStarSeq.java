@@ -135,7 +135,7 @@ public class AStarSeq {
 	 * @return True - if the given ParticalSolution has a chance of being an optimal solution
 	 */
 	public boolean isViable(PartialSolution partialSolution) {
-		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumFinishTime() > sequentialTime/*||checkPermutations(exploredSolutions, partialSolution)*/ ) {
+		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumFinishTime() > PartialSolution.getSequentialTime()/*||checkPermutations(exploredSolutions, partialSolution)*/ ) {
 			solutionsPruned++;
 			return false;
 		}
