@@ -102,7 +102,6 @@ public class PartialSolution {
 		unallocatedVertices.remove(v);
 		
 		//Get the processor number that the vertex should be added to and then add the vertex onto the end of that
-		System.out.println("proc num " + ganttChart.get(processorNumber));
 		ganttChart.get(processorNumber).add(v.getName());
 		
 		updateAvailableVertices(v);

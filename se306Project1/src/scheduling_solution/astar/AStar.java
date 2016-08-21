@@ -146,33 +146,75 @@ public class AStar {
 			
 			//Goes through each individual processor for the current explored solution
 			for(ArrayList<String> exploredSolutionProcessor : explored.ganttChart){
+				System.out.println("new Solution");
 				
 				//Create an array containing all the processor numbers
-				ArrayList<Integer> duplicateProcessor = new ArrayList<>();
+				ArrayList<String> duplicateProcessor = new ArrayList<>();
 				for (int i = 0; i<numProcessors;i++){
-					duplicateProcessor.add(i);
+					duplicateProcessor.add(Integer.toString(i));
 				}
 				
 				//Goes through all current non-duplicate processor
 				//Check if any of the the processors are duplicates of the current explored solution processor
-				for (int i:duplicateProcessor){					
-					ArrayList<String> newSolutionProcessor = newPartialSolution.ganttChart.get(i);	
+//				for (int i:duplicateProcessor){					
+//					ArrayList<String> newSolutionProcessor = newPartialSolution.ganttChart.get(i);	
+//					
+//					//If they are the same, remove the processor number from the array
+//					if (exploredSolutionProcessor.equals(newSolutionProcessor)){
+//						duplicateProcessor.remove(i);
+//					}	
+//					
+//				}
+				
+//				for (int i=0;i<duplicateProcessor.size();i++){					
+//					ArrayList<String> newSolutionProcessor = newPartialSolution.ganttChart.get(i);	
+					
+					for(ArrayList<String> newSolutionProcessor: newPartialSolution.ganttChart){
+						
+						for (int i = 0; i<numProcessors;i++){
+							duplicateProcessor.add(Integer.toString(i));
+						}
+											
+						for (int i=0;i<duplicateProcessor.size();i++){	
+						
+						System.out.println("explored "+exploredSolutionProcessor);
+						System.out.println("new sol "+newSolutionProcessor);
+						System.out.println("dupliacate arry "+i+" has value "+duplicateProcessor.get(i));
+						
+						if (exploredSolutionProcessor.equals(newSolutionProcessor)&& !duplicateProcessor.get(i).equals("*")){
+							duplicateProcessor.set(i, "*");
+							System.out.println("changed to "+duplicateProcessor.get(i));
+//							duplicateProcessor.remove(i);
+							
+						}							
+					}
 					
 					//If they are the same, remove the processor number from the array
-					if (exploredSolutionProcessor.equals(newSolutionProcessor)){
-						duplicateProcessor.remove(i);
-					}	
 					
 				}
 				
-				//If all processors were found to be a duplicate
-				//new partial solution is a premutation of a previous explored solution
-				if(duplicateProcessor.isEmpty()){
-					return true;
+				boolean match = true;
+				
+				for(String duplicate:duplicateProcessor){
+					if(!duplicate.equals("*")){
+						match = false;
+						break;
+					}
 				}
+				if(match){
+				System.out.println("match");
+				return true;
+				}
+				
+				//If all processors were found to be a duplicate
+				//new partial solution is a permutation of a previous explored solution
+//				if(duplicateProcessor.isEmpty()){
+//					return true;
+//				}
 			}
 		}
 		return false;
+//		return true;
 	}
 	
 	
