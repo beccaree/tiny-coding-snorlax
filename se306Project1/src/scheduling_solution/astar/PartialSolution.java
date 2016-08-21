@@ -1,5 +1,6 @@
 package scheduling_solution.astar;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -24,6 +25,9 @@ public class PartialSolution {
 	protected HashSet<Vertex> availableVertices;
 	protected HashSet<Vertex> unallocatedVertices;
 	
+	//Gantt chart for partial solution, for checking permutations
+	protected ArrayList<ArrayList<String>> ganttChart;
+	
 	protected int minimumFinishTime = 0;
 	
 	/**
@@ -45,6 +49,20 @@ public class PartialSolution {
 		
 		allocatedVertices = new HashMap<>();
 		allocatedVertices.put(v, new AllocationInfo(processorNumber, 0));
+		
+		//Gantt chart of a single partial solution,(index represents the processor numbers)
+		//Inner arraylist hold the order of tasks that processor will run
+		ganttChart = new ArrayList<ArrayList<String>>();
+		ArrayList<String> processor =new ArrayList<String>();
+		processor.add(v.getName());
+		ganttChart.add(processorNumber, processor);		
+		
+		for(int i = 0; i<numProcessors;i++){
+			if(i!=numProcessors){
+				ArrayList<String> proc =new ArrayList<String>();
+				ganttChart.add(i, proc);	
+			}
+		}
 		
 		unallocatedVertices = new HashSet<>();
 		unallocatedVertices.addAll(graph.vertexSet());
@@ -74,6 +92,7 @@ public class PartialSolution {
 		allocatedVertices = (HashMap<Vertex, AllocationInfo>) partialSolution.getAllocatedVertices().clone();
 		unallocatedVertices = (HashSet<Vertex>) partialSolution.getUnallocatedVertices().clone();
 		availableVertices = (HashSet<Vertex>) partialSolution.getAvailableVertices().clone();
+		ganttChart = (ArrayList<ArrayList<String>>) partialSolution.ganttChart.clone();
 
 		finishTimes = partialSolution.getFinishTimes().clone();
 		
@@ -81,6 +100,10 @@ public class PartialSolution {
 		
 		allocatedVertices.put(v, new AllocationInfo(processorNumber, startTime));
 		unallocatedVertices.remove(v);
+		
+		//Get the processor number that the vertex should be added to and then add the vertex onto the end of that
+		System.out.println("proc num " + ganttChart.get(processorNumber));
+		ganttChart.get(processorNumber).add(v.getName());
 		
 		updateAvailableVertices(v);
 		availableVertices.remove(v);
@@ -243,6 +266,8 @@ public class PartialSolution {
 			}
 		}
 	}
+	
+	
 	
 }
 

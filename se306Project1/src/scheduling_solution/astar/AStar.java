@@ -1,5 +1,6 @@
 package scheduling_solution.astar;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Set;
@@ -129,12 +130,52 @@ public class AStar {
 	 * @return True - if the given ParticalSolution has a chance of being an optimal solution
 	 */
 	public boolean isViable(PartialSolution partialSolution) {
-		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumFinishTime() > sequentialTime ) {
+		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumFinishTime() > sequentialTime/*||checkPermutations(exploredSolutions, partialSolution)*/ ) {
 			solutionsPruned++;
 			return false;
 		}
 
 		return true;
 	}
+	
+	
+	private boolean checkPermutations(Set<PartialSolution> exploredSolutions, PartialSolution newPartialSolution) {
+
+		//Goes through the all the explored partial solutions
+		for (PartialSolution explored : exploredSolutions) {
+			
+			//Goes through each individual processor for the current explored solution
+			for(ArrayList<String> exploredSolutionProcessor : explored.ganttChart){
+				
+				//Create an array containing all the processor numbers
+				ArrayList<Integer> duplicateProcessor = new ArrayList<>();
+				for (int i = 0; i<numProcessors;i++){
+					duplicateProcessor.add(i);
+				}
+				
+				//Goes through all current non-duplicate processor
+				//Check if any of the the processors are duplicates of the current explored solution processor
+				for (int i:duplicateProcessor){					
+					ArrayList<String> newSolutionProcessor = newPartialSolution.ganttChart.get(i);	
+					
+					//If they are the same, remove the processor number from the array
+					if (exploredSolutionProcessor.equals(newSolutionProcessor)){
+						duplicateProcessor.remove(i);
+					}	
+					
+				}
+				
+				//If all processors were found to be a duplicate
+				//new partial solution is a premutation of a previous explored solution
+				if(duplicateProcessor.isEmpty()){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	
+	
 }
 
