@@ -61,8 +61,8 @@ public class TestAStar extends TestCase {
 		AStarSeq astar = new AStarSeq(graph, (byte) 2);
 		
 		//Checks if the number of start states is what is expected
-		astar.initialiseStartStates();
-		unexploredSolutions = astar.getUnexploredSolutions();
+		astar.initialise();
+		unexploredSolutions = (PriorityQueue<PartialSolution>) astar.getUnexploredSolutions();
 		assertEquals("Number of start states is different than what was expected", 1, unexploredSolutions.size());
 		
 		//Checks that the start state is vertex "a"
@@ -105,8 +105,8 @@ public class TestAStar extends TestCase {
 		AStarSeq astar = new AStarSeq(graph, (byte) 2);
 		
 		//Checks if the number of start states is what is expected
-		astar.initialiseStartStates();
-		unexploredSolutions = astar.getUnexploredSolutions();
+		astar.initialise();
+		unexploredSolutions = (PriorityQueue<PartialSolution>) astar.getUnexploredSolutions();
 		assertEquals("Number of start states is different than what was expected", 10, unexploredSolutions.size());
 		
 //		for (int i = 0; i < NUM_VERTICES; i++) {
@@ -163,8 +163,8 @@ public class TestAStar extends TestCase {
 		AStarSeq astar = new AStarSeq(graph, (byte) 3);
 		
 		//Checks if the number of start states is what is expected
-		astar.initialiseStartStates();
-		unexploredSolutions = astar.getUnexploredSolutions();
+		astar.initialise();
+		unexploredSolutions = (PriorityQueue<PartialSolution>) astar.getUnexploredSolutions();
 		assertEquals("Number of start states is different than what was expected", 4, unexploredSolutions.size());
 		
 //		//Checks that the start state vertices are 0, 6, 8 and 9

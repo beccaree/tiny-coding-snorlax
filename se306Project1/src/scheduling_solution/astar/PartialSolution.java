@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
+import scheduling_solution.astar.threads.AStarParallelThreads;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 
@@ -53,7 +54,7 @@ public class PartialSolution {
 		unallocatedVertices.addAll(graph.vertexSet());
 		unallocatedVertices.remove(v);
 		
-		availableVertices = (HashSet<Vertex>) AStarParallelThreads.startingVertices.clone(); //Not very object oriented either
+		availableVertices = (HashSet<Vertex>) PartialSolution.startingVertices.clone(); 
 		availableVertices.remove(v);
 		updateAvailableVertices(v);
 		
@@ -228,7 +229,7 @@ public class PartialSolution {
 	@Override
 	public int hashCode() {
 		//I'm not sure if caching it actually helps, as this should only get called once.
-		//This technically uses more memory
+		//This technically uses more memory because we are storing it
 		if (hashcode == null) {
 			hashcode = allocatedVertices.hashCode();
 		}

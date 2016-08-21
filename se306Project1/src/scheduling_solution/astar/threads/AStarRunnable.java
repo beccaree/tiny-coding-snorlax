@@ -1,4 +1,4 @@
-package scheduling_solution.astar;
+package scheduling_solution.astar.threads;
 
 import java.util.HashSet;
 import java.util.PriorityQueue;
@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
+import scheduling_solution.astar.PartialSolution;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 

@@ -34,9 +34,9 @@ public class TestPartialSolution extends TestCase {
 		
 		Vertex v = new Vertex("1", 10);
 		/*PARTIALSOLUTION FAILS CONSTRUCTION BECAUSE IT HAS NO INCOMING/OUTGOING EDGES*/
-		
+		graph.addVertex(v);
 		AStarSeq astar = new AStarSeq(graph, (byte) 2);
-		astar.initialiseStartingVertices();
+		astar.initialise();
 		PartialSolution pSolution = new PartialSolution(graph, (byte)2, v, (byte)1);
 		
 		//The finish time of the current partial solution must be equal to the weight of the vertex
@@ -60,7 +60,7 @@ public class TestPartialSolution extends TestCase {
 		
 		/*Test the starting vertex*/
 		AStarSeq astar = new AStarSeq(graph, (byte) 3);
-		astar.initialiseStartingVertices();
+		astar.initialise();
 		PartialSolution pSolution = new PartialSolution(graph, (byte) 3, vertexArray[0], (byte) 0);
 		//Finishing time of the starting partial solution should be equal to its weight
 		assertEquals("Finish time of current partial solution is incorrect", 
@@ -115,7 +115,7 @@ public class TestPartialSolution extends TestCase {
 		
 		/*Vertex A*/
 		AStarSeq astar = new AStarSeq(graph, (byte) 2);
-		astar.initialiseStartingVertices();
+		astar.initialise();
 		PartialSolution pSolution = new PartialSolution(graph, (byte) 2, vertexa, (byte) 0);
 		//Check the finish time of the current partial solution
 		System.out.println("Bottom Level of a "+vertexa.getBottomLevel());

@@ -1,5 +1,6 @@
 package scheduling_solution.astar;
 
+import java.util.AbstractQueue;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Set;
@@ -8,17 +9,18 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
+import scheduling_solution.solver.BottomLevelCalculator;
 import scheduling_solution.visualisation.GraphVisualisation;
 
+/**
+ * Standard sequential version of AStar
+ */
 public class AStarSeq {
 	public GraphInterface<Vertex, DefaultWeightedEdge> graph;
-	public static HashSet<Vertex> startingVertices;
 	
-	PriorityQueue<PartialSolution> unexploredSolutions;
-	Set<PartialSolution> exploredSolutions;
-	final byte numProcessors;
-	
-	public static Integer sequentialTime = null;//Use an object so we get an error when it is not initialised
+	protected PriorityQueue<PartialSolution> unexploredSolutions;
+	protected Set<PartialSolution> exploredSolutions;
+	protected final byte numProcessors;
 	
 	public int solutionsPopped = 0;
 	public int solutionsCreated = 0;
@@ -29,7 +31,6 @@ public class AStarSeq {
 		this.graph = graph;
 		unexploredSolutions = new PriorityQueue<>(1000, new PartialSolutionComparator());
 		exploredSolutions = new HashSet<>();
-		startingVertices = new HashSet<>();
 		this.numProcessors = numProcessors;
 	}
 	
@@ -39,6 +40,7 @@ public class AStarSeq {
 	 * @return optimal PartialSolution object
 	 */
 	public PartialSolution calculateOptimalSolution() {
+		
 		
 		initialise();
 
@@ -77,37 +79,35 @@ public class AStarSeq {
 	
 	/**
 	 * Initialises a crude upper bound (sequentialTime) as well as the starting
-	 * vertices
+	 * vertices and solutions.
+	 * The starting vertices and sequential time are stored statically in PartialSolution.java
 	 */
-	protected void initialise() {
+	public void initialise() {
+		BottomLevelCalculator.calculate(graph);
+		
 		// Create a crude upper bound for pruning
-		sequentialTime = new Integer(0);
+		int sequentialTime = 0;
 		for (Vertex v : graph.vertexSet()) {
 			sequentialTime += v.getWeight();
 		}
 		PartialSolution.setSequentialTime(sequentialTime);
-
-		// Get initial vertices of solution
-		initialiseStartingVertices();
-		initialiseStartStates();
-	}
-
-	/**
-	 * Initialises the PriorityQueue with the possible starting states
-	 */
-	public void initialiseStartStates() {
-		for (Vertex v : startingVertices) {
-			unexploredSolutions.add(new PartialSolution(graph, numProcessors, v, (byte)0));//TODO is it ok to add them all to processor 0? Pretty sure it is
-		}
-	}
-	
-	public void initialiseStartingVertices() {
+		
+		HashSet<Vertex> startingVertices = new HashSet<>();
 		for (Vertex v : graph.vertexSet()) {
 			if (graph.inDegreeOf(v) == 0) {
 				startingVertices.add(v);
+				
 			}
+		}	
+		
+		PartialSolution.setStartingVertices(startingVertices);
+
+		for (Vertex v : startingVertices) {
+			unexploredSolutions.add(new PartialSolution(graph, numProcessors, v, (byte)0));
 		}
+			
 	}
+
 	
 	/**
 	 * Checks if partial solution has allocated all vertices
@@ -118,7 +118,7 @@ public class AStarSeq {
 		return p.getUnallocatedVertices().size() == 0;
 	}
 	
-	public PriorityQueue<PartialSolution> getUnexploredSolutions() {
+	public AbstractQueue<PartialSolution> getUnexploredSolutions() {
 		return unexploredSolutions;
 	}
 	
@@ -131,7 +131,7 @@ public class AStarSeq {
 	 * @return True - if the given ParticalSolution has a chance of being an optimal solution
 	 */
 	public boolean isViable(PartialSolution partialSolution) {
-		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumFinishTime() > sequentialTime ) {
+		if (exploredSolutions.contains(partialSolution) || partialSolution.getMinimumFinishTime() > PartialSolution.getSequentialTime() ) {
 			solutionsPruned++;
 			return false;
 		}

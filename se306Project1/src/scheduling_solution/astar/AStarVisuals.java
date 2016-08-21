@@ -15,16 +15,9 @@ public class AStarVisuals extends AStarSeq {
 		this.visualisation = visualisation;
 	}
 	
-public PartialSolution calculateOptimalSolution() {
+	public PartialSolution calculateOptimalSolution() {
 		
-		// Create a crude upper bound for pruning
-		for (Vertex v : graph.vertexSet()) {
-			super.sequentialTime += v.getWeight();
-		}
-		
-		//Get initial vertices of solution
-		initialiseStartingVertices();
-		initialiseStartStates();
+		initialise();
 
 		while (true) {
 			solutionsPopped++;
