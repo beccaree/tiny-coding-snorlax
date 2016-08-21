@@ -37,7 +37,7 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/Nodes_11_OutTree.dot", "2"};
+		args = new String[]{"tests/Nodes_11_OutTree.dot", "4"};
 		
 		long startTime = System.currentTimeMillis();
 
@@ -50,8 +50,8 @@ public class Main {
 		//	AStarVisuals astar = new AStarVisuals(graph,  numProcessors, visuals);
 		//	PartialSolution p = astar.calculateOptimalSolution();
 		//}
-//		AStarSeq astar = new AStarSeq(graph, numProcessors);
-		AStarParallelThreads astar = new AStarParallelThreads(graph,  numProcessors, 4);
+		AStarSeq astar = new AStarSeq(graph, numProcessors);
+//		AStarParallelThreads astar = new AStarParallelThreads(graph,  numProcessors, 4);
 		PartialSolution p = astar.calculateOptimalSolution();
 		
 		//GraphVisualisation.stopTimer(p, astar);

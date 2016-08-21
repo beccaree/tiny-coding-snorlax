@@ -2,7 +2,7 @@ package scheduling_solution.astar;
 
 
 import java.util.ArrayList;
-
+import java.awt.List;
 import java.util.AbstractQueue;
 
 import java.util.HashSet;
@@ -51,18 +51,31 @@ public class AStarSeq {
 		while (true) {
 			solutionsPopped++;
 			
-			/* Log memory for optimisation purposes */
+			/* Log memory for optimization purposes */
 			maxMemory = Math.max(maxMemory, Runtime.getRuntime().totalMemory());
 
 			// priority list of unexplored solutions
 			PartialSolution currentSolution = unexploredSolutions.poll();
 
-			// check partial solution has all vertices allocated
+			// Check if partial solution contains all the vertices
 			if (isComplete(currentSolution)) {
 				return currentSolution;
 			} else {
+				
+				int newNumProcessors;
+				int processorUsed;
+				
+				// Set the number of processors available vertices should be added to
+				// Eliminates permutations created when adding vertices to partial solutions that have
+				// more than one empty processor
+				if((processorUsed = getProcessorsUsed(currentSolution))<numProcessors-1){
+					newNumProcessors = processorUsed + 1; //Equivalent to having only 1 empty processor
+				}else{
+					newNumProcessors = numProcessors;
+				}				
+				
 				for (Vertex v : currentSolution.getAvailableVertices()) {
-					for (byte processor = 0; processor < numProcessors; processor++) {
+					for (byte processor = 0; processor < newNumProcessors; processor++) {
 						// add vertex into solution
 						PartialSolution newSolution = new PartialSolution(
 								graph, currentSolution, v, processor);
@@ -143,85 +156,20 @@ public class AStarSeq {
 		return true;
 	}
 	
-	
-	private boolean checkPermutations(Set<PartialSolution> exploredSolutions, PartialSolution newPartialSolution) {
-
-		//Goes through the all the explored partial solutions
-		for (PartialSolution explored : exploredSolutions) {
-			
-			//Goes through each individual processor for the current explored solution
-			for(ArrayList<String> exploredSolutionProcessor : explored.ganttChart){
-				System.out.println("new Solution");
-				
-				//Create an array containing all the processor numbers
-				ArrayList<String> duplicateProcessor = new ArrayList<>();
-				for (int i = 0; i<numProcessors;i++){
-					duplicateProcessor.add(Integer.toString(i));
-				}
-				
-				//Goes through all current non-duplicate processor
-				//Check if any of the the processors are duplicates of the current explored solution processor
-//				for (int i:duplicateProcessor){					
-//					ArrayList<String> newSolutionProcessor = newPartialSolution.ganttChart.get(i);	
-//					
-//					//If they are the same, remove the processor number from the array
-//					if (exploredSolutionProcessor.equals(newSolutionProcessor)){
-//						duplicateProcessor.remove(i);
-//					}	
-//					
-//				}
-				
-//				for (int i=0;i<duplicateProcessor.size();i++){					
-//					ArrayList<String> newSolutionProcessor = newPartialSolution.ganttChart.get(i);	
-					
-					for(ArrayList<String> newSolutionProcessor: newPartialSolution.ganttChart){
-						
-						for (int i = 0; i<numProcessors;i++){
-							duplicateProcessor.add(Integer.toString(i));
-						}
-											
-						for (int i=0;i<duplicateProcessor.size();i++){	
-						
-						System.out.println("explored "+exploredSolutionProcessor);
-						System.out.println("new sol "+newSolutionProcessor);
-						System.out.println("dupliacate arry "+i+" has value "+duplicateProcessor.get(i));
-						
-						if (exploredSolutionProcessor.equals(newSolutionProcessor)&& !duplicateProcessor.get(i).equals("*")){
-							duplicateProcessor.set(i, "*");
-							System.out.println("changed to "+duplicateProcessor.get(i));
-//							duplicateProcessor.remove(i);
-							
-						}							
-					}
-					
-					//If they are the same, remove the processor number from the array
-					
-				}
-				
-				boolean match = true;
-				
-				for(String duplicate:duplicateProcessor){
-					if(!duplicate.equals("*")){
-						match = false;
-						break;
-					}
-				}
-				if(match){
-				System.out.println("match");
-				return true;
-				}
-				
-				//If all processors were found to be a duplicate
-				//new partial solution is a permutation of a previous explored solution
-//				if(duplicateProcessor.isEmpty()){
-//					return true;
-//				}
-			}
-		}
-		return false;
-//		return true;
+	/**
+	 * Calculates the number of processors used so the 
+	 * number of empty processors in the partial solution can be figured out
+	 * @param currentSolution
+	 * @return Length of processors
+	 */
+	private int getProcessorsUsed(PartialSolution currentSolution){
+		
+		Set<Byte> processorsUsed = new HashSet<>();
+		
+		for (AllocationInfo vertexInfo : currentSolution.allocatedVertices.values()) {
+			processorsUsed.add(vertexInfo.getProcessorNumber());
+		}		
+		return processorsUsed.size();		
 	}
-	
-	
 	
 }
