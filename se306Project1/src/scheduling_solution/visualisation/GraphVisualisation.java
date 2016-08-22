@@ -29,8 +29,8 @@ public class GraphVisualisation extends JFrame {
 	JLabel lblTimeElapsed = new JLabel("0.00s");
 	JLabel lblNumbNodes = new JLabel("0");
 	JLabel lblNumbProc = new JLabel("0");
-	static JLabel lblOpenQ = new JLabel("0");
-	static JLabel lblClosedQ = new JLabel("0");
+	JLabel lblOpenQ = new JLabel("0");
+	JLabel lblClosedQ = new JLabel("0");
 	JLabel lblNumbThreads = new JLabel("0");
 
 	private static long startTime;
@@ -99,7 +99,7 @@ public class GraphVisualisation extends JFrame {
 		setVisible(true);
 	}
 	
-	public static void stopTimer(PartialSolution p, AStarVisuals astar) {
+	public void stopTimer(PartialSolution p, AStarVisuals astar) {
 		programEnded = true;
 		JFrame frame = new JFrame("A* Search Details");
 		frame.setBounds(200, 150, 500, 300);
@@ -110,7 +110,6 @@ public class GraphVisualisation extends JFrame {
 		BoxLayout b = new BoxLayout(solutionDetails, BoxLayout.Y_AXIS);
 		
 		solutionDetails.setLayout(b);
-		
 		
 		// Add gantt chart here to display p
 		

@@ -45,16 +45,16 @@ public class Main {
 		GraphInterface<Vertex, DefaultWeightedEdge> graph = GraphParser.parse(inputFileName);
 		
 		
-		//if (isVisualised) {
-		//	GraphVisualisation visuals = new GraphVisualisation(GraphParser.getDisplayGraph(), startTime, numProcessors, Integer.toString(numThreads));
-		//	AStarVisuals astar = new AStarVisuals(graph,  numProcessors, visuals);
-		//	PartialSolution p = astar.calculateOptimalSolution();
-		//}
+//		if (isVisualised) {
+//			GraphVisualisation visuals = new GraphVisualisation(GraphParser.getDisplayGraph(), startTime, numProcessors, Integer.toString(numThreads));
+//			AStarVisuals astar = new AStarVisuals(graph,  numProcessors, visuals);
+//			PartialSolution p = astar.calculateOptimalSolution();
+//			visuals.stopTimer(p, astar);	
+//		}
 		AStarSeq astar = new AStarSeq(graph, numProcessors);
 //		AStarParallelThreads astar = new AStarParallelThreads(graph,  numProcessors, 4);
 		PartialSolution p = astar.calculateOptimalSolution();
 		
-		//GraphVisualisation.stopTimer(p, astar);
 		p.printDetails();
 		System.out.println("Solutions created: " + astar.solutionsCreated);
 		System.out.println("Solutions popped: " + astar.solutionsPopped);
