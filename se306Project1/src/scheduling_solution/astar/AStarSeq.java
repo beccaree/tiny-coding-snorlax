@@ -62,20 +62,20 @@ public class AStarSeq {
 				return currentSolution;
 			} else {
 				
-				int newNumProcessors;
-				int processorUsed;
-				
-				// Set the number of processors available vertices should be added to
-				// Eliminates permutations created when adding vertices to partial solutions that have
-				// more than one empty processor
-				if((processorUsed = getProcessorsUsed(currentSolution))<numProcessors-1){
-					newNumProcessors = processorUsed + 1; //Equivalent to having only 1 empty processor
-				}else{
-					newNumProcessors = numProcessors;
-				}				
-				
-				for (Vertex v : currentSolution.getAvailableVertices()) {
-					for (byte processor = 0; processor < newNumProcessors; processor++) {
+//				int newNumProcessors;
+//				int processorUsed;
+//				
+//				// Set the number of processors available vertices should be added to
+//				// Eliminates permutations created when adding vertices to partial solutions that have
+//				// more than one empty processor
+//				if((processorUsed = getProcessorsUsed(currentSolution))<numProcessors-1){
+//					newNumProcessors = processorUsed + 1; //Equivalent to having only 1 empty processor
+//				}else{
+//					newNumProcessors = numProcessors;
+//				}				
+//				
+				for (Vertex v : currentSolution.getAvailableVertices()) {					
+					for (byte processor = 0; processor < numProcessors; processor++) {
 						// add vertex into solution
 						PartialSolution newSolution = new PartialSolution(
 								graph, currentSolution, v, processor);
@@ -86,7 +86,13 @@ public class AStarSeq {
 						if (isViable(newSolution)) {
 							unexploredSolutions.add(newSolution);
 						}
-					}
+						
+						// Only adds vertex to leftmost empty processor
+						if(currentSolution.finishTimes[processor] == 0){
+							break;
+						}
+										
+					}					
 				}
 				
 				exploredSolutions.add(currentSolution);
@@ -163,6 +169,8 @@ public class AStarSeq {
 	 * @return Length of processors
 	 */
 	private int getProcessorsUsed(PartialSolution currentSolution){
+		
+
 		
 		Set<Byte> processorsUsed = new HashSet<>();
 		
