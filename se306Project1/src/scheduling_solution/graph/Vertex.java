@@ -5,7 +5,7 @@ public class Vertex {
 	private String name;
 	private int weight;
 	private int bottomLevel;
-	
+	private int numbOfUse = 0;
 	
 	public Vertex(String name, int weight) {
 		this.name = name;
@@ -38,6 +38,14 @@ public class Vertex {
 		return bottomLevel;
 	}
 	
+	/**
+	 * Get the number of times this vertex is used in a valid solution
+	 * @return int number of use
+	 */
+	public int getNumbOfUse() {
+		return numbOfUse;
+	}
+	
 	//---Set methods---
 	
 	/**
@@ -54,6 +62,10 @@ public class Vertex {
 	 */
 	public void setWeight(int weight) {
 		this.weight = weight;
+	}
+	
+	public void incrementNumbUsed() {
+		this.numbOfUse++;
 	}
 	
 	@Override
