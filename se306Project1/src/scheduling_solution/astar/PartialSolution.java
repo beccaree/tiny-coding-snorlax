@@ -13,18 +13,18 @@ import scheduling_solution.graph.Vertex;
 
 @SuppressWarnings("unchecked")
 public class PartialSolution {
-	protected GraphInterface<Vertex, DefaultWeightedEdge> graph;
+	private GraphInterface<Vertex, DefaultWeightedEdge> graph;
 
-	protected byte numProcessors;
+	protected final byte numProcessors;
 	
-	protected int totalIdleTime;
-	protected int[] finishTimes;
+	private int totalIdleTime;
+	private int[] finishTimes;
 	
 	protected Integer hashcode = null;
 	
-	protected HashMap<Vertex, AllocationInfo> allocatedVertices;
+	private HashMap<Vertex, AllocationInfo> allocatedVertices;
 	protected HashSet<Vertex> availableVertices;
-	protected HashSet<Vertex> unallocatedVertices;
+	private HashSet<Vertex> unallocatedVertices;
 	
 	protected int minimumFinishTime = 0;
 	

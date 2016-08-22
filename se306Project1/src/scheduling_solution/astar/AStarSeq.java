@@ -88,7 +88,7 @@ public class AStarSeq {
 						}
 						
 						// Only adds vertex to leftmost empty processor
-						if(currentSolution.finishTimes[processor] == 0){
+						if(currentSolution.getFinishTimes()[processor] == 0){
 							break;
 						}
 										
@@ -169,12 +169,9 @@ public class AStarSeq {
 	 * @return Length of processors
 	 */
 	private int getProcessorsUsed(PartialSolution currentSolution){
-		
-
-		
 		Set<Byte> processorsUsed = new HashSet<>();
 		
-		for (AllocationInfo vertexInfo : currentSolution.allocatedVertices.values()) {
+		for (AllocationInfo vertexInfo : currentSolution.getAllocatedVertices().values()) {
 			processorsUsed.add(vertexInfo.getProcessorNumber());
 		}		
 		return processorsUsed.size();		

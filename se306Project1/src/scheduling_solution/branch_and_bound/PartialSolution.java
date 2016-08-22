@@ -20,8 +20,8 @@ public class PartialSolution extends scheduling_solution.astar.PartialSolution {
 	}
 	
 	public void calculateMinimumFinishTime(PartialSolution p, Vertex v) {
-		int maxHeuristic = Math.max(p.getMinimumFinishTime(), allocatedVertices.get(v).getStartTime() + v.getBottomLevel());
-		maxHeuristic = Math.max(maxHeuristic, ((BranchAndBound.getSequentialTime() + totalIdleTime) / numProcessors));
+		int maxHeuristic = Math.max(p.getMinimumFinishTime(), getAllocatedVertices().get(v).getStartTime() + v.getBottomLevel());
+		maxHeuristic = Math.max(maxHeuristic, ((BranchAndBound.getSequentialTime() + getTotalIdleTime() / numProcessors)));
 //		maxHeuristic = Math.max(maxHeuristic, calculateEarliestUnallocatedVertexFinishTime());
 		minimumFinishTime = maxHeuristic;
 	}
