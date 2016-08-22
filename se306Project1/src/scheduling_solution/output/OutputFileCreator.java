@@ -64,7 +64,7 @@ public class OutputFileCreator {
 						AllocationInfo vertexInfo  = solution.getAllocatedVertices().get(vertex);
 						
 						//Write to file
-						bw.write(substring+", Start="+vertexInfo.getStartTime()+", Processor="+vertexInfo.getProcessorNumber()+"];");	
+						bw.write(substring+", Start="+vertexInfo.getStartTime()+", Processor="+(vertexInfo.getProcessorNumber()+1)+"];");	
 						bw.newLine();						
 					
 					} else if(line.contains("}")) { //Rewrites last line without newline
