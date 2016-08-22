@@ -64,18 +64,7 @@ public class OutputFileCreator {
 						AllocationInfo vertexInfo  = solution.getAllocatedVertices().get(vertex);
 						
 						//Write to file
-						System.out.println(substring+", Start="+vertexInfo.getStartTime()+", Processor="+vertexInfo.getProcessorNumber()+"];");
-						bw.write(substring+", Start="+vertexInfo.getStartTime()+", Processor="+vertexInfo.getProcessorNumber()+"];");
-						
-						
-						
-//						Vertex v = GraphParser.getVertexMap().get(vertex);
-//						//Get solution of the vertex 
-//						//i.e. the string that appears after each vertex/edge in the output file
-//						VertexInfo vInfo = solution.getVertexInfo(v);
-//	
-//						//Rewrite vertex output to include solution
-//						bw.write(substring+vInfo.toString()+"];");
+						bw.write(substring+", Start="+vertexInfo.getStartTime()+", Processor="+vertexInfo.getProcessorNumber()+"];");	
 						bw.newLine();						
 					
 					} else if(line.contains("}")) { //Rewrites last line without newline
