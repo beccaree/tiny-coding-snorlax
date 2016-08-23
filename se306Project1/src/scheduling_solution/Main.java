@@ -37,7 +37,7 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/example2.dot", "1"};
+		args = new String[]{"tests/Nodes_11_OutTree.dot", "8"};
 		
 		long startTime = System.currentTimeMillis();
 
