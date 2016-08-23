@@ -4,37 +4,31 @@ import java.util.PriorityQueue;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
+import scheduling_solution.astar.parallel.AStarParallel;
+import scheduling_solution.astar.parallel.AStarRunnable;
 import scheduling_solution.astar.parallel.AStarRunnableVisuals;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 import scheduling_solution.visualisation.GraphVisualisation;
 
-public class AStarVisuals extends AStarSequential {
-	private int nThreads;
-	
+public class AStarVisuals extends AStarParallel {
 	public int solutionsPopped = 0;
 	public int solutionsCreated = 0;
 	public int solutionsPruned = 0;
 	public long maxMemory = 0;
 	
-	//Number of solutions to create
-	private static final int SOLUTIONS_TO_CREATE = 1000;
-	
 	private GraphVisualisation visualisation;
 	private boolean isParallel;
 
 	public AStarVisuals(GraphInterface<Vertex, DefaultWeightedEdge> graph, byte numProcessors, int numThreads, GraphVisualisation visualisation, boolean isParallel) {
-		super(graph, numProcessors);
+		super(graph, numProcessors, numThreads);
 		this.visualisation = visualisation;
 		this.isParallel = isParallel;
-		this.nThreads = numThreads;
 	}
 	
+	/*
 	@Override
 	public PartialSolution calculateOptimalSolution() {
-		
-		initialise();
-
 		PartialSolution partialSolution = super.calculateOptimalSolution();
 		
 		//If it is sequential or it is running in parallel but finished, return it
@@ -98,7 +92,25 @@ public class AStarVisuals extends AStarSequential {
 		return bestSolution;
 		// ---------------------------------------------------------------------------->
 	}
+	*/
 	
+	/**
+	 * This class needs to create AStarRunnableVisuals instead of AStarRunnableStandards
+	 */
+	@Override
+	protected void createAndStartThreads(AStarRunnable[] runnables, Thread[] threads, PriorityQueue<PartialSolution>[] queues) {
+		// Initialise the other threads and start them
+		for (int i = 1; i < nThreads; i++) {
+			runnables[i] = new AStarRunnableVisuals(i, graph, queues[i], exploredSolutions, numProcessors,
+					visualisation, this);
+			threads[i] = new Thread(runnables[i]);
+			threads[i].start();
+		}
+
+		// This is the main thread
+		runnables[0] = new AStarRunnableVisuals(0, graph, queues[0], exploredSolutions, numProcessors, visualisation, this);
+		runnables[0].run();
+	}
 
 	//Overridden methods to increment statistics when called
 	@Override
@@ -128,5 +140,15 @@ public class AStarVisuals extends AStarSequential {
 	protected boolean shouldRunSequentially() {
 		return !isParallel || unexploredSolutions.size() < (nThreads + SOLUTIONS_TO_CREATE);
 	}
-
+	
+	@Override
+	protected PartialSolution findOptimalSolution(AStarRunnable[] runnables) {
+		PartialSolution bestSolution = runnables[0].getOptimalSolution();
+		for (int i = 1; i < nThreads; i++) {
+			if (bestSolution.getFinishTime() < runnables[i].getOptimalSolution().getFinishTime()) {
+				bestSolution = runnables[i].getOptimalSolution();
+			}
+		}
+		return bestSolution;
+	}
 }

@@ -24,8 +24,7 @@ public abstract class AStar {
 	protected PriorityQueue<PartialSolution> unexploredSolutions;
 	protected Set<PartialSolution> exploredSolutions;
 	protected byte numProcessors;
-
-
+	
 	public AStar(GraphInterface<Vertex, DefaultWeightedEdge> graph, byte numProcessors) {
 		this.graph = graph;
 		this.numProcessors = numProcessors;
@@ -51,6 +50,7 @@ public abstract class AStar {
 	public PartialSolution calculateOptimalSolution() {
 		while (shouldRunSequentially()) {
 			PartialSolution currentSolution = unexploredSolutions.poll();
+//			solutionsPopped++;
 
 			// Check if partial solution contains all the vertices
 			if (isComplete(currentSolution)) {
@@ -96,6 +96,7 @@ public abstract class AStar {
 	protected boolean isViable(PartialSolution partialSolution) {
 		if (exploredSolutions.contains(partialSolution)
 				|| partialSolution.getMinimumFinishTime() > PartialSolution.getSequentialTime()) {
+//			solutionsPruned++;
 			return false;
 		}
 
@@ -111,6 +112,8 @@ public abstract class AStar {
 	protected void expandPartialSolution(PartialSolution solution) {
 		for (Vertex v : solution.getAvailableVertices()) {
 			for (byte processor = 0; processor < numProcessors; processor++) {
+				
+//				solutionsCreated++;
 				
 				createViableSolution(solution, v, processor);
 

@@ -26,7 +26,6 @@ public class AStarSequential extends AStar{
 	 */
 	public PartialSolution calculateOptimalSolution() {
 		initialise();
-
 		return super.calculateOptimalSolution();
 	}
 	

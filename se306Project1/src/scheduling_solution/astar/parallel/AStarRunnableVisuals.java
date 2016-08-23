@@ -11,22 +11,24 @@ import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 import scheduling_solution.visualisation.GraphVisualisation;
 
-public class AStarRunnableVisuals extends AStarVisuals implements Runnable{
+public class AStarRunnableVisuals extends AStarVisuals implements AStarRunnable{
 	
 	private GraphVisualisation visualisation;	
 	final int threadNumber;
 	
 	private PartialSolution optimalSolution = null;
+	AStarVisuals parent;
 
 	public AStarRunnableVisuals(int i, GraphInterface<Vertex, DefaultWeightedEdge> graph, 
 			PriorityQueue<PartialSolution> unexploredSolutions, Set<PartialSolution> exploredSolutions, 
-			byte numProcessors, GraphVisualisation visualisation) {
+			byte numProcessors, GraphVisualisation visualisation, AStarVisuals parent) {
 		
 		super(graph, numProcessors, i, visualisation, true);
 		this.threadNumber = i;
 		this.unexploredSolutions = unexploredSolutions;
 		this.exploredSolutions = exploredSolutions;
 		this.visualisation = visualisation;
+		this.parent = parent;
 	}
 	
 	@Override
@@ -37,6 +39,7 @@ public class AStarRunnableVisuals extends AStarVisuals implements Runnable{
 			// check partial solution has all vertices allocated
 			if (isComplete(currentSolution)) {
 				this.optimalSolution = currentSolution;
+				incrementStatistics();
 				return;
 			} else {
 				expandPartialSolution(currentSolution);
@@ -46,9 +49,15 @@ public class AStarRunnableVisuals extends AStarVisuals implements Runnable{
 	}
 	
 	@Override
-	public PartialSolution calculateOptimalSolution() {
+	public PartialSolution getOptimalSolution() {
 		return optimalSolution;
 	}
 
-	
+	private void incrementStatistics() {
+		System.out.println(this.solutionsCreated + " " + this.solutionsPopped + " " + this.solutionsPruned);
+		parent.solutionsCreated += this.solutionsCreated;
+		parent.solutionsPopped += this.solutionsPopped;
+		parent.solutionsPruned += this.solutionsPruned;
+		parent.maxMemory = Math.max(parent.maxMemory, this.maxMemory);
+	}
 }

@@ -17,20 +17,20 @@ public class Main {
 	
 	private static String inputFileName;
 	private static byte numProcessors;
-	private static boolean isParallel = false;
-	private static int numThreads;
+	private static boolean isParallel = true;
+	private static int numThreads = 4;			//TODO MAKE SURE THESE ARE ALL NORMAL BEFORE SUBMISSION
 	private static boolean isVisualised = true;
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/Nodes_11_OutTree.dot", "4"};
+		args = new String[]{"tests/Nodes_11_OutTree.dot", "2"};
 		
 		long startTime = System.currentTimeMillis();
 
 		parseArgs(args);
 		GraphInterface<Vertex, DefaultWeightedEdge> graph = GraphParser.parse(inputFileName);
 		
-		PartialSolution p;
+		PartialSolution p = null;
 		
 		if (isVisualised) {
 			GraphVisualisation visuals = new GraphVisualisation(GraphParser.getDisplayGraph(), startTime, numProcessors, numThreads);
@@ -40,7 +40,7 @@ public class Main {
 		} else {
 			AStar astar;
 			if (isParallel) {
-				astar = new AStarParallel(graph,  numProcessors, 4);
+				astar = new AStarParallel(graph,  numProcessors, numThreads);
 			} else {
 				astar = new AStarSequential(graph, numProcessors);
 			}
