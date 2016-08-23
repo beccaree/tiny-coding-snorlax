@@ -43,6 +43,11 @@ public abstract class AStar {
 		this.exploredSolutions = new HashSet<>();
 	}
 
+	
+	/**
+	 * Calculates the optimal solution and returns it
+	 * @return
+	 */
 	public PartialSolution calculateOptimalSolution() {
 		while (shouldRunSequentially()) {
 			PartialSolution currentSolution = unexploredSolutions.poll();

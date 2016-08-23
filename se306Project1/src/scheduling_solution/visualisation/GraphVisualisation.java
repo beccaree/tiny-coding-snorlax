@@ -105,7 +105,7 @@ static Boolean programEnded = false;
 		lblNumbThreads.setText(Integer.toString(numThreads));
 		information.add(lblNumbThreads);
 		
-		information.add(new JLabel("Closed queue size:"));
+		information.add(new JLabel("Closed set size:"));
 		information.add(lblClosedQ);
 		
 		for (int i = 0; i < numThreads; i++) {

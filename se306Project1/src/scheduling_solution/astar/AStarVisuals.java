@@ -12,8 +12,7 @@ import scheduling_solution.visualisation.GraphVisualisation;
 public class AStarVisuals extends AStarSequential {
 	private int nThreads;
 	
-	public int solutionsPopped = 0;// TODO should these be here, or in
-	// visualisation subclasses
+	public int solutionsPopped = 0;
 	public int solutionsCreated = 0;
 	public int solutionsPruned = 0;
 	public long maxMemory = 0;

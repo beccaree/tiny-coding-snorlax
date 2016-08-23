@@ -17,7 +17,7 @@ public class Main {
 	
 	private static String inputFileName;
 	private static byte numProcessors;
-	private static boolean isParallel = true;
+	private static boolean isParallel = false;
 	private static int numThreads;
 	private static boolean isVisualised = true;
 	private static String outputFileName;
@@ -29,22 +29,24 @@ public class Main {
 
 		parseArgs(args);
 		GraphInterface<Vertex, DefaultWeightedEdge> graph = GraphParser.parse(inputFileName);
-
+		
+		PartialSolution p;
+		
 		if (isVisualised) {
 			GraphVisualisation visuals = new GraphVisualisation(GraphParser.getDisplayGraph(), startTime, numProcessors, numThreads);
 			AStarVisuals astar = new AStarVisuals(graph,  numProcessors, numThreads, visuals, isParallel);
-			PartialSolution p = astar.calculateOptimalSolution();
+			p = astar.calculateOptimalSolution();
 			visuals.stopTimer(p, astar);	
-		}
-		
-		AStar astar;
-		if (isParallel) {
-			astar = new AStarParallel(graph,  numProcessors, 4);
 		} else {
-			astar = new AStarSequential(graph, numProcessors);
+			AStar astar;
+			if (isParallel) {
+				astar = new AStarParallel(graph,  numProcessors, 4);
+			} else {
+				astar = new AStarSequential(graph, numProcessors);
+			}
+			p = astar.calculateOptimalSolution();
 		}
 		
-		PartialSolution p = astar.calculateOptimalSolution();
 		
 		p.printDetails();
 //		System.out.println("Solutions created: " + astar.solutionsCreated);
