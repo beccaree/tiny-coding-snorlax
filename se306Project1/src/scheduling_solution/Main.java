@@ -1,18 +1,7 @@
 package scheduling_solution;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.traverse.TopologicalOrderIterator;
-
-import com.sun.jndi.toolkit.ctx.PartialCompositeContext;
-
-import pj.Pyjama;
 import scheduling_solution.astar.AStarSeq;
-//import scheduling_solution.astar.AStarSeq;
 import scheduling_solution.astar.AStarVisuals;
 import scheduling_solution.astar.PartialSolution;
 import scheduling_solution.astar.fullyparallel.AStarParallelThreadsSlow;
@@ -21,10 +10,6 @@ import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 import scheduling_solution.input.GraphParser;
 import scheduling_solution.output.OutputFileCreator;
-import scheduling_solution.output.Solution;
-import scheduling_solution.solver.BottomLevelCalculator;
-import scheduling_solution.solver.TopologicalSortGenerator;
-import scheduling_solution.solver.TopologicalSolver;
 import scheduling_solution.visualisation.GraphVisualisation;
 
 public class Main {
@@ -45,12 +30,12 @@ public class Main {
 		GraphInterface<Vertex, DefaultWeightedEdge> graph = GraphParser.parse(inputFileName);
 		
 		
-//		if (isVisualised) {
-//			GraphVisualisation visuals = new GraphVisualisation(GraphParser.getDisplayGraph(), startTime, numProcessors, Integer.toString(numThreads));
-//			AStarVisuals astar = new AStarVisuals(graph,  numProcessors, visuals);
-//			PartialSolution p = astar.calculateOptimalSolution();
-//			visuals.stopTimer(p, astar);	
-//		}
+		if (isVisualised) {
+			GraphVisualisation visuals = new GraphVisualisation(GraphParser.getDisplayGraph(), startTime, numProcessors, Integer.toString(numThreads));
+			AStarVisuals astar = new AStarVisuals(graph,  numProcessors, visuals);
+			PartialSolution p = astar.calculateOptimalSolution();
+			visuals.stopTimer(p, astar);	
+		}
 		AStarSeq astar = new AStarSeq(graph, numProcessors);
 //		AStarParallelThreads astar = new AStarParallelThreads(graph,  numProcessors, 4);
 		PartialSolution p = astar.calculateOptimalSolution();
@@ -67,15 +52,6 @@ public class Main {
 		
 		
 		p.verify();//TODO remove
-		
-		//Basic milestone: Produce any schedule
-//		List<Vertex> topologicalSort = TopologicalSortGenerator.calculate(graph);
-//		
-//		Solution topologicalSolution = TopologicalSolver.solve(topologicalSort);
-//		
-//		//Should decide on whether to do static or non-static
-//		OutputFileCreator.create(outputFileName, inputFileName, topologicalSolution);
-		
 	}
 	
 	private static void parseArgs(String[] args) {		

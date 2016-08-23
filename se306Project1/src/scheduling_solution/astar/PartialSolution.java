@@ -1,6 +1,5 @@
 package scheduling_solution.astar;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

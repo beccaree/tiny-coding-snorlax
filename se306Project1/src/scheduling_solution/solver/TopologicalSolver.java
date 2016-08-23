@@ -1,10 +1,6 @@
 package scheduling_solution.solver;
 
 import java.util.List;
-
-import org.jgrapht.graph.DefaultWeightedEdge;
-
-import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 import scheduling_solution.output.Solution;
 

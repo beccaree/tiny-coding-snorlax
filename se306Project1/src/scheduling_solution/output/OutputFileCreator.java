@@ -2,7 +2,6 @@ package scheduling_solution.output;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,8 +10,6 @@ import java.io.InputStreamReader;
 import scheduling_solution.astar.AllocationInfo;
 import scheduling_solution.astar.PartialSolution;
 import scheduling_solution.graph.Vertex;
-import scheduling_solution.input.GraphParser;
-import scheduling_solution.solver.VertexInfo;
 
 /**
  * Creates and writes the output file in the same format as the input file

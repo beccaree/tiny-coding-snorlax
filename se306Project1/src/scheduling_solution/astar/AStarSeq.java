@@ -1,8 +1,5 @@
 package scheduling_solution.astar;
 
-
-import java.util.ArrayList;
-import java.awt.List;
 import java.util.AbstractQueue;
 
 import java.util.HashSet;
