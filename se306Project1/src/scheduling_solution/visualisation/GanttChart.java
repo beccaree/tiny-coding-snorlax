@@ -3,8 +3,6 @@ package scheduling_solution.visualisation;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import org.jfree.data.category.IntervalCategoryDataset;
@@ -20,6 +18,7 @@ public class GanttChart {
 	
 	PartialSolution partialSolution;
 	byte numProc;
+	TaskSeries series;
 
 	public GanttChart(PartialSolution partialSolution, byte numProc) {
 		this.partialSolution = partialSolution;
@@ -28,7 +27,7 @@ public class GanttChart {
 	
 	IntervalCategoryDataset getDataSet() {
 		
-		final TaskSeries series = new TaskSeries("Scheduled");
+		series = new TaskSeries("Scheduled");
 		int[] processorStartTimes = new int[numProc];
 		int[] processorFinishTimes = new int[numProc];
 		ArrayList<Task> procTasks = new ArrayList<Task>();
@@ -68,8 +67,7 @@ public class GanttChart {
 			Vertex v = entry.getKey();
 			AllocationInfo a = entry.getValue();
 			
-			Task task = new Task("Processor "+a.getProcessorNumber()+v.getName(), 
-					date(a.getStartTime()), date(a.getStartTime()+v.getWeight()));
+			Task task = new Task(v.getName(), date(a.getStartTime()), date(a.getStartTime()+v.getWeight()));
 			
 			procTasks.get(a.getProcessorNumber()).addSubtask(task);
 		}
@@ -92,4 +90,8 @@ public class GanttChart {
         final Date result = calendar.getTime();
         return result;
     }
+	
+	public TaskSeries getTasks() {
+		return series;
+	}
 }

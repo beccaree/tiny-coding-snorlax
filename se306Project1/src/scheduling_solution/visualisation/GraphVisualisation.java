@@ -3,7 +3,6 @@ package scheduling_solution.visualisation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -20,8 +19,8 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.renderer.category.GanttRenderer;
 import org.jfree.data.category.IntervalCategoryDataset;
+import org.jfree.data.gantt.TaskSeries;
 
 import scheduling_solution.astar.AStarVisuals;
 import scheduling_solution.astar.PartialSolution;
@@ -49,6 +48,9 @@ static Boolean programEnded = false;
 	ViewPanel view;
 	ViewerPipe vp;
 	
+	byte numbProc;
+	CategoryPlot plot;
+	
 	public GraphVisualisation(Graph gsGraph, long startTime, byte numProc, int numThreads) {
 		setTitle("Process Visualisation");
 		setBounds(50, 50, 900, 600);
@@ -56,6 +58,7 @@ static Boolean programEnded = false;
 		
 		if (numThreads == 0) { numThreads = 1; } // main thread
 		
+		this.numbProc = numProc;
 		this.startTime = startTime;
 		this.gsGraph = gsGraph;
 		this.gsGraph.addAttribute("ui.stylesheet", "node {fill-mode: dyn-plain;}");
@@ -134,30 +137,33 @@ static Boolean programEnded = false;
 		
 		solutionDetails.setLayout(b);
 		
-//		//GANTT
-//		GanttChart gantt = new GanttChart(p, numbProc);
-//		
-//		final IntervalCategoryDataset dataset = gantt.getDataSet();
-//		
-//		// create the chart...
-//        final JFreeChart chart = ChartFactory.createGanttChart(
-//            "Optimal Schedule",  // chart title
-//            "Processor",              // domain axis label
-//            "Time",              // range axis label
-//            dataset,             // data
-//            true,                // include legend
-//            true,                // tooltips
-//            false                // urls
-//        );
-//        final CategoryPlot plot = (CategoryPlot) chart.getPlot();
-//  //      plot.getDomainAxis().setMaxCategoryLabelWidthRatio(10.0f);
-//        final GanttRenderer renderer = (GanttRenderer) plot.getRenderer();
-//        renderer.setSeriesPaint(0, Color.blue);
-//        
-//        final ChartPanel chartPanel = new ChartPanel(chart);
-//        chartPanel.setPreferredSize(new java.awt.Dimension(500, 370));
-//		solutionDetails.add(chartPanel);
+		
+		//GANTT CHART
+		GanttChart gantt = new GanttChart(p, numbProc);
+				
+		final IntervalCategoryDataset dataset = gantt.getDataSet();
+				
+		// create the chart...
+		final JFreeChart chart = ChartFactory.createGanttChart(
+				"Optimal Schedule",  // chart title
+		        "Processor",              // domain axis label
+		        "Time",              // range axis label
+		        dataset,             // data
+		        true,                // include legend
+		        true,                // tooltips
+		        false                // urls
+		);
+		this.plot = (CategoryPlot) chart.getPlot();
+		        
+		TaskSeries series = gantt.getTasks();
+		GanttChartRenderer renderer = new GanttChartRenderer(series);
+		plot.setRenderer(renderer);
+		        
+		final ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new java.awt.Dimension(500, 370));
+		solutionDetails.add(chartPanel);
         
+		
 		solutionDetails.add(new JLabel("Solutions created: " + astar.solutionsCreated));
 		solutionDetails.add(new JLabel("Solutions popped: " + astar.solutionsPopped));
 		solutionDetails.add(new JLabel("Solutions pruned: " + astar.solutionsPruned));
