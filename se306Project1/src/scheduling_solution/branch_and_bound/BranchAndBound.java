@@ -21,7 +21,7 @@ public class BranchAndBound {
 	private static Queue<PartialSolution> activeStates;
 	private static HashSet<Vertex> startVertices;
 	
-	public static PartialSolution calculateOptimalSolution(GraphInterface<Vertex, DefaultWeightedEdge> graph, int numProcessors) {
+	public PartialSolution calculateOptimalSolution(GraphInterface<Vertex, DefaultWeightedEdge> graph, int numProcessors) {
 		BranchAndBound.graph = graph;
 		BranchAndBound.numProcessors = numProcessors;
 		activeStates = new LinkedList<PartialSolution>();

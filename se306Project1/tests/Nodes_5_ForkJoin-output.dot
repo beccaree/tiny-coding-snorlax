@@ -1,0 +1,13 @@
+digraph "outputFork Join" {
+	0	 [Weight=50, Start=0, Processor=1];
+	1	 [Weight=70, Start=59, Processor=3];
+	0 -> 1	 [Weight=9];
+	2	 [Weight=90, Start=57, Processor=2];
+	0 -> 2	 [Weight=7];
+	3	 [Weight=100, Start=50, Processor=1];
+	0 -> 3	 [Weight=4];
+	4	 [Weight=40, Start=152, Processor=2];
+	1 -> 4	 [Weight=4];
+	2 -> 4	 [Weight=6];
+	3 -> 4	 [Weight=2];
+}

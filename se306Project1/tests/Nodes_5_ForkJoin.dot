@@ -1,0 +1,13 @@
+digraph "Fork Join" {
+	0	 [Weight=50];
+	1	 [Weight=70];
+	0 -> 1	 [Weight=9];
+	2	 [Weight=90];
+	0 -> 2	 [Weight=7];
+	3	 [Weight=100];
+	0 -> 3	 [Weight=4];
+	4	 [Weight=40];
+	1 -> 4	 [Weight=4];
+	2 -> 4	 [Weight=6];
+	3 -> 4	 [Weight=2];
+}
