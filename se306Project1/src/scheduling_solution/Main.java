@@ -47,10 +47,10 @@ public class Main {
 		PartialSolution p = astar.calculateOptimalSolution();
 		
 		p.printDetails();
-		System.out.println("Solutions created: " + astar.solutionsCreated);
-		System.out.println("Solutions popped: " + astar.solutionsPopped);
-		System.out.println("Solutions pruned: " + astar.solutionsPruned);
-		System.out.println("Max memory (MB): " + astar.maxMemory /1024/1024);
+//		System.out.println("Solutions created: " + astar.solutionsCreated);
+//		System.out.println("Solutions popped: " + astar.solutionsPopped);
+//		System.out.println("Solutions pruned: " + astar.solutionsPruned);
+//		System.out.println("Max memory (MB): " + astar.maxMemory /1024/1024);
 		long finishTime = System.currentTimeMillis();
 		System.out.println("Time taken: " + (finishTime - startTime));
 		

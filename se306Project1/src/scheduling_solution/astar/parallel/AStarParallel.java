@@ -29,39 +29,30 @@ public class AStarParallel extends AStarSequential {
 	
 	@Override
 	public PartialSolution calculateOptimalSolution() {
-		initialise();
+		PartialSolution solution = super.calculateOptimalSolution();
 		
-		//Run it sequentially until we have the desired number of solutions
-		while (unexploredSolutions.size() < (nThreads + SOLUTIONS_TO_CREATE)) {
-
-			// priority queue of unexplored solutions
-			PartialSolution currentSolution = unexploredSolutions.poll();
-
-			// Check if partial solution has all vertices allocated
-			if (isComplete(currentSolution)) {
-				return currentSolution;
-			} else {
-				expandPartialSolution(currentSolution);
-			}
+		//Will return null if the solution was not found in the sequential part
+		if (solution != null) {
+			return solution;
 		}
 		
 		//After the desired number of solutions is reached, perform the search in parallel
 		PriorityQueue<PartialSolution>[] queues = new PriorityQueue[nThreads];
 		
-		//Initialise the queues
+		//Initialize the queues of each thread
 		for (int i = 0; i < nThreads; i++) {
 			queues[i] = new PriorityQueue<PartialSolution>(new PartialSolutionComparator());
 		}
 		
 		//Rotate through the list of queues, popping a solution for each until it is empty
 		PartialSolution ps;
-		int n = 0;
+		int index = 0;
 		while ((ps = unexploredSolutions.poll()) != null) {
-			queues[n].add(ps);
-			n++;
+			queues[index].add(ps);
+			index++;
 			
-			if (n == nThreads) { //Go back to queue[0]
-				n = 0;
+			if (index == nThreads) { //Go back to queue[0]
+				index = 0;
 			}
 		}
 		unexploredSolutions = null; //Prevent further accidental access 
@@ -76,7 +67,7 @@ public class AStarParallel extends AStarSequential {
 			threads[i].start();
 		}
 		
-		//This is the main thread
+		//This is the main thread, doesnt need a thread
 		runnables[0] = new AStarRunnable(0, graph, queues[0], exploredSolutions, numProcessors);
 		runnables[0].run();
 		
@@ -89,16 +80,23 @@ public class AStarParallel extends AStarSequential {
 			}
 		}
 		
-		//Get the shortest result and return it
-		PartialSolution bestSolution = runnables[0].calculateOptimalSolution();
+		//Get the shortest result from all threads and return it
+		PartialSolution bestSolution = runnables[0].getOptimalSolution();
 		for (int i = 1; i < nThreads; i++) {
-			if (bestSolution.getFinishTime() < runnables[i].calculateOptimalSolution().getFinishTime()) {
-				bestSolution = runnables[i].calculateOptimalSolution();
+			if (bestSolution.getFinishTime() < runnables[i].getOptimalSolution().getFinishTime()) {
+				bestSolution = runnables[i].getOptimalSolution();
 			}
 		}
 		return bestSolution;
-		
 	}
 	
-
+	/**
+	 * The parallel version should only run sequentially until we create the desired
+	 * number of solutions.
+	 */
+	@Override
+	protected boolean shouldRunSequentially() {
+		return unexploredSolutions.size() < (nThreads + SOLUTIONS_TO_CREATE);
+	}
+	
 }

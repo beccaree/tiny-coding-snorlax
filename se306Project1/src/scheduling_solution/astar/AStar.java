@@ -25,11 +25,6 @@ public abstract class AStar {
 	protected Set<PartialSolution> exploredSolutions;
 	protected byte numProcessors;
 
-	public int solutionsPopped = 0;// TODO should these be here, or in
-									// visualisation subclasses
-	public int solutionsCreated = 0;
-	public int solutionsPruned = 0;
-	public long maxMemory = 0;
 
 	public AStar(GraphInterface<Vertex, DefaultWeightedEdge> graph, byte numProcessors) {
 		this.graph = graph;
@@ -48,8 +43,30 @@ public abstract class AStar {
 		this.exploredSolutions = new HashSet<>();
 	}
 
-	public abstract PartialSolution calculateOptimalSolution();
+	public PartialSolution calculateOptimalSolution() {
+		while (shouldRunSequentially()) {
+			PartialSolution currentSolution = unexploredSolutions.poll();
 
+			// Check if partial solution contains all the vertices
+			if (isComplete(currentSolution)) {
+				return currentSolution;
+			} else {
+				expandPartialSolution(currentSolution);
+			}
+		}
+		
+		/*This will be reached in the parallel version, as shouldRunSequentially() 
+		  will return false after N iterations*/
+		return null;
+	}
+
+	/**
+	 * Method that should be overridden by subclasses which indicates
+	 * when to break the while loop in calculateOptimalSolution
+	 * @return
+	 */
+	protected abstract boolean shouldRunSequentially();
+	
 	/**
 	 * Checks if partial solution has allocated all vertices
 	 * 
@@ -71,7 +88,7 @@ public abstract class AStar {
 	 * @return True - if the given ParticalSolution has a chance of being an
 	 *         optimal solution
 	 */
-	public boolean isViable(PartialSolution partialSolution) {
+	protected boolean isViable(PartialSolution partialSolution) {
 		if (exploredSolutions.contains(partialSolution)
 				|| partialSolution.getMinimumFinishTime() > PartialSolution.getSequentialTime()) {
 			return false;
@@ -89,14 +106,8 @@ public abstract class AStar {
 	protected void expandPartialSolution(PartialSolution solution) {
 		for (Vertex v : solution.getAvailableVertices()) {
 			for (byte processor = 0; processor < numProcessors; processor++) {
-				// add vertex into solution
-				PartialSolution newSolution = new PartialSolution(graph, solution, v, processor);
-				// Only add the solution to the priority queue if it
-				// passes the pruning check
-
-				if (isViable(newSolution)) {
-					unexploredSolutions.add(newSolution);
-				}
+				
+				createViableSolution(solution, v, processor);
 
 				// Only adds vertex to leftmost empty processor
 				if (solution.getFinishTimes()[processor] == 0) {
@@ -105,8 +116,23 @@ public abstract class AStar {
 
 			}
 		}
-		
 		exploredSolutions.add(solution);
-
 	}
+	
+	
+	/**
+	 * Creates a child solution, but does not add it to the priority queue if it
+	 * does not pass the pruning check
+	 * @param solution
+	 * @param v
+	 * @param processor
+	 */
+	protected void createViableSolution(PartialSolution solution, Vertex v, byte processor) {
+		PartialSolution newSolution = new PartialSolution(graph, solution, v, processor);
+		// Only add the solution to the priority queue if it passes the pruning check
+		if (isViable(newSolution)) {
+			unexploredSolutions.add(newSolution);
+		}
+	}
+	
 }

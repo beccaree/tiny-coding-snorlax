@@ -28,22 +28,20 @@ public class AStarRunnable extends AStar implements Runnable{
 	
 	@Override
 	public void run() {
-		while (true) {
-			PartialSolution currentSolution = unexploredSolutions.poll();
-			
-			// check partial solution has all vertices allocated
-			if (isComplete(currentSolution)) {
-				this.optimalSolution = currentSolution;
-				return;
-			} else {
-				expandPartialSolution(currentSolution);
-			}
-		}
+		optimalSolution = super.calculateOptimalSolution();
 	}
 	
-	@Override
-	public PartialSolution calculateOptimalSolution() {
+	public PartialSolution getOptimalSolution() {
 		return optimalSolution;
+	}
+
+	
+	/**
+	 * The runnable should run until a solution is found
+	 */
+	@Override
+	protected boolean shouldRunSequentially() {
+		return true;
 	}
 
 }

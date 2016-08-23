@@ -12,6 +12,12 @@ import scheduling_solution.visualisation.GraphVisualisation;
 public class AStarVisuals extends AStarSequential {
 	private int nThreads;
 	
+	public int solutionsPopped = 0;// TODO should these be here, or in
+	// visualisation subclasses
+	public int solutionsCreated = 0;
+	public int solutionsPruned = 0;
+	public long maxMemory = 0;
+	
 	//Number of solutions to create
 	private static final int SOLUTIONS_TO_CREATE = 1000;
 	
@@ -25,27 +31,16 @@ public class AStarVisuals extends AStarSequential {
 		this.nThreads = numThreads;
 	}
 	
+	@Override
 	public PartialSolution calculateOptimalSolution() {
 		
 		initialise();
 
-		while (true) {
-			if (isParallel && !(unexploredSolutions.size() < (nThreads + SOLUTIONS_TO_CREATE))) {
-				break;
-			}
-			solutionsPopped++;
-
-			maxMemory = Math.max(maxMemory, Runtime.getRuntime().totalMemory());
-			// priority list of unexplored solutions
-			PartialSolution currentSolution = unexploredSolutions.poll();
-
-			// check partial solution has all vertices allocated
-			if (isComplete(currentSolution)) {
-				return currentSolution;
-			} else {
-				expandPartialSolution(currentSolution);
-				visualisation.updateQueueSize(0, unexploredSolutions.size(), exploredSolutions.size());
-			}
+		PartialSolution partialSolution = super.calculateOptimalSolution();
+		
+		//If it is sequential or it is running in parallel but finished, return it
+		if (partialSolution != null) {
+			return partialSolution;
 		}
 		
 		// SHOULD ONLY EXECUTE IF IS PARALLEL-------------------------------------------->
@@ -105,34 +100,34 @@ public class AStarVisuals extends AStarSequential {
 		// ---------------------------------------------------------------------------->
 	}
 	
+
+	//Overridden methods to increment statistics when called
 	@Override
-	public void expandPartialSolution(PartialSolution solution) {
-		for (Vertex v : solution.getAvailableVertices()) {
-			for (byte processor = 0; processor < numProcessors; processor++) {
-				// add vertex into solution
-				PartialSolution newSolution = new PartialSolution(graph, solution, v, processor);
-				// Only add the solution to the priority queue if it
-				// passes the pruning check
-
-				if (isViable(newSolution)) {
-					unexploredSolutions.add(newSolution);
-				} else {
-					solutionsPruned++;
-				}
-				
-				//TODO is there a better way to increment these rather than overriding the whole method?
-				solutionsCreated++; 
-
-				// Only adds vertex to leftmost empty processor
-				if (solution.getFinishTimes()[processor] == 0) {
-					break;
-				}
-
-			}
+	protected void createViableSolution(PartialSolution solution, Vertex v, byte processor) {
+		super.createViableSolution(solution, v, processor);
+		solutionsCreated++;
+	}
+	
+	@Override
+	protected boolean isViable(PartialSolution partialSolution) {
+		boolean isViable = super.isViable(partialSolution);
+		if (!isViable) {
+			solutionsPruned++;
 		}
-		
-		exploredSolutions.add(solution);
-		
+		return isViable;
+	}
+	
+	@Override
+	protected void expandPartialSolution(PartialSolution solution) {
+		super.expandPartialSolution(solution);
+		solutionsPopped++;
+		maxMemory = Math.max(maxMemory, Runtime.getRuntime().totalMemory());
+		visualisation.updateQueueSize(0, unexploredSolutions.size(), exploredSolutions.size());
+	}
+	
+	@Override
+	protected boolean shouldRunSequentially() {
+		return !isParallel || unexploredSolutions.size() < (nThreads + SOLUTIONS_TO_CREATE);
 	}
 
 }

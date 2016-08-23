@@ -25,31 +25,16 @@ public class AStarSequential extends AStar{
 	 * @return optimal PartialSolution object
 	 */
 	public PartialSolution calculateOptimalSolution() {
-		
 		initialise();
 
-		while (true) {
-//			solutionsPopped++;
-			
-			/* Log memory for optimization purposes */
-//			maxMemory = Math.max(maxMemory, Runtime.getRuntime().totalMemory());
-
-			// priority list of unexplored solutions
-			PartialSolution currentSolution = unexploredSolutions.poll();
-
-			// Check if partial solution contains all the vertices
-			if (isComplete(currentSolution)) {
-				return currentSolution;
-			} else {
-				expandPartialSolution(currentSolution);
-			}
-		}
+		return super.calculateOptimalSolution();
 	}
 	
 	/**
 	 * Initialises a crude upper bound (sequentialTime) as well as the starting
 	 * vertices and solutions.
 	 * The starting vertices and sequential time are stored statically in PartialSolution.java
+	 * to save on memory/computation time.
 	 */
 	public void initialise() {
 		BottomLevelCalculator.calculate(graph);
@@ -61,11 +46,11 @@ public class AStarSequential extends AStar{
 		}
 		PartialSolution.setSequentialTime(sequentialTime);
 		
+		//Get all nodes of indegree 0
 		HashSet<Vertex> startingVertices = new HashSet<>();
 		for (Vertex v : graph.vertexSet()) {
 			if (graph.inDegreeOf(v) == 0) {
 				startingVertices.add(v);
-				
 			}
 		}	
 		
@@ -77,4 +62,13 @@ public class AStarSequential extends AStar{
 			
 	}
 	
+	
+	/**
+	 * Method to be overridden in the parallel version.
+	 * Should return false when we should break the sequential for loop
+	 * @return
+	 */
+	protected boolean shouldRunSequentially() {
+		return true;
+	}
 }
