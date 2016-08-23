@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import junit.framework.TestCase;
-import scheduling_solution.astar.AStarSeq;
+import scheduling_solution.astar.AStarSequential;
 import scheduling_solution.astar.PartialSolution;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.JGraphTAdapter;
@@ -56,7 +56,7 @@ public class TestAStar extends TestCase {
 		graph.setEdgeWeight(edgecd, 1);
 		
 		//Runs Astar on the graph with 2 processors
-		AStarSeq astar = new AStarSeq(graph, (byte) 2);
+		AStarSequential astar = new AStarSequential(graph, (byte) 2);
 		
 		//Checks if the number of start states is what is expected
 		astar.initialise();
@@ -100,7 +100,7 @@ public class TestAStar extends TestCase {
 		}
 		
 		//Runs Astar on the graph with 2 processors
-		AStarSeq astar = new AStarSeq(graph, (byte) 2);
+		AStarSequential astar = new AStarSequential(graph, (byte) 2);
 		
 		//Checks if the number of start states is what is expected
 		astar.initialise();
@@ -158,7 +158,7 @@ public class TestAStar extends TestCase {
 		graph.setEdgeWeight(edge94, 1);
 		
 		//Runs Astar on the graph with 3 processors
-		AStarSeq astar = new AStarSeq(graph, (byte) 3);
+		AStarSequential astar = new AStarSequential(graph, (byte) 3);
 		
 		//Checks if the number of start states is what is expected
 		astar.initialise();

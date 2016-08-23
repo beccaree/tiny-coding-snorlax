@@ -1,10 +1,12 @@
 package scheduling_solution;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
-import scheduling_solution.astar.AStarSeq;
+
+import scheduling_solution.astar.AStar;
+import scheduling_solution.astar.AStarSequential;
 import scheduling_solution.astar.AStarVisuals;
 import scheduling_solution.astar.PartialSolution;
-import scheduling_solution.astar.threads.AStarParallelThreads;
+import scheduling_solution.astar.parallel.AStarParallel;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 import scheduling_solution.input.GraphParser;
@@ -17,11 +19,11 @@ public class Main {
 	private static byte numProcessors;
 	private static boolean isParallel = false;
 	private static int numThreads;
-	private static boolean isVisualised = false;
+	private static boolean isVisualised = true;
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/Nodes_11_ForkJoin.dot", "8"};
+		args = new String[]{"tests/Nodes_11_OutTree.dot", "4"};
 		
 		long startTime = System.currentTimeMillis();
 
@@ -35,8 +37,14 @@ public class Main {
 			PartialSolution p = astar.calculateOptimalSolution();
 			visuals.stopTimer(p, astar);	
 		}
-		AStarSeq astar = new AStarSeq(graph, numProcessors);
-//		AStarParallelThreads astar = new AStarParallelThreads(graph,  numProcessors, 4);
+		
+		AStar astar;
+		if (isParallel) {
+			astar = new AStarParallel(graph,  numProcessors, 4);
+		} else {
+			astar = new AStarSequential(graph, numProcessors);
+		}
+		
 		PartialSolution p = astar.calculateOptimalSolution();
 		
 		p.printDetails();

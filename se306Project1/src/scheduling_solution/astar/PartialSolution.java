@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
-import scheduling_solution.astar.threads.AStarParallelThreads;
+import scheduling_solution.astar.parallel.AStarParallel;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 
@@ -255,6 +255,9 @@ public class PartialSolution {
 		}
 	}
 	
+	/**
+	 * Used for verification, not to be called in final product
+	 */
 	public void verify() {
 		for (Map.Entry<Vertex, AllocationInfo> entry : allocatedVertices.entrySet()) {
 			Vertex vertex = entry.getKey();

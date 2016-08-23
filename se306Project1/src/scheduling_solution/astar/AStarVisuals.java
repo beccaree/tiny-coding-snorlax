@@ -6,7 +6,7 @@ import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 import scheduling_solution.visualisation.GraphVisualisation;
 
-public class AStarVisuals extends AStarSeq {
+public class AStarVisuals extends AStarSequential {
 	
 	private GraphVisualisation visualisation;
 
@@ -22,6 +22,7 @@ public class AStarVisuals extends AStarSeq {
 		while (true) {
 			solutionsPopped++;
 
+			maxMemory = Math.max(maxMemory, Runtime.getRuntime().totalMemory());
 			// priority list of unexplored solutions
 			PartialSolution currentSolution = unexploredSolutions.poll();
 
@@ -29,31 +30,40 @@ public class AStarVisuals extends AStarSeq {
 			if (isComplete(currentSolution)) {
 				return currentSolution;
 			} else {
-				for (Vertex v : currentSolution.getAvailableVertices()) {
-					for (byte processor = 0; processor < numProcessors; processor++) {
-						// add vertex into solution
-						PartialSolution newSolution = new PartialSolution(
-								graph, currentSolution, v, processor);
-
-						/* Log memory for optimisation purposes */
-						long mem = Runtime.getRuntime().totalMemory();
-						if (mem > maxMemory) {
-							maxMemory = mem;
-						}
-						solutionsCreated++;
-
-						// Only add the solution to the priority queue if it
-						// passes the pruning check
-
-						if (super.isViable(newSolution)) {
-							unexploredSolutions.add(newSolution);
-						}
-					}
-				}
-				exploredSolutions.add(currentSolution);
+				expandPartialSolution(currentSolution);
 				visualisation.updateQueueSize(unexploredSolutions.size(), exploredSolutions.size());
 			}
 		}
+	}
+	
+	@Override
+	public void expandPartialSolution(PartialSolution solution) {
+		for (Vertex v : solution.getAvailableVertices()) {
+			for (byte processor = 0; processor < numProcessors; processor++) {
+				// add vertex into solution
+				PartialSolution newSolution = new PartialSolution(graph, solution, v, processor);
+				// Only add the solution to the priority queue if it
+				// passes the pruning check
+
+				if (isViable(newSolution)) {
+					unexploredSolutions.add(newSolution);
+				} else {
+					solutionsPruned++;
+				}
+				
+				//TODO is there a better way to increment these rather than overriding the whole method?
+				solutionsCreated++; 
+
+				// Only adds vertex to leftmost empty processor
+				if (solution.getFinishTimes()[processor] == 0) {
+					break;
+				}
+
+			}
+		}
+		
+		exploredSolutions.add(solution);
+		
 	}
 
 }

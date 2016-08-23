@@ -1,12 +1,10 @@
-package scheduling_solution.astar.threads;
+package scheduling_solution.astar.parallel;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.PriorityQueue;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
-import scheduling_solution.astar.AStarSeq;
+import scheduling_solution.astar.AStarSequential;
 import scheduling_solution.astar.PartialSolution;
 import scheduling_solution.astar.PartialSolutionComparator;
 import scheduling_solution.graph.GraphInterface;
@@ -18,13 +16,13 @@ import scheduling_solution.graph.Vertex;
  * the decreased pruning is better than a blocking Set.
  *
  */
-public class AStarParallelThreads extends AStarSeq {
+public class AStarParallel extends AStarSequential {
 	final int nThreads;
 	
 	//Number of solutions to create
 	private final static int SOLUTIONS_TO_CREATE = 1000;
 	
-	public AStarParallelThreads(GraphInterface<Vertex, DefaultWeightedEdge> graph, byte numProcessors, int nThreads) {
+	public AStarParallel(GraphInterface<Vertex, DefaultWeightedEdge> graph, byte numProcessors, int nThreads) {
 		super(graph, numProcessors);
 		this.nThreads = nThreads;
 	}
@@ -43,21 +41,7 @@ public class AStarParallelThreads extends AStarSeq {
 			if (isComplete(currentSolution)) {
 				return currentSolution;
 			} else {
-				for (Vertex v : currentSolution.getAvailableVertices()) {
-					for (byte processor = 0; processor < numProcessors; processor++) {
-						// Create new solution that is a clone of it's parent + the new vertex
-						PartialSolution newSolution = new PartialSolution(graph, currentSolution, v, processor);
-						solutionsCreated++;
-						
-						// Only add the solution to the priority queue if it
-						// passes the pruning check
-						if (isViable(newSolution)) {
-							unexploredSolutions.add(newSolution);
-						}
-					}
-				}
-				
-				exploredSolutions.add(currentSolution);
+				expandPartialSolution(currentSolution);
 			}
 		}
 		
@@ -82,19 +66,18 @@ public class AStarParallelThreads extends AStarSeq {
 		}
 		unexploredSolutions = null; //Prevent further accidental access 
 		
-		PartialSolution[] resultList = new PartialSolution[nThreads];
 		AStarRunnable[] runnables = new AStarRunnable[nThreads];
 		Thread threads[] = new Thread[nThreads];
 		
 		//Initialise the other threads and start them
 		for (int i = 1; i < nThreads; i++) {
-			runnables[i] = new AStarRunnable(i, graph, queues[i], resultList, exploredSolutions, numProcessors);
+			runnables[i] = new AStarRunnable(i, graph, queues[i], exploredSolutions, numProcessors);
 			threads[i] = new Thread(runnables[i]);
 			threads[i].start();
 		}
 		
 		//This is the main thread
-		runnables[0] = new AStarRunnable(0, graph, queues[0], resultList, exploredSolutions, numProcessors);
+		runnables[0] = new AStarRunnable(0, graph, queues[0], exploredSolutions, numProcessors);
 		runnables[0].run();
 		
 		//Wait for all threads to finish
@@ -107,10 +90,10 @@ public class AStarParallelThreads extends AStarSeq {
 		}
 		
 		//Get the shortest result and return it
-		PartialSolution bestSolution = resultList[0];
+		PartialSolution bestSolution = runnables[0].calculateOptimalSolution();
 		for (int i = 1; i < nThreads; i++) {
-			if (bestSolution.getFinishTime() < resultList[i].getFinishTime()) {
-				bestSolution = resultList[i];
+			if (bestSolution.getFinishTime() < runnables[i].calculateOptimalSolution().getFinishTime()) {
+				bestSolution = runnables[i].calculateOptimalSolution();
 			}
 		}
 		return bestSolution;

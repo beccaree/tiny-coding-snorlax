@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import scheduling_solution.astar.AStarSeq;
+import scheduling_solution.astar.AStarSequential;
 import scheduling_solution.astar.PartialSolution;
 import scheduling_solution.branch_and_bound.BranchAndBound;
 import scheduling_solution.graph.GraphInterface;
@@ -21,7 +21,7 @@ public class TestVaildOptimalSolution {
 	private static final byte numProcessors = 4;
 	
 	// Solution 
-	AStarSeq astar;
+	AStarSequential astar;
 	BranchAndBound branchBound;
 	
 	// Files
@@ -50,7 +50,7 @@ public class TestVaildOptimalSolution {
 		
 		graph = GraphParser.parse(node11ForkJoin);
 		
-		astar = new AStarSeq(graph, numProcessors);
+		astar = new AStarSequential(graph, numProcessors);
 		PartialSolution aStarSolution = astar.calculateOptimalSolution();
 		
 		branchBound = new BranchAndBound();
