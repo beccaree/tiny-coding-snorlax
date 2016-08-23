@@ -2,6 +2,7 @@ package scheduling_solution.visualisation;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.BoxLayout;
@@ -13,6 +14,12 @@ import javax.swing.border.EmptyBorder;
 import org.graphstream.graph.Graph;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.renderer.category.GanttRenderer;
+import org.jfree.data.category.IntervalCategoryDataset;
 
 import scheduling_solution.astar.AStarVisuals;
 import scheduling_solution.astar.PartialSolution;
@@ -32,6 +39,7 @@ public class GraphVisualisation extends JFrame {
 	JLabel lblOpenQ = new JLabel("0");
 	JLabel lblClosedQ = new JLabel("0");
 	JLabel lblNumbThreads = new JLabel("0");
+	byte numbProc;
 
 	private static long startTime;
 	
@@ -41,6 +49,7 @@ public class GraphVisualisation extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		this.startTime = startTime;
+		this.numbProc = numbProc;
 		
 		JPanel information = new JPanel();
 		information.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -111,8 +120,33 @@ public class GraphVisualisation extends JFrame {
 		
 		solutionDetails.setLayout(b);
 		
-		// Add gantt chart here to display p
 		
+		
+		
+		//GANTT
+		GanttChart gantt = new GanttChart(p, numbProc);
+		
+		final IntervalCategoryDataset dataset = gantt.getDataSet();
+		
+		// create the chart...
+        final JFreeChart chart = ChartFactory.createGanttChart(
+            "Optimal Schedule",  // chart title
+            "Processor",              // domain axis label
+            "Time",              // range axis label
+            dataset,             // data
+            true,                // include legend
+            true,                // tooltips
+            false                // urls
+        );
+        final CategoryPlot plot = (CategoryPlot) chart.getPlot();
+  //      plot.getDomainAxis().setMaxCategoryLabelWidthRatio(10.0f);
+        final GanttRenderer renderer = (GanttRenderer) plot.getRenderer();
+        renderer.setSeriesPaint(0, Color.blue);
+        
+        final ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new java.awt.Dimension(500, 370));
+		solutionDetails.add(chartPanel);
+        
 		solutionDetails.add(new JLabel("Solutions created: " + astar.solutionsCreated));
 		solutionDetails.add(new JLabel("Solutions popped: " + astar.solutionsPopped));
 		solutionDetails.add(new JLabel("Solutions pruned: " + astar.solutionsPruned));
