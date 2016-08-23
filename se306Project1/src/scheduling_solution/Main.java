@@ -4,7 +4,6 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import scheduling_solution.astar.AStarSeq;
 import scheduling_solution.astar.AStarVisuals;
 import scheduling_solution.astar.PartialSolution;
-import scheduling_solution.astar.fullyparallel.AStarParallelThreadsSlow;
 import scheduling_solution.astar.threads.AStarParallelThreads;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
