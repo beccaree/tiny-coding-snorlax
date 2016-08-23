@@ -17,7 +17,7 @@ public class Main {
 	
 	private static String inputFileName;
 	private static byte numProcessors;
-	private static boolean isParallel = false;
+	private static boolean isParallel = true;
 	private static int numThreads;
 	private static boolean isVisualised = true;
 	private static String outputFileName;
@@ -29,11 +29,10 @@ public class Main {
 
 		parseArgs(args);
 		GraphInterface<Vertex, DefaultWeightedEdge> graph = GraphParser.parse(inputFileName);
-		
-		
+
 		if (isVisualised) {
-			GraphVisualisation visuals = new GraphVisualisation(GraphParser.getDisplayGraph(), startTime, numProcessors, Integer.toString(numThreads));
-			AStarVisuals astar = new AStarVisuals(graph,  numProcessors, visuals);
+			GraphVisualisation visuals = new GraphVisualisation(GraphParser.getDisplayGraph(), startTime, numProcessors, numThreads);
+			AStarVisuals astar = new AStarVisuals(graph,  numProcessors, numThreads, visuals, isParallel);
 			PartialSolution p = astar.calculateOptimalSolution();
 			visuals.stopTimer(p, astar);	
 		}

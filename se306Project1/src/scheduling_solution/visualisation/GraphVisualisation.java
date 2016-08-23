@@ -12,8 +12,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
+import org.graphstream.ui.view.ViewerPipe;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -31,25 +33,33 @@ import scheduling_solution.astar.PartialSolution;
 @SuppressWarnings("serial")
 public class GraphVisualisation extends JFrame {
 	
-	static Boolean programEnded = false;
+static Boolean programEnded = false;
+	
+	Graph gsGraph;
+	private long startTime;
 	
 	JLabel lblTimeElapsed = new JLabel("0.00s");
 	JLabel lblNumbNodes = new JLabel("0");
 	JLabel lblNumbProc = new JLabel("0");
-	JLabel lblOpenQ = new JLabel("0");
-	JLabel lblClosedQ = new JLabel("0");
 	JLabel lblNumbThreads = new JLabel("0");
-	byte numbProc;
-
-	private static long startTime;
+	JLabel lblClosedQ = new JLabel("0");
 	
-	public GraphVisualisation(Graph gsGraph, final long startTime, byte numbProc, String numbThreads) {
+	JLabel[] openQlbls;
+	
+	ViewPanel view;
+	ViewerPipe vp;
+	
+	public GraphVisualisation(Graph gsGraph, long startTime, byte numProc, int numThreads) {
 		setTitle("Process Visualisation");
 		setBounds(50, 50, 900, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		if (numThreads == 0) { numThreads = 1; } // main thread
+		
 		this.startTime = startTime;
-		this.numbProc = numbProc;
+		this.gsGraph = gsGraph;
+		this.gsGraph.addAttribute("ui.stylesheet", "node {fill-mode: dyn-plain;}");
+		this.openQlbls = new JLabel[numThreads];
 		
 		JPanel information = new JPanel();
 		information.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -79,30 +89,34 @@ public class GraphVisualisation extends JFrame {
 			}
         });
         t.start();
-
-		information.add(new JLabel("No. of Nodes:"));
+        
+        information.add(new JLabel("No. of Nodes:"));
 		lblNumbNodes.setText(Integer.toString(gsGraph.getNodeCount()));
 		information.add(lblNumbNodes);
 		
 		information.add(new JLabel("No. of Processors:"));
-		lblNumbProc.setText(Byte.toString(numbProc));
+		lblNumbProc.setText(Byte.toString(numProc));
 		information.add(lblNumbProc);
 		
-		information.add(new JLabel("Open queue size:"));
-		information.add(lblOpenQ);
+		information.add(new JLabel("Threads used:"));
+		lblNumbThreads.setText(Integer.toString(numThreads));
+		information.add(lblNumbThreads);
 		
 		information.add(new JLabel("Closed queue size:"));
 		information.add(lblClosedQ);
 		
-		information.add(new JLabel("Threads used:"));
-		lblNumbThreads.setText(numbThreads);
-		information.add(lblNumbThreads);
+		for (int i = 0; i < numThreads; i++) {
+			information.add(new JLabel("Open queue size thread " + (i+1) + ":"));
+			openQlbls[i] = new JLabel("0");
+			information.add(openQlbls[i]);
+		}
 		
 		add(information, BorderLayout.WEST);
 		
-		Viewer viewer = new Viewer(gsGraph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+		Viewer viewer = new Viewer(this.gsGraph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.enableAutoLayout();
-		ViewPanel view = viewer.addDefaultView(false);
+		vp = viewer.newViewerPipe();
+		view = viewer.addDefaultView(false);
 		add(view, BorderLayout.CENTER);
 		
 		setVisible(true);
@@ -120,32 +134,29 @@ public class GraphVisualisation extends JFrame {
 		
 		solutionDetails.setLayout(b);
 		
-		
-		
-		
-		//GANTT
-		GanttChart gantt = new GanttChart(p, numbProc);
-		
-		final IntervalCategoryDataset dataset = gantt.getDataSet();
-		
-		// create the chart...
-        final JFreeChart chart = ChartFactory.createGanttChart(
-            "Optimal Schedule",  // chart title
-            "Processor",              // domain axis label
-            "Time",              // range axis label
-            dataset,             // data
-            true,                // include legend
-            true,                // tooltips
-            false                // urls
-        );
-        final CategoryPlot plot = (CategoryPlot) chart.getPlot();
-  //      plot.getDomainAxis().setMaxCategoryLabelWidthRatio(10.0f);
-        final GanttRenderer renderer = (GanttRenderer) plot.getRenderer();
-        renderer.setSeriesPaint(0, Color.blue);
-        
-        final ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(500, 370));
-		solutionDetails.add(chartPanel);
+//		//GANTT
+//		GanttChart gantt = new GanttChart(p, numbProc);
+//		
+//		final IntervalCategoryDataset dataset = gantt.getDataSet();
+//		
+//		// create the chart...
+//        final JFreeChart chart = ChartFactory.createGanttChart(
+//            "Optimal Schedule",  // chart title
+//            "Processor",              // domain axis label
+//            "Time",              // range axis label
+//            dataset,             // data
+//            true,                // include legend
+//            true,                // tooltips
+//            false                // urls
+//        );
+//        final CategoryPlot plot = (CategoryPlot) chart.getPlot();
+//  //      plot.getDomainAxis().setMaxCategoryLabelWidthRatio(10.0f);
+//        final GanttRenderer renderer = (GanttRenderer) plot.getRenderer();
+//        renderer.setSeriesPaint(0, Color.blue);
+//        
+//        final ChartPanel chartPanel = new ChartPanel(chart);
+//        chartPanel.setPreferredSize(new java.awt.Dimension(500, 370));
+//		solutionDetails.add(chartPanel);
         
 		solutionDetails.add(new JLabel("Solutions created: " + astar.solutionsCreated));
 		solutionDetails.add(new JLabel("Solutions popped: " + astar.solutionsPopped));
@@ -158,10 +169,16 @@ public class GraphVisualisation extends JFrame {
 		frame.setVisible(true);
 	}
 
-	public void updateQueueSize(int openSize, int closedSize) {
-		// updates the labels in the display for open queue and closed queue
-		lblOpenQ.setText(Integer.toString(openSize));
-		lblClosedQ.setText(Integer.toString(closedSize));		
+	public void updateQueueSize(int threadID, int openSize, int closeSize) {
+		lblClosedQ.setText(Integer.toString(closeSize));
+		openQlbls[threadID].setText(Integer.toString(openSize));
+	}
+	
+	public void changeNodeColour(String name) {
+		Node n = gsGraph.getNode(name);
+		n.addAttribute("ui.color", Color.RED);
+		
+		vp.pump();
 	}
 	
 }
