@@ -32,7 +32,7 @@ public class TestAStar extends TestCase {
 		unexploredSolutions = null;
 	}
 	
-	@Test//Need to test calculateStartTime, getStartState and isComplete
+	@Test//Need to test getStartState and isComplete
 	public void testSmallGraphAStar() {
 		
 		/*Create a graph with 4 vertices and start vertex a*/
