@@ -181,7 +181,7 @@ public class GraphVisualisation extends JFrame {
 	 * @param numUsed
 	 */
 	public void changeNodeColour(String name, int numUsed) {
-		int i = numUsed / 1000;
+		int i = numUsed / 10000;
 		
 		if (i > 30) { i = 30; }
 			
