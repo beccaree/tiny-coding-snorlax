@@ -17,13 +17,13 @@ public class Main {
 	
 	private static String inputFileName;
 	private static byte numProcessors;
-	private static boolean isParallel = true;
-	private static int numThreads = 8;			//TODO MAKE SURE THESE ARE ALL NORMAL BEFORE SUBMISSION
-	private static boolean isVisualised = true;
+	private static boolean isParallel = false;
+	private static int numThreads = 1;			//TODO MAKE SURE THESE ARE ALL NORMAL BEFORE SUBMISSION
+	private static boolean isVisualised = false;
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/Nodes_7_OutTree.dot", "2"};
+		//args = new String[]{"tests/Nodes_11_OutTree.dot", "4"};
 		
 		long startTime = System.currentTimeMillis();
 

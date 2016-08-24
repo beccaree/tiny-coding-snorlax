@@ -78,6 +78,7 @@ static Boolean programEnded = false;
 		information.setBorder(new EmptyBorder(20, 20, 20, 20));
 		information.setLayout(new BoxLayout(information, BoxLayout.Y_AXIS));
 		
+		
 //		information.add(new JLabel("Time Elapsed:"));
 //		information.add(lblTimeElapsed);
 		        
@@ -97,7 +98,7 @@ static Boolean programEnded = false;
 		
        
 		// Create table with Statistics
-		JTable table = new JTable(data, columns);
+		final JTable table = new JTable(data, columns);
 		
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
@@ -157,7 +158,7 @@ static Boolean programEnded = false;
 			information.add(openQlbls[i]);
 		}
 		
-		information.add(new JLabel(new ImageIcon(new ImageIcon(System.getProperty("user.dir") + "\\ColourKey.jpg").getImage().getScaledInstance(150, 70, Image.SCALE_DEFAULT))));
+		information.add(new JLabel(new ImageIcon(new ImageIcon(System.getProperty("user.dir") + "/ColourKey.jpg").getImage().getScaledInstance(150, 70, Image.SCALE_DEFAULT))));
 
 		add(information, BorderLayout.WEST);
 		
@@ -169,11 +170,7 @@ static Boolean programEnded = false;
 		
 		setVisible(true);
 	}
-	
-	private Object format(long l) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	public void stopTimer(PartialSolution p, AStarVisuals astar) {
 		programEnded = true;
