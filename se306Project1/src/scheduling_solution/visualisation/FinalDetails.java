@@ -98,7 +98,7 @@ public class FinalDetails extends JFrame {
         
         //Add table to a scroll pane
         JScrollPane pane = new JScrollPane(table);
-        pane.setPreferredSize(new Dimension(500, 117));
+        pane.setPreferredSize(new Dimension(500, 130));
         //Add the table to the frame
         solutionDetails.add(pane);
 		

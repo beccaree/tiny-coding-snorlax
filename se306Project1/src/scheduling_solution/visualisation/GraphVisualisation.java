@@ -37,14 +37,6 @@ public class GraphVisualisation extends JFrame {
 	
 	final JTable infoTable;
 	
-	JLabel lblTimeElapsed = new JLabel("0.00s");
-	JLabel lblNumbNodes = new JLabel("0");
-	JLabel lblNumbProc = new JLabel("0");
-	JLabel lblNumbThreads = new JLabel("0");
-	JLabel lblClosedQ = new JLabel("0");
-	
-	JLabel[] openQlbls;
-	
 	ViewPanel view;
 	ViewerPipe vp;
 	
@@ -63,7 +55,6 @@ public class GraphVisualisation extends JFrame {
 		this.startTime = startTime;
 		this.gsGraph = gsGraph;
 		this.gsGraph.addAttribute("ui.stylesheet", "node {fill-mode: dyn-plain;}");
-		this.openQlbls = new JLabel[numThreads];
 		this.colours = new ColourArray();
 		
 		JPanel information = new JPanel();
@@ -78,7 +69,7 @@ public class GraphVisualisation extends JFrame {
         Object[][] data = new Object[numThreads+6][2];
 
         data[0][0]= "Time Elapsed:";
-		data[0][1] = lblTimeElapsed.getText();
+		data[0][1] = "0";
 		data[1][0] = "No. of Vertices:";
 		data[1][1] = Integer.toString(gsGraph.getNodeCount());
 		data[2][0] = "No. of Processors:";
@@ -86,9 +77,8 @@ public class GraphVisualisation extends JFrame {
 		data[3][0] = "Threads Used:" ;
 		data[3][1] = Integer.toString(numThreads);
 		data[4][0] = "Closed Set Size:";
-		data[4][1] = lblClosedQ.getText();
+		data[4][1] = "0";
 		data[5][0] = "Open Queue (Size):";
-		data[5][1] = "";
 
 		// For each thread, add row data
 		for(int i = 0; i<numThreads; i++){
@@ -113,7 +103,6 @@ public class GraphVisualisation extends JFrame {
                 while (!programEnded) {
                 	try {
                 		infoTable.setValueAt(format(System.currentTimeMillis() - startTime), 0, 1);
-                		lblTimeElapsed.setText(format(System.currentTimeMillis() - startTime));
 						Thread.sleep(10);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
