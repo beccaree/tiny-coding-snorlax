@@ -86,6 +86,7 @@ public class FinalDetails extends JFrame {
             {"Solutions pruned: ", astar.solutionsPruned},
             {"Max memory (MB): ", astar.maxMemory /1024/1024},
             {"Time taken: ", (finishTime - startTime)},
+            {"Optimal Finish Time:", p.getFinishTime()},
         };
         
         //Create table with Statistics
@@ -98,7 +99,7 @@ public class FinalDetails extends JFrame {
         
         //Add table to a scroll pane
         JScrollPane pane = new JScrollPane(table);
-        pane.setPreferredSize(new Dimension(500, 130));
+        pane.setPreferredSize(new Dimension(500, 145));
         //Add the table to the frame
         solutionDetails.add(pane);
 		
