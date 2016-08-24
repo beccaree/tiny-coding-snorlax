@@ -2,9 +2,7 @@ package scheduling_solution.basic_milestone_solver;
 
 /**
  * This class stores the solution (start time and processor) for a vertex.
- * @author Team 8
  */
-
 public class VertexInfo {
 	
 	private int startTime;

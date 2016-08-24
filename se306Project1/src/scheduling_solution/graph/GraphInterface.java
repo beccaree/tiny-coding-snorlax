@@ -3,7 +3,13 @@ package scheduling_solution.graph;
 import java.util.Set;
 
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
-
+/**
+ * Used so that if we were to change graph libraries,
+ * The change would not have a large effect to the
+ * code using the libraries
+ * @param <V> Vertices
+ * @param <E> Edges
+ */
 public interface GraphInterface<V,E> {
 	
 	public E addEdge(V sourceVertex, V targetVertex);

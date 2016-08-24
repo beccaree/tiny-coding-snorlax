@@ -1,5 +1,8 @@
 package scheduling_solution.graph;
 
+/**
+ * Used to store information about a task
+ */
 public class Vertex {
 
 	private String name;
