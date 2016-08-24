@@ -1,8 +1,7 @@
-package scheduling_solution.solver;
+package scheduling_solution.basic_milestone_solver;
 
 import java.util.List;
 import scheduling_solution.graph.Vertex;
-import scheduling_solution.output.Solution;
 
 /**
  * This class creates a valid solution based on a topological sort of the vertices in the graph.

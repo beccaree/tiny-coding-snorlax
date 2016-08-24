@@ -1,11 +1,11 @@
-package scheduling_solution.output;
+package scheduling_solution.basic_milestone_solver;
 
 import java.util.HashMap;
 
 import scheduling_solution.graph.Vertex;
-import scheduling_solution.solver.VertexInfo;
 
 /**
+ * Used in Topological Sort for the basic milestone solution
  * Contains a HashMap of vertices and their corresponding solutions
  * @author Team 8
  */

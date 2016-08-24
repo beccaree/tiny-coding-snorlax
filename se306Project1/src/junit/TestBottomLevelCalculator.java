@@ -6,11 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import junit.framework.TestCase;
+import scheduling_solution.astar.BottomLevelCalculator;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.JGraphTAdapter;
 import scheduling_solution.graph.Vertex;
 import scheduling_solution.input.GraphParser;
-import scheduling_solution.solver.BottomLevelCalculator;
 
 /**
  * Unit tests for BottomLevelCalculator
