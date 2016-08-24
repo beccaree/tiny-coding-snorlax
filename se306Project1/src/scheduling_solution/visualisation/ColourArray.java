@@ -2,6 +2,11 @@ package scheduling_solution.visualisation;
 
 import java.awt.Color;
 
+/**
+ * An array of Color objects that correspond to the 31 shades that trasition from green to yellow to red.
+ * @author team 8
+ *
+ */
 public class ColourArray {
 	
 	Color[] colourArray;
@@ -43,6 +48,10 @@ public class ColourArray {
 		colourArray[30] = new Color(0xFF0000); // Red
 	}
 
+	/**
+	 * @param The index number of the colour to get
+	 * @return the colour at index
+	 */
 	protected Color getColour(int index) {
 		return colourArray[index];
 	}

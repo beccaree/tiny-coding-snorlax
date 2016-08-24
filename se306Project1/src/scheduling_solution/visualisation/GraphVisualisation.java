@@ -1,8 +1,6 @@
 package scheduling_solution.visualisation;
 
-
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 
@@ -22,24 +20,17 @@ import org.graphstream.graph.Node;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerPipe;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.data.category.IntervalCategoryDataset;
-import org.jfree.data.gantt.TaskSeries;
-
 import scheduling_solution.astar.AStarVisuals;
 import scheduling_solution.astar.PartialSolution;
 
 /**
- * 
+ * Visualisation class to display search progress and information of scheduler
  * @author Team 8
  */
 @SuppressWarnings("serial")
 public class GraphVisualisation extends JFrame {
 	
-static Boolean programEnded = false;
+	static Boolean programEnded = false;
 	
 	Graph gsGraph;
 	private long startTime;
@@ -55,8 +46,7 @@ static Boolean programEnded = false;
 	ViewPanel view;
 	ViewerPipe vp;
 	
-	byte numbProc;
-	CategoryPlot plot;
+	byte numProc;
 
 	private ColourArray colours;
 	
@@ -67,7 +57,7 @@ static Boolean programEnded = false;
 		
 		if (numThreads == 0) { numThreads = 1; } // main thread
 		
-		this.numbProc = numProc;
+		this.numProc = numProc;
 		this.startTime = startTime;
 		this.gsGraph = gsGraph;
 		this.gsGraph.addAttribute("ui.stylesheet", "node {fill-mode: dyn-plain;}");
@@ -77,36 +67,31 @@ static Boolean programEnded = false;
 		JPanel information = new JPanel();
 		information.setBorder(new EmptyBorder(20, 20, 20, 20));
 		information.setLayout(new BoxLayout(information, BoxLayout.Y_AXIS));
-		
-		
-//		information.add(new JLabel("Time Elapsed:"));
-//		information.add(lblTimeElapsed);
 		        
-		//Table Headers for Information
+		// Table Headers for Information
         String[] columns = new String[] {
             "Running Details", "Thing"
         };
-
-       //Information data
-       Object[][] data = new Object[][] {
+        // Information data
+        Object[][] data = new Object[][] {
     		   {"Time Elapsed:", lblTimeElapsed.getText()},
     		   {"No. of Vertices:",Integer.toString(gsGraph.getNodeCount())},
     		   {"No. of Processors:",Byte.toString(numProc)},
     		   {"Threads Used:",Integer.toString(numThreads)},
     		   {"Closed Set Size:", lblClosedQ.getText()},
-       };
+        };
 		
        
-		// Create table with Statistics
+        // Create table with Statistics
 		final JTable table = new JTable(data, columns);
 		
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-		table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
+		table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 
 		
-		//create thread to print timer (time in milliseconds)
+		//create thread to update timer (time in milliseconds)
         Thread t = new Thread(new Runnable() {
         	
             @Override
@@ -130,7 +115,7 @@ static Boolean programEnded = false;
         });
         t.start();
         
-//        information.add(new JLabel("No. of Vertices:"));
+//      information.add(new JLabel("No. of Vertices:"));
 //		lblNumbNodes.setText(Integer.toString(gsGraph.getNodeCount()));
 //		information.add(lblNumbNodes);
 //		
@@ -158,13 +143,15 @@ static Boolean programEnded = false;
 			information.add(openQlbls[i]);
 		}
 		
+		// Add the image of the key for vertex colour
 		information.add(new JLabel(new ImageIcon(new ImageIcon(System.getProperty("user.dir") + "/ColourKey.jpg").getImage().getScaledInstance(150, 70, Image.SCALE_DEFAULT))));
 
 		add(information, BorderLayout.WEST);
 		
+		// Add the input graph stream graph into the JPanel
 		Viewer viewer = new Viewer(this.gsGraph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.enableAutoLayout();
-		vp = viewer.newViewerPipe();
+		vp = viewer.newViewerPipe(); // Allows us to make updates to the displayed graph
 		view = viewer.addDefaultView(false);
 		add(view, BorderLayout.CENTER);
 		
@@ -172,95 +159,41 @@ static Boolean programEnded = false;
 	}
 
 
+	/**
+	 * Firstly stops the timer by setting programEnded to true, them uses the information stored 
+	 * in the final solution and scheduler statistics in astar to display a meaningful Gantt chart.
+	 * 
+	 * @param p - final solution
+	 * @param astar
+	 */
 	public void stopTimer(PartialSolution p, AStarVisuals astar) {
 		programEnded = true;
-		JFrame frame = new JFrame("A* Search Details");
-		frame.setBounds(900, 100, 700, 500);
 		
-		// Show details of the search after it is complete
-		JPanel solutionDetails = new JPanel();
-		solutionDetails.setBorder(new EmptyBorder(20, 20, 20, 20));
-		BoxLayout b = new BoxLayout(solutionDetails, BoxLayout.Y_AXIS);
-		
-		solutionDetails.setLayout(b);
-		
-		
-		//GANTT CHART
-		GanttChart gantt = new GanttChart(p, numbProc);
-				
-		final IntervalCategoryDataset dataset = gantt.getDataSet();
-				
-		// create the chart...
-		final JFreeChart chart = ChartFactory.createGanttChart(
-				"Optimal Schedule",  // chart title
-		        "Processor",              // domain axis label
-		        "Time",              // range axis label
-		        dataset,             // data
-		        true,                // include legend
-		        true,                // tooltips
-		        false                // urls
-		);
-		this.plot = (CategoryPlot) chart.getPlot();
-		        
-		TaskSeries series = gantt.getTasks();
-		GanttChartRenderer renderer = new GanttChartRenderer(series);
-		plot.setRenderer(renderer);
-		
-		TimeAxis axis = new TimeAxis();
-		plot.setRangeAxis(axis);
-		
-		final ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setPreferredSize(new java.awt.Dimension(500, 370));
-		solutionDetails.add(chartPanel);
-
-		//STATISTICS TABLE
-	    //Table Headers
-        String[] columns = new String[] {
-            "Statistics", "No."
-        };
-         
-        long finishTime = System.currentTimeMillis();
-        
-        //Statistics
-        Object[][] data = new Object[][] {
-            {"Solutions created: ", astar.solutionsCreated},
-            {"Solutions popped: ", astar.solutionsPopped},
-            {"Solutions pruned: ", astar.solutionsPruned},
-            {"Max memory (MB): ", astar.maxMemory /1024/1024},
-            {"Time taken: ", (finishTime - startTime)},
-        };
-        
-        //Create table with Statistics
-        JTable table = new JTable(data, columns);
-        
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
-        table.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
-        table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
-        
-        //Add table to a scroll pane
-        JScrollPane pane = new JScrollPane(table);
-        pane.setPreferredSize(new Dimension(500, 117));
-        //Add the table to the frame
-        solutionDetails.add(pane);
-
-		
-//		solutionDetails.add(new JLabel("Solutions created: " + astar.solutionsCreated));
-//		solutionDetails.add(new JLabel("Solutions popped: " + astar.solutionsPopped));
-//		solutionDetails.add(new JLabel("Solutions pruned: " + astar.solutionsPruned));
-//		solutionDetails.add(new JLabel("Max memory (MB): " + astar.maxMemory /1024/1024));
-//		long finishTime = System.currentTimeMillis();
-//		solutionDetails.add(new JLabel("Time taken: " + (finishTime - startTime)));
-		
-		frame.add(solutionDetails);
-		frame.setVisible(true);
+		// Display scheduler results 
+		new FinalDetails(p, astar, startTime, numProc);
 	}
 
+	/**
+	 * Updates the labels of closed queue and updates the open queue size label for the
+	 * corresponding thread number.
+	 * 
+	 * @param threadID
+	 * @param openSize
+	 * @param closeSize
+	 */
 	public void updateQueueSize(int threadID, int openSize, int closeSize) {
 		lblClosedQ.setText(Integer.toString(closeSize));
 		openQlbls[threadID].setText(Integer.toString(openSize));
 	}
 	
+	/**
+	 * Changes the vertex colour of the vertex with name according to the number of times is has
+	 * been allocated. The colours range from green to yellow to red, with green representing
+	 * approximately 1-1000 calls, while red represents around 31000+ calls.
+	 * 
+	 * @param name
+	 * @param numUsed
+	 */
 	public void changeNodeColour(String name, int numUsed) {
 		int i = numUsed / 1000;
 		
