@@ -21,6 +21,14 @@ public class AStarVisuals extends AStarParallel {
 	private GraphVisualisation visualisation;
 	private boolean isParallel;
 
+	/**
+	 * Visualisation for calculating the solution
+	 * @param graph - Graph Stream (digraph of all vertex and edges)
+	 * @param numProcessors - Number of processors
+	 * @param numThreads - Number of threads
+	 * @param visualisation - Graph visuals
+	 * @param isParallel - Is the solution calculated in parallel
+	 */
 	public AStarVisuals(GraphInterface<Vertex, DefaultWeightedEdge> graph, byte numProcessors, int numThreads, GraphVisualisation visualisation, boolean isParallel) {
 		super(graph, numProcessors, numThreads);
 		this.visualisation = visualisation;

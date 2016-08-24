@@ -14,7 +14,6 @@ import scheduling_solution.graph.Vertex;
  * Performs a certain number of iterations sequentially, then divides up the priority queue among n threads
  * Explored solutions is shared but not thread safe: a thread safe Set slows down the program, meaning that 
  * the decreased pruning is better than a blocking Set.
- *
  */
 public class AStarParallel extends AStarSequential {
 	protected int nThreads;
@@ -47,6 +46,10 @@ public class AStarParallel extends AStarSequential {
 		return unexploredSolutions.size() < (nThreads + SOLUTIONS_TO_CREATE);
 	}
 	
+	/**
+	 * Calculated the optimal solution in parallel (seperate threads)
+	 * @return optimal solution
+	 */
 	protected PartialSolution calculateOptimalInParallel() {
 		// After the desired number of solutions is reached, perform the search
 		// in parallel
@@ -109,6 +112,11 @@ public class AStarParallel extends AStarSequential {
 		runnables[0].run();
 	}
 	
+	/**
+	 * Gets the optimal solution of of all the optimal solutions found by each thread
+	 * @param runnables - Running Threads that have found their own optimal solution
+	 * @return best optimal solution
+	 */
 	protected PartialSolution findOptimalSolution(AStarRunnable[] runnables) {
 		PartialSolution bestSolution = runnables[0].getOptimalSolution();
 		for (int i = 1; i < nThreads; i++) {

@@ -46,6 +46,14 @@ public class GraphVisualisation extends JFrame {
 
 	private ColourArray colours;
 	
+	/**
+	 * Sets up JFrame for the graph and the live search statistics
+	 * @param gsGraph - Graph Stream (digraph of all vertex and edges)
+	 * @param startTime - Starting Time
+	 * @param numProc - Number of Processors
+	 * @param numThreads - Number of Threads
+	 * @param inputFileName - Input File's name
+	 */
 	public GraphVisualisation(Graph gsGraph, final long startTime, byte numProc, int numThreads, String inputFileName) {
 		setTitle("A* Graph Visualisation - " + inputFileName);
 		setBounds(0, 0, 900, 600);
@@ -151,8 +159,7 @@ public class GraphVisualisation extends JFrame {
 	/**
 	 * Firstly stops the timer by setting programEnded to true, them uses the information stored 
 	 * in the final solution and scheduler statistics in astar to display a meaningful Gantt chart.
-	 * 
-	 * @param p - final solution
+	 * @param p - Final solution
 	 * @param astar
 	 */
 	public void stopTimer(PartialSolution p, AStarVisuals astar) {
