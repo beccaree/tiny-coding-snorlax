@@ -53,9 +53,9 @@ static Boolean programEnded = false;
 
 	private ColourArray colours;
 	
-	public GraphVisualisation(Graph gsGraph, long startTime, byte numProc, int numThreads) {
-		setTitle("Process Visualisation");
-		setBounds(50, 50, 900, 600);
+	public GraphVisualisation(Graph gsGraph, long startTime, byte numProc, int numThreads, String inputFileName) {
+		setTitle("A* Graph Visualisation - " + inputFileName);
+		setBounds(0, 0, 900, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		if (numThreads == 0) { numThreads = 1; } // main thread
@@ -104,15 +104,15 @@ static Boolean programEnded = false;
 		lblNumbProc.setText(Byte.toString(numProc));
 		information.add(lblNumbProc);
 		
-		information.add(new JLabel("Threads used:"));
+		information.add(new JLabel("Threads Used:"));
 		lblNumbThreads.setText(Integer.toString(numThreads));
 		information.add(lblNumbThreads);
 		
-		information.add(new JLabel("Closed set size:"));
+		information.add(new JLabel("Closed Set Size:"));
 		information.add(lblClosedQ);
 		
 		for (int i = 0; i < numThreads; i++) {
-			information.add(new JLabel("Open queue size thread " + (i+1) + ":"));
+			information.add(new JLabel("Open Queue Size - Thread " + (i+1) + ":"));
 			openQlbls[i] = new JLabel("0");
 			information.add(openQlbls[i]);
 		}
@@ -131,7 +131,7 @@ static Boolean programEnded = false;
 	public void stopTimer(PartialSolution p, AStarVisuals astar) {
 		programEnded = true;
 		JFrame frame = new JFrame("A* Search Details");
-		frame.setBounds(200, 150, 500, 300);
+		frame.setBounds(900, 100, 700, 500);
 		
 		// Show details of the search after it is complete
 		JPanel solutionDetails = new JPanel();
@@ -168,8 +168,7 @@ static Boolean programEnded = false;
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 370));
 		solutionDetails.add(chartPanel);
-        
-		
+
 		solutionDetails.add(new JLabel("Solutions created: " + astar.solutionsCreated));
 		solutionDetails.add(new JLabel("Solutions popped: " + astar.solutionsPopped));
 		solutionDetails.add(new JLabel("Solutions pruned: " + astar.solutionsPruned));
