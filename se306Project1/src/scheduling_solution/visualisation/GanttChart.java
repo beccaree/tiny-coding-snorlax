@@ -14,17 +14,30 @@ import scheduling_solution.astar.AllocationInfo;
 import scheduling_solution.astar.PartialSolution;
 import scheduling_solution.graph.Vertex;
 
+/**
+ * Class that creates the details for the gantt chart. This class creates all the Task objects for each
+ * vertex and assigns them starting and finishing times. This class utilises GanttChartRenderer to 
+ * draw its tasks and TimeAxis to draw its time unit axis.
+ */
 public class GanttChart {
 	
 	PartialSolution partialSolution;
 	byte numProc;
 	TaskSeries series;
 
+	/**
+	 * @param partialSolution - optimal partial schedule
+	 * @param numProc - number of processors
+	 */
 	public GanttChart(PartialSolution partialSolution, byte numProc) {
 		this.partialSolution = partialSolution;
 		this.numProc = numProc;
 	}
 	
+	/**
+	 * This method creates the dataset to be used in the gantt chart.
+	 * @return
+	 */
 	IntervalCategoryDataset getDataSet() {
 		
 		series = new TaskSeries("Scheduled Task");
@@ -58,7 +71,7 @@ public class GanttChart {
 		
 		// Create and store the Overall Task for each processor
 		for (int i = 0; i < numProc; i++) {
-			Task procTask = new Task("Processor "+i, date(processorStartTimes[i]), date(processorFinishTimes[i]));
+			Task procTask = new Task("Processor "+(i+1), date(processorStartTimes[i]), date(processorFinishTimes[i]));
 			procTasks.add(procTask);
 		}
 		
@@ -83,6 +96,11 @@ public class GanttChart {
         return collection;
 	}
 	
+	/**
+	 * This method creates a Date object out of the time unit supplied
+	 * @param second - time units
+	 * @return
+	 */
 	private static Date date(final int second) {
 
         final Calendar calendar = Calendar.getInstance();

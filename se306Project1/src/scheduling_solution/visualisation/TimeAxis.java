@@ -3,7 +3,6 @@ package scheduling_solution.visualisation;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +18,10 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.TextAnchor;
 
 
+/**
+ *Since JFreeChart's default DateAxis class doesn't provide sufficient support for customising axis labels,
+ * TimeAxis overrides some of its methods to do so.
+ */
 @SuppressWarnings({ "serial", "rawtypes", "unchecked", "deprecation" })
 public class TimeAxis extends DateAxis {
 	
@@ -29,6 +32,9 @@ public class TimeAxis extends DateAxis {
 		super();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.jfree.chart.axis.DateAxis#refreshTicksHorizontal(java.awt.Graphics2D, java.awt.geom.Rectangle2D, org.jfree.ui.RectangleEdge)
+	 */
 	@Override
 	protected List refreshTicksHorizontal(Graphics2D g2,
                                            Rectangle2D dataArea,
@@ -53,6 +59,8 @@ public class TimeAxis extends DateAxis {
                  // work out the value, label and position
                  String tickLabel;
                  
+                 /*---------------------------ADDITIONAL PART---------------------------*/
+                 // Convert Date object to time units and draw time axis labels accordingly
                  int hours = tickDate.getHours();
                  int mins = tickDate.getMinutes();
                  int secs = tickDate.getSeconds();
@@ -122,6 +130,13 @@ public class TimeAxis extends DateAxis {
  
      }
 	
+	/* (non-Javadoc)
+     * @see org.jfree.chart.axis.DateAxis#calculateDateForPosition(RegularTimePeriod period, 
+       DateTickMarkPosition position)
+     */
+     /**
+     * This class replaces a method from DateAxis that is set to private to be used by this class
+     */
      private Date calculateDateForPosition(RegularTimePeriod period, 
                                            DateTickMarkPosition position) {
          

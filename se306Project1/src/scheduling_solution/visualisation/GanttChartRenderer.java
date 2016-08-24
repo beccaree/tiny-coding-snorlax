@@ -28,20 +28,27 @@ import org.jfree.text.TextUtilities;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.TextAnchor;
 
+/**
+ * Since JFreeChart's default GanttRenderer class doesn't provide sufficient support in drawing subtask
+ * labels, GanttChartRenderer overrides some of its methods to do so.
+ * It customises the labels to display the name of each task on the gantt chart.
+ */
 public class GanttChartRenderer extends GanttRenderer {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	TaskSeries series;
 
+	/**
+	 * @param series - The data series containing info about each task
+	 */
 	public GanttChartRenderer(TaskSeries series) {
 		super();
 		setIncludeBaseInRange(false);
 		this.series = series;
 		
 		setBaseItemLabelGenerator(new IntervalCategoryItemLabelGenerator());
+		
+		// Customise some of the visuals of gantt chart (colour, outlines, position)
 		setSeriesPaint(0, Color.decode("#a5dbff"));
 		setDrawBarOutline(true);
 		setBaseItemLabelsVisible(true);
@@ -49,6 +56,13 @@ public class GanttChartRenderer extends GanttRenderer {
 		setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.INSIDE6, TextAnchor.BOTTOM_CENTER));
 	}
 	
+    /* (non-Javadoc)
+     * @see org.jfree.chart.renderer.category.GanttRenderer#drawTasks(java.awt.Graphics2D, 
+     * org.jfree.chart.renderer.category.CategoryItemRendererState, java.awt.geom.Rectangle2D, 
+     * org.jfree.chart.plot.CategoryPlot, org.jfree.chart.axis.CategoryAxis, org.jfree.chart.axis.ValueAxis, 
+     * org.jfree.data.gantt.GanttCategoryDataset, int, int)
+     */
+	@Override
     protected void drawTasks(Graphics2D g2,
             CategoryItemRendererState state,
             Rectangle2D dataArea,
@@ -157,7 +171,7 @@ public class GanttChartRenderer extends GanttRenderer {
             
             
             /*---------------------------ADDITIONAL PART---------------------------*/
-            //Subtask label generator
+            // Call subtask label generator and pass in subinterval info
             CategoryItemLabelGenerator generator = getItemLabelGenerator(row, column);
             if (generator != null && isItemLabelVisible(row, column)) {
                drawItemLabel(g2, dataset, row, column, plot, generator, bar, false, subinterval);
@@ -188,15 +202,18 @@ public class GanttChartRenderer extends GanttRenderer {
       }
     
     
-    
-    protected void drawItemLabel(Graphics2D g2,
-                                  CategoryDataset data,
-                                  int row,
-                                  int column,
-                                  CategoryPlot plot,
-                                  CategoryItemLabelGenerator generator,
-                                  Rectangle2D bar,
-                                  boolean negative, int subinterval) {
+	/* (non-Javadoc)
+     * @see org.jfree.chart.renderer.category.GanttRenderer#drawItemLabel(Graphics2D g2, CategoryDataset data,
+        int row, int column, CategoryPlot plot, CategoryItemLabelGenerator generator, Rectangle2D bar,
+        boolean negative, int subinterval)
+     */
+    /**
+     * This method replaces one of the methods in the GanttRenderer class in JFreeChart. This class generates
+     * and draws the correct label, given a subtask.
+     * @param subinterval - the index of a task in their respective processor
+     */
+    protected void drawItemLabel(Graphics2D g2, CategoryDataset data, int row, int column, CategoryPlot plot,
+    CategoryItemLabelGenerator generator, Rectangle2D bar, boolean negative, int subinterval) {
                           
     	/*------------------------ADDITIONAL PART---------------------------*/    	
     	// Sets the label of the subtask as its label
@@ -210,11 +227,6 @@ public class GanttChartRenderer extends GanttRenderer {
          g2.setFont(labelFont);
          Paint paint = getItemLabelPaint(row, column);
          g2.setPaint(paint);
-         
- 
-         
-         
-         
          
          // find out where to place the label...
          ItemLabelPosition position = null;
@@ -250,7 +262,6 @@ public class GanttChartRenderer extends GanttRenderer {
                      }
                  }
              }
-         
          }
          
          if (position != null) {
@@ -261,10 +272,14 @@ public class GanttChartRenderer extends GanttRenderer {
          }        
      }
     
-    
-     private Point2D calculateLabelAnchorPoint(ItemLabelAnchor anchor,
-                                               Rectangle2D bar, 
-                                               PlotOrientation orientation) {
+    /* (non-Javadoc)
+     * @see org.jfree.chart.renderer.category.GanttRenderer#calculateLabelAnchorPoint(ItemLabelAnchor anchor,
+       Rectangle2D bar, PlotOrientation orientation)
+     */
+     /**
+     * This class replaces a method from GanttChartRenderer that is set to private to be used by this class
+     */
+    private Point2D calculateLabelAnchorPoint(ItemLabelAnchor anchor, Rectangle2D bar, PlotOrientation orientation) {
  
          Point2D result = null;
          double offset = getItemLabelAnchorOffset();
@@ -364,6 +379,12 @@ public class GanttChartRenderer extends GanttRenderer {
  
      }
      
+    /* (non-Javadoc)
+     * @see org.jfree.chart.renderer.category.GanttRenderer#isInternalAnchor(ItemLabelAnchor anchor)
+     */
+     /**
+     * This class replaces a method from GanttChartRenderer that is set to private to be used by this class
+     */
      private boolean isInternalAnchor(ItemLabelAnchor anchor) {
          return anchor == ItemLabelAnchor.CENTER 
                 || anchor == ItemLabelAnchor.INSIDE1
