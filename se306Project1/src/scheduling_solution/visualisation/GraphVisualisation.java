@@ -20,6 +20,7 @@ import org.graphstream.graph.Node;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerPipe;
+
 import scheduling_solution.astar.AStarVisuals;
 import scheduling_solution.astar.PartialSolution;
 
@@ -34,6 +35,7 @@ public class GraphVisualisation extends JFrame {
 	
 	Graph gsGraph;
 	private long startTime;
+	long finishTime;
 	
 	final JTable infoTable;
 	
@@ -102,8 +104,9 @@ public class GraphVisualisation extends JFrame {
             public void run() {
                 while (!programEnded) {
                 	try {
+                		finishTime = System.currentTimeMillis();
                 		infoTable.setValueAt(format(System.currentTimeMillis() - startTime), 0, 1);
-						Thread.sleep(10);
+						Thread.sleep(100);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -156,7 +159,7 @@ public class GraphVisualisation extends JFrame {
 		programEnded = true;
 		
 		// Display scheduler results 
-		new FinalDetails(p, astar, startTime, numProc);
+		new FinalDetails(p, astar, startTime, numProc, finishTime);
 	}
 
 	/**
