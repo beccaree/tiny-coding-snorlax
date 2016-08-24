@@ -15,10 +15,10 @@ import scheduling_solution.graph.Vertex;
 public class BranchAndBound {
 	
 	public static GraphInterface<Vertex, DefaultWeightedEdge> graph;
-	private static int numProcessors = 1;
+	public static int numProcessors = 1;
 	private static int bestBound = 10000;//TODO infinity
 	private static PartialSolution currentBest = null;
-	private static Queue<PartialSolution> activeStates;
+	public static Queue<PartialSolution> activeStates;
 	private static HashSet<Vertex> startVertices;
 	
 	public PartialSolution calculateOptimalSolution(GraphInterface<Vertex, DefaultWeightedEdge> graph, int numProcessors) {

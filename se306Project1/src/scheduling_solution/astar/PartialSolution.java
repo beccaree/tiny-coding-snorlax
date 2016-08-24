@@ -1,8 +1,12 @@
 package scheduling_solution.astar;
 
+import java.awt.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
@@ -259,18 +263,97 @@ public class PartialSolution {
 	 * Used for verification, not to be called in final product
 	 */
 	public void verify() {
+		
+//		HashSet<Vertex>[] processor;
+		HashSet<String[]> process;
+		
+		HashSet<String[]> processor0 = new HashSet<>();
+		HashSet<String[]> processor1 = new HashSet<>();
+		HashSet<String[]> processor2 = new HashSet<>();
+		HashSet<String[]> processor3 = new HashSet<>();
+		HashSet<String[]> processor4 = new HashSet<>();
+		HashSet<String[]> processor5 = new HashSet<>();
+		HashSet<String[]> processor6 = new HashSet<>();
+		HashSet<String[]> processor7 = new HashSet<>();
+		
+		
+		//Check that each vertex meets each parent's dependencies
 		for (Map.Entry<Vertex, AllocationInfo> entry : allocatedVertices.entrySet()) {
 			Vertex vertex = entry.getKey();
-			AllocationInfo info = entry.getValue();
+			AllocationInfo info = entry.getValue();	
+			
+			//Add vertex into their processor
+			int processorNumber = info.getProcessorNumber();
+			//[Name,Vertex Weight, Vertex Start Time]
+			String[] vertInfo = {vertex.getName(),Integer.toString(vertex.getWeight()),Integer.toString(info.getStartTime())};			
+			switch (processorNumber){
+			case 0:	processor0.add(vertInfo);
+					break;
+			case 1:	processor1.add(vertInfo);
+					break;
+			case 2:	processor2.add(vertInfo);
+					break;
+			case 3:	processor3.add(vertInfo);
+					break;
+			case 4:	processor4.add(vertInfo);
+					break;
+			case 5:	processor5.add(vertInfo);
+					break;
+			case 6:	processor6.add(vertInfo);
+					break;
+			case 7:	processor7.add(vertInfo);
+					break;
+			}
+			
+			
 			for (DefaultWeightedEdge e : graph.incomingEdgesOf(vertex)) {
 				Vertex parent = graph.getEdgeSource(e);
 				AllocationInfo parentInfo = allocatedVertices.get(parent);
-				if(info.getStartTime() < parentInfo.getStartTime() + parent.getWeight()) {
+				
+				//add in the communication time if the current vertex is in a different processor to parent
+				double communicationTime = 0;	
+				if(parentInfo.getProcessorNumber()!= info.getProcessorNumber()){
+					communicationTime = graph.getEdgeWeight(e);
+				}	
+				
+				double currentParentFinishTime = parentInfo.getStartTime() + parent.getWeight()+communicationTime;
+				
+				//If current vertex starts before current parent vertex we are look at finishes
+				if(info.getStartTime() < currentParentFinishTime) {
 					System.out.println("===== Solution is incorrect! =====");
 					System.out.println("Vertex " + vertex.getName() + " starts at " + info.getStartTime() + " but parent "  + parent.getName() + " finished at " + (parentInfo.getStartTime() + parent.getWeight()));
 				}
 			}
 		}
+		
+		ArrayList<HashSet<String[]>> proc = new ArrayList<>();
+		proc.add(processor0);
+		proc.add(processor1);
+		proc.add(processor2);
+		proc.add(processor3);
+		proc.add(processor4);
+		proc.add(processor5);
+		proc.add(processor6);
+		proc.add(processor7);
+		int processorNumber = 1;
+		
+		//Loop through and check no vertex overlap each other in each processor
+		for(HashSet<String[]> p :proc){
+			for(String[] vertex1 : p){
+				int v1StartTime = Integer.parseInt(vertex1[2]);
+				int v1FinishTime = (v1StartTime+Integer.parseInt(vertex1[1]));
+				for(String[] vertex2 : p){
+					int v2StartTime = Integer.parseInt(vertex2[2]);
+					//If not the same vertex names and the start time of vertex 2 is not in the runtime of vertex 1
+					if(!vertex1[0].equals(vertex2[0])&&(v2StartTime<v1FinishTime&&v2StartTime>v1StartTime)){
+						System.out.println("===== Solution is incorrect! =====");
+						System.out.println("Vertex "+vertex1[0]+" overlaps Vertex "+vertex2[0]+" in processor "+ processorNumber);
+					}
+				}
+			}
+			processorNumber++;
+		}
+		
 	}
 	
 	
