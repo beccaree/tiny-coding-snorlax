@@ -35,6 +35,8 @@ public class GraphVisualisation extends JFrame {
 	Graph gsGraph;
 	private long startTime;
 	
+	final JTable infoTable;
+	
 	JLabel lblTimeElapsed = new JLabel("0.00s");
 	JLabel lblNumbNodes = new JLabel("0");
 	JLabel lblNumbProc = new JLabel("0");
@@ -70,25 +72,37 @@ public class GraphVisualisation extends JFrame {
 		        
 		// Table Headers for Information
         String[] columns = new String[] {
-            "Running Details", "Thing"
+            "Running Details", "Value"
         };
-        // Information data
-        Object[][] data = new Object[][] {
-    		   {"Time Elapsed:", lblTimeElapsed.getText()},
-    		   {"No. of Vertices:",Integer.toString(gsGraph.getNodeCount())},
-    		   {"No. of Processors:",Byte.toString(numProc)},
-    		   {"Threads Used:",Integer.toString(numThreads)},
-    		   {"Closed Set Size:", lblClosedQ.getText()},
-        };
-		
+        // Initialise size and information data
+        Object[][] data = new Object[numThreads+6][2];
+
+        data[0][0]= "Time Elapsed:";
+		data[0][1] = lblTimeElapsed.getText();
+		data[1][0] = "No. of Vertices:";
+		data[1][1] = Integer.toString(gsGraph.getNodeCount());
+		data[2][0] = "No. of Processors:";
+		data[2][1] = Byte.toString(numProc);
+		data[3][0] = "Threads Used:" ;
+		data[3][1] = Integer.toString(numThreads);
+		data[4][0] = "Closed Set Size:";
+		data[4][1] = lblClosedQ.getText();
+		data[5][0] = "Open Queue (Size):";
+		data[5][1] = "";
+
+		// For each thread, add row data
+		for(int i = 0; i<numThreads; i++){
+			data[i+6][0] = "- Thread " + (i+1);
+			data[i+6][1] = "0";
+		}
        
         // Create table with Statistics
-		final JTable table = new JTable(data, columns);
+		infoTable = new JTable(data, columns);
 		
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-		table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-		table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+		infoTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+		infoTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 
 		
 		//create thread to update timer (time in milliseconds)
@@ -98,7 +112,7 @@ public class GraphVisualisation extends JFrame {
             public void run() {
                 while (!programEnded) {
                 	try {
-                		table.setValueAt(format(System.currentTimeMillis() - startTime), 0, 1);
+                		infoTable.setValueAt(format(System.currentTimeMillis() - startTime), 0, 1);
                 		lblTimeElapsed.setText(format(System.currentTimeMillis() - startTime));
 						Thread.sleep(10);
 					} catch (InterruptedException e) {
@@ -114,34 +128,17 @@ public class GraphVisualisation extends JFrame {
 			}
         });
         t.start();
-        
-//      information.add(new JLabel("No. of Vertices:"));
-//		lblNumbNodes.setText(Integer.toString(gsGraph.getNodeCount()));
-//		information.add(lblNumbNodes);
-//		
-//		information.add(new JLabel("No. of Processors:"));
-//		lblNumbProc.setText(Byte.toString(numProc));
-//		information.add(lblNumbProc);
-//		
-//		information.add(new JLabel("Threads Used:"));
-//		lblNumbThreads.setText(Integer.toString(numThreads));
-//		information.add(lblNumbThreads);
-//		
-//		information.add(new JLabel("Closed Set Size:"));
-//		information.add(lblClosedQ);
 		
         //Add table to a scroll pane
-        JScrollPane pane1 = new JScrollPane(table);
-        pane1.setPreferredSize(new Dimension(200, 50));
+        JScrollPane pane1 = new JScrollPane(infoTable);
+        JPanel p = new JPanel();
+        p.add(pane1);
+        pane1.setPreferredSize(new Dimension(200, 0));
+        
         //Add the table to the frame
         information.add(pane1);
-        
-		for (int i = 0; i < numThreads; i++) {
-			information.add(new JLabel("Open Queue Size - Thread " + (i+1) + ":"));
-			openQlbls[i] = new JLabel("0");
-			//table.add(new Object[]{("Open Queue Size - Thread " + (i+1) + ":"), openQlbls[i]});
-			information.add(openQlbls[i]);
-		}
+        JTable thing = new JTable();
+        information.add(thing);
 		
 		// Add the image of the key for vertex colour
 		information.add(new JLabel(new ImageIcon(new ImageIcon(System.getProperty("user.dir") + "/ColourKey.jpg").getImage().getScaledInstance(150, 70, Image.SCALE_DEFAULT))));
@@ -182,8 +179,8 @@ public class GraphVisualisation extends JFrame {
 	 * @param closeSize
 	 */
 	public void updateQueueSize(int threadID, int openSize, int closeSize) {
-		lblClosedQ.setText(Integer.toString(closeSize));
-		openQlbls[threadID].setText(Integer.toString(openSize));
+		infoTable.setValueAt(Integer.toString(closeSize), (4), 1);
+		infoTable.setValueAt(Integer.toString(openSize), (threadID + 6), 1);
 	}
 	
 	/**
