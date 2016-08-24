@@ -18,12 +18,11 @@ public class Main {
 	private static String inputFileName;
 	private static byte numProcessors;
 	private static boolean isParallel = false;
-	private static int numThreads = 1;			//TODO MAKE SURE THESE ARE ALL NORMAL BEFORE SUBMISSION
+	private static int numThreads = 1;	
 	private static boolean isVisualised = false;
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		//args = new String[]{"tests/Nodes_11_OutTree.dot", "4"};
 		
 		long startTime = System.currentTimeMillis();
 
@@ -47,19 +46,7 @@ public class Main {
 			p = astar.calculateOptimalSolution();
 		}
 		
-		
-		p.printDetails();
-//		System.out.println("Solutions created: " + astar.solutionsCreated);
-//		System.out.println("Solutions popped: " + astar.solutionsPopped);
-//		System.out.println("Solutions pruned: " + astar.solutionsPruned);
-//		System.out.println("Max memory (MB): " + astar.maxMemory /1024/1024);
-		long finishTime = System.currentTimeMillis();
-		System.out.println("Time taken: " + (finishTime - startTime));
-		
 		OutputFileCreator.create(outputFileName, inputFileName, p);
-		
-		
-		p.verify();//TODO remove
 	}
 	
 	private static void parseArgs(String[] args) {		
