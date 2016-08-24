@@ -161,7 +161,10 @@ static Boolean programEnded = false;
 		TaskSeries series = gantt.getTasks();
 		GanttChartRenderer renderer = new GanttChartRenderer(series);
 		plot.setRenderer(renderer);
-		        
+		
+		TimeAxis axis = new TimeAxis();
+		plot.setRangeAxis(axis);
+		
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 370));
 		solutionDetails.add(chartPanel);
