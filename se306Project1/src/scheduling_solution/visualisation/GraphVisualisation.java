@@ -2,9 +2,10 @@ package scheduling_solution.visualisation;
 
 
 import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.Image;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -116,6 +117,8 @@ static Boolean programEnded = false;
 			openQlbls[i] = new JLabel("0");
 			information.add(openQlbls[i]);
 		}
+		
+		information.add(new JLabel(new ImageIcon(new ImageIcon(System.getProperty("user.dir") + "\\ColourKey.jpg").getImage().getScaledInstance(150, 70, Image.SCALE_DEFAULT))));
 		
 		add(information, BorderLayout.WEST);
 		
