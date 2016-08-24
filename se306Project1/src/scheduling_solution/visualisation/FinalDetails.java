@@ -32,7 +32,7 @@ public class FinalDetails extends JFrame {
 	
 	CategoryPlot plot;
 	
-	public FinalDetails(PartialSolution p, AStarVisuals astar, long startTime, byte numProc) {
+	public FinalDetails(PartialSolution p, AStarVisuals astar, long startTime, byte numProc, long finishTime) {
 		setTitle("A* Search Details");
 		setBounds(900, 100, 700, 500);
 		
@@ -77,7 +77,7 @@ public class FinalDetails extends JFrame {
             "Statistics", "No."
         };
          
-        long finishTime = System.currentTimeMillis();
+        //long finishTime = System.currentTimeMillis();
         
         //Statistics
         Object[][] data = new Object[][] {
@@ -85,7 +85,7 @@ public class FinalDetails extends JFrame {
             {"Solutions popped: ", astar.solutionsPopped},
             {"Solutions pruned: ", astar.solutionsPruned},
             {"Max memory (MB): ", astar.maxMemory /1024/1024},
-            {"Time taken: ", (finishTime - startTime)},
+            {"Time taken (ms): ", (finishTime - startTime)},
             {"Optimal Finish Time:", p.getFinishTime()},
         };
         
