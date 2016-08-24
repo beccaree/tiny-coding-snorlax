@@ -54,7 +54,6 @@ public class AStarRunnableVisuals extends AStarVisuals implements AStarRunnable{
 	}
 
 	private void incrementStatistics() {
-		System.out.println(this.solutionsCreated + " " + this.solutionsPopped + " " + this.solutionsPruned);
 		parent.solutionsCreated += this.solutionsCreated;
 		parent.solutionsPopped += this.solutionsPopped;
 		parent.solutionsPruned += this.solutionsPruned;

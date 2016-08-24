@@ -26,74 +26,6 @@ public class AStarVisuals extends AStarParallel {
 		this.isParallel = isParallel;
 	}
 	
-	/*
-	@Override
-	public PartialSolution calculateOptimalSolution() {
-		PartialSolution partialSolution = super.calculateOptimalSolution();
-		
-		//If it is sequential or it is running in parallel but finished, return it
-		if (partialSolution != null) {
-			return partialSolution;
-		}
-		
-		// SHOULD ONLY EXECUTE IF IS PARALLEL-------------------------------------------->
-		//After the desired number of solutions is reached, perform the search in parallel
-		if (nThreads == 0) { nThreads = 1; }
-		PriorityQueue<PartialSolution>[] queues = new PriorityQueue[nThreads];
-		
-		//Initialise the queues
-		for (int i = 0; i < nThreads; i++) {
-			queues[i] = new PriorityQueue<PartialSolution>(new PartialSolutionComparator());
-		}
-		
-		//Rotate through the list of queues, popping a solution for each until it is empty
-		PartialSolution ps;
-		int n = 0;
-		while ((ps = unexploredSolutions.poll()) != null) {
-			queues[n].add(ps);
-			n++;
-			
-			if (n == nThreads) { //Go back to queue[0]
-				n = 0;
-			}
-		}
-		unexploredSolutions = null; //Prevent further accidental access 
-		
-		AStarRunnableVisuals[] runnables = new AStarRunnableVisuals[nThreads];
-		Thread threads[] = new Thread[nThreads];
-		
-		//Initialise the other threads and start them
-		for (int i = 1; i < nThreads; i++) {
-			runnables[i] = new AStarRunnableVisuals(i, graph, queues[i], exploredSolutions, numProcessors, visualisation);
-			threads[i] = new Thread(runnables[i]);
-			threads[i].start();
-		}
-		
-		//This is the main thread
-		runnables[0] = new AStarRunnableVisuals(0, graph, queues[0], exploredSolutions, numProcessors, visualisation);
-		runnables[0].run();
-		
-		//Wait for all threads to finish
-		for (int i = 1; i < nThreads; i++) {
-			try {
-				threads[i].join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		//Get the shortest result and return it
-		PartialSolution bestSolution = runnables[0].calculateOptimalSolution();
-		for (int i = 1; i < nThreads; i++) {
-			if (bestSolution.getFinishTime() < runnables[i].calculateOptimalSolution().getFinishTime()) {
-				bestSolution = runnables[i].calculateOptimalSolution();
-			}
-		}
-		return bestSolution;
-		// ---------------------------------------------------------------------------->
-	}
-	*/
-	
 	/**
 	 * This class needs to create AStarRunnableVisuals instead of AStarRunnableStandards
 	 */
@@ -138,17 +70,8 @@ public class AStarVisuals extends AStarParallel {
 	
 	@Override
 	protected boolean shouldRunSequentially() {
+		//If running in parallel, it should stop running when enough solutions are created
 		return !isParallel || unexploredSolutions.size() < (nThreads + SOLUTIONS_TO_CREATE);
 	}
 	
-	@Override
-	protected PartialSolution findOptimalSolution(AStarRunnable[] runnables) {
-		PartialSolution bestSolution = runnables[0].getOptimalSolution();
-		for (int i = 1; i < nThreads; i++) {
-			if (bestSolution.getFinishTime() < runnables[i].getOptimalSolution().getFinishTime()) {
-				bestSolution = runnables[i].getOptimalSolution();
-			}
-		}
-		return bestSolution;
-	}
 }

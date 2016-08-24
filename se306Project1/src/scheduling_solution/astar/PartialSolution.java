@@ -196,7 +196,7 @@ public class PartialSolution {
 	}
 	
 	/**
-	 * This function calculates the maximum finish time of the currently available vertices..
+	 * This function calculates the maximum finish time of the currently available vertices.
 	 * Doesn't appear to prune any solutions for any graph, so it is commented out above.
 	 * @return
 	 */
