@@ -96,7 +96,7 @@ static Boolean programEnded = false;
         });
         t.start();
         
-        information.add(new JLabel("No. of Nodes:"));
+        information.add(new JLabel("No. of Vertices:"));
 		lblNumbNodes.setText(Integer.toString(gsGraph.getNodeCount()));
 		information.add(lblNumbNodes);
 		
