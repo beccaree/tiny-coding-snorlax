@@ -18,7 +18,7 @@ public class Main {
 	private static String inputFileName;
 	private static byte numProcessors;
 	private static boolean isParallel = true;
-	private static int numThreads = 3;			//TODO MAKE SURE THESE ARE ALL NORMAL BEFORE SUBMISSION
+	private static int numThreads = 8;			//TODO MAKE SURE THESE ARE ALL NORMAL BEFORE SUBMISSION
 	private static boolean isVisualised = true;
 	private static String outputFileName;
 
