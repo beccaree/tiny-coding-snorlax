@@ -41,6 +41,9 @@ provided below and replacing "scheduler.jar" with the name you gave the jar file
 To try the JUnit tests, run any of the tests under the junit package as Test Cases.
 
 
+**NOTE: For best results, run the project on Java 1.8. In Java 1.7, for some cases, the parallelisation
+has some issues.
+
 ----------------------------------------------------------------------------------------------------
 How to run the supplied jar:
 
