@@ -27,7 +27,7 @@ public class GanttChart {
 	
 	IntervalCategoryDataset getDataSet() {
 		
-		series = new TaskSeries("Scheduled");
+		series = new TaskSeries("Scheduled Task");
 		int[] processorStartTimes = new int[numProc];
 		int[] processorFinishTimes = new int[numProc];
 		ArrayList<Task> procTasks = new ArrayList<Task>();

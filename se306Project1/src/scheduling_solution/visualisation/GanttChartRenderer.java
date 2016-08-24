@@ -42,7 +42,7 @@ public class GanttChartRenderer extends GanttRenderer {
 		this.series = series;
 		
 		setBaseItemLabelGenerator(new IntervalCategoryItemLabelGenerator());
-//      renderer.setSeriesPaint(0, Color.blue);
+		setSeriesPaint(0, Color.decode("#a5dbff"));
 		setDrawBarOutline(true);
 		setBaseItemLabelsVisible(true);
 		setBaseItemLabelPaint(Color.BLACK);
@@ -210,6 +210,7 @@ public class GanttChartRenderer extends GanttRenderer {
          g2.setFont(labelFont);
          Paint paint = getItemLabelPaint(row, column);
          g2.setPaint(paint);
+         
  
          
          
