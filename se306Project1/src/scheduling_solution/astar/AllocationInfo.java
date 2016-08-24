@@ -1,5 +1,8 @@
 package scheduling_solution.astar;
 
+/**
+ * Stores the allocated processor number and start time of the vertex
+ */
 public class AllocationInfo {
 	private final byte processor;
 	private final int startTime;

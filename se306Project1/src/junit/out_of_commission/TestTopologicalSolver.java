@@ -1,4 +1,4 @@
-package junit;
+package junit.out_of_commission;
 
 import java.util.ArrayList;
 import java.util.List;
