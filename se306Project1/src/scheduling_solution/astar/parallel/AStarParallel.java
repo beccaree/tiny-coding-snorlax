@@ -19,7 +19,7 @@ import scheduling_solution.graph.Vertex;
 public class AStarParallel extends AStarSequential {
 	protected int nThreads;
 	
-	//Number of solutions to create
+	//Number of solutions to create. 1000 seems to provide a good balance
 	protected final static int SOLUTIONS_TO_CREATE = 1000;
 	
 	public AStarParallel(GraphInterface<Vertex, DefaultWeightedEdge> graph, byte numProcessors, int nThreads) {
@@ -61,14 +61,21 @@ public class AStarParallel extends AStarSequential {
 		// it is empty
 		PartialSolution ps;
 		int index = 0;
-		while ((ps = unexploredSolutions.poll()) != null) {
-			queues[index].add(ps);
-			index++;
+		
+		//If we are running in parallel with one thread, don't bother popping all solutions only to re-add them
+		if (nThreads == 1) {
+			queues[0] = unexploredSolutions;
+		} else {
+			while ((ps = unexploredSolutions.poll()) != null) {
+				queues[index].add(ps);
+				index++;
 
-			if (index == nThreads) { // Go back to queue[0]
-				index = 0;
+				if (index == nThreads) { // Go back to queue[0]
+					index = 0;
+				}
 			}
 		}
+		
 		unexploredSolutions = null; // Prevent further accidental access
 
 		AStarRunnable[] runnables = new AStarRunnable[nThreads];

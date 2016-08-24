@@ -61,7 +61,6 @@ public class AStarSequential extends AStar{
 			
 	}
 	
-	
 	/**
 	 * Method to be overridden in the parallel version.
 	 * Should return false when we should break the sequential for loop

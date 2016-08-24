@@ -18,7 +18,6 @@ public class AStarRunnableStandard extends AStar implements AStarRunnable{
 	final int threadNumber; // What number thread the runnable is
 	
 	private PartialSolution optimalSolution = null;
-	private int solutionsPopped= 0;
 	
 	public AStarRunnableStandard(int i, GraphInterface<Vertex, DefaultWeightedEdge> graph, PriorityQueue<PartialSolution> unexploredSolutions, Set<PartialSolution> exploredSolutions, byte numProcessors ) {
 		super(graph, numProcessors);
@@ -29,22 +28,7 @@ public class AStarRunnableStandard extends AStar implements AStarRunnable{
 	
 	@Override
 	public void run() {
-		while (shouldRunSequentially()) {
-			PartialSolution currentSolution = unexploredSolutions.poll();
-			solutionsPopped++;
-
-			// Check if partial solution contains all the vertices
-			if (isComplete(currentSolution)) {
-				optimalSolution = currentSolution;
-				System.out.println(solutionsPopped);
-				return;
-			} else {
-				expandPartialSolution(currentSolution);
-			}
-		}
-		
-		/*This will be reached in the parallel version, as shouldRunSequentially() 
-		  will return false after N iterations*/
+		optimalSolution = super.calculateOptimalSolution();
 	}
 	
 	public PartialSolution getOptimalSolution() {

@@ -15,8 +15,6 @@ import scheduling_solution.graph.Vertex;
  * implementation. The only method which is left to subclasses is the
  * calculateOptimalSolution() method
  * 
- * @author Stefan
- *
  */
 public abstract class AStar {
 
@@ -50,7 +48,6 @@ public abstract class AStar {
 	public PartialSolution calculateOptimalSolution() {
 		while (shouldRunSequentially()) {
 			PartialSolution currentSolution = unexploredSolutions.poll();
-//			solutionsPopped++;
 
 			// Check if partial solution contains all the vertices
 			if (isComplete(currentSolution)) {
@@ -112,8 +109,6 @@ public abstract class AStar {
 	protected void expandPartialSolution(PartialSolution solution) {
 		for (Vertex v : solution.getAvailableVertices()) {
 			for (byte processor = 0; processor < numProcessors; processor++) {
-				
-//				solutionsCreated++;
 				
 				createViableSolution(solution, v, processor);
 
