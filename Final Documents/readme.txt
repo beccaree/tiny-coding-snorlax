@@ -45,10 +45,11 @@ To try the JUnit tests, run any of the tests under the junit package as Test Cas
 How to run the supplied jar:
 
 The program can be run by opening the command line on Linux and Navigating to the directory 
-containing the jar file. Then, type "java -jar scheculer.jar -args" where the -args are the input 
-arguments to the program. This should include the name of a valid .dot file name followed by the 
-number of processors to schedule it on. Other optional arguments include -v for visualisation, -o
-followed by an output file name to customise the name of the output file and -p for parallelisation 
+containing the jar file and the "ColourKey.jpg" image. This image can be found at the top level in 
+the se306Project1 project directory. Then, type "java -jar scheculer.jar -args" where the -args are 
+the input arguments to the program. This should include the name of a valid .dot file name followed 
+by the number of processors to schedule it on. Other optional arguments include -v for visualisation, 
+-o followed by an output file name to customise the name of the output file and -p for parallelisation 
 followed by the number of threads.
 
 By default, the output file name would be the input file name with "-output" appended to it. The 
