@@ -3,12 +3,17 @@ package scheduling_solution.visualisation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -71,8 +76,33 @@ static Boolean programEnded = false;
 		information.setBorder(new EmptyBorder(20, 20, 20, 20));
 		information.setLayout(new BoxLayout(information, BoxLayout.Y_AXIS));
 		
-		information.add(new JLabel("Time Elapsed:"));
-		information.add(lblTimeElapsed);
+//		information.add(new JLabel("Time Elapsed:"));
+//		information.add(lblTimeElapsed);
+		        
+		//Table Headers for Information
+        String[] columns = new String[] {
+            "Running Details", "Thing"
+        };
+
+       //Information data
+       Object[][] data = new Object[][] {
+    		   {"Time Elapsed:", lblTimeElapsed.getText()},
+    		   {"No. of Vertices:",Integer.toString(gsGraph.getNodeCount())},
+    		   {"No. of Processors:",Byte.toString(numProc)},
+    		   {"Threads Used:",Integer.toString(numThreads)},
+    		   {"Closed Set Size:", lblClosedQ.getText()},
+       };
+		
+       
+		// Create table with Statistics
+		JTable table = new JTable(data, columns);
+		
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+		table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
+
+		
 		//create thread to print timer (time in milliseconds)
         Thread t = new Thread(new Runnable() {
         	
@@ -80,6 +110,7 @@ static Boolean programEnded = false;
             public void run() {
                 while (!programEnded) {
                 	try {
+                		table.setValueAt(format(System.currentTimeMillis() - startTime), 0, 1);
                 		lblTimeElapsed.setText(format(System.currentTimeMillis() - startTime));
 						Thread.sleep(10);
 					} catch (InterruptedException e) {
@@ -96,27 +127,34 @@ static Boolean programEnded = false;
         });
         t.start();
         
-        information.add(new JLabel("No. of Vertices:"));
-		lblNumbNodes.setText(Integer.toString(gsGraph.getNodeCount()));
-		information.add(lblNumbNodes);
+//        information.add(new JLabel("No. of Vertices:"));
+//		lblNumbNodes.setText(Integer.toString(gsGraph.getNodeCount()));
+//		information.add(lblNumbNodes);
+//		
+//		information.add(new JLabel("No. of Processors:"));
+//		lblNumbProc.setText(Byte.toString(numProc));
+//		information.add(lblNumbProc);
+//		
+//		information.add(new JLabel("Threads Used:"));
+//		lblNumbThreads.setText(Integer.toString(numThreads));
+//		information.add(lblNumbThreads);
+//		
+//		information.add(new JLabel("Closed Set Size:"));
+//		information.add(lblClosedQ);
 		
-		information.add(new JLabel("No. of Processors:"));
-		lblNumbProc.setText(Byte.toString(numProc));
-		information.add(lblNumbProc);
-		
-		information.add(new JLabel("Threads Used:"));
-		lblNumbThreads.setText(Integer.toString(numThreads));
-		information.add(lblNumbThreads);
-		
-		information.add(new JLabel("Closed Set Size:"));
-		information.add(lblClosedQ);
-		
+        //Add table to a scroll pane
+        JScrollPane pane1 = new JScrollPane(table);
+        pane1.setPreferredSize(new Dimension(200, 50));
+        //Add the table to the frame
+        information.add(pane1);
+        
 		for (int i = 0; i < numThreads; i++) {
 			information.add(new JLabel("Open Queue Size - Thread " + (i+1) + ":"));
 			openQlbls[i] = new JLabel("0");
+			//table.add(new Object[]{("Open Queue Size - Thread " + (i+1) + ":"), openQlbls[i]});
 			information.add(openQlbls[i]);
 		}
-		
+				
 		add(information, BorderLayout.WEST);
 		
 		Viewer viewer = new Viewer(this.gsGraph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
@@ -128,6 +166,11 @@ static Boolean programEnded = false;
 		setVisible(true);
 	}
 	
+	private Object format(long l) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public void stopTimer(PartialSolution p, AStarVisuals astar) {
 		programEnded = true;
 		JFrame frame = new JFrame("A* Search Details");
@@ -169,12 +212,44 @@ static Boolean programEnded = false;
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 370));
 		solutionDetails.add(chartPanel);
 
-		solutionDetails.add(new JLabel("Solutions created: " + astar.solutionsCreated));
-		solutionDetails.add(new JLabel("Solutions popped: " + astar.solutionsPopped));
-		solutionDetails.add(new JLabel("Solutions pruned: " + astar.solutionsPruned));
-		solutionDetails.add(new JLabel("Max memory (MB): " + astar.maxMemory /1024/1024));
-		long finishTime = System.currentTimeMillis();
-		solutionDetails.add(new JLabel("Time taken: " + (finishTime - startTime)));
+		//STATISTICS TABLE
+	    //Table Headers
+        String[] columns = new String[] {
+            "Statistics", "No."
+        };
+         
+        long finishTime = System.currentTimeMillis();
+        
+        //Statistics
+        Object[][] data = new Object[][] {
+            {"Solutions created: ", astar.solutionsCreated},
+            {"Solutions popped: ", astar.solutionsPopped},
+            {"Solutions pruned: ", astar.solutionsPruned},
+            {"Max memory (MB): ", astar.maxMemory /1024/1024},
+            {"Time taken: ", (finishTime - startTime)},
+        };
+        
+        //Create table with Statistics
+        JTable table = new JTable(data, columns);
+        
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
+        table.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
+        table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
+        
+        //Add table to a scroll pane
+        JScrollPane pane = new JScrollPane(table);
+        pane.setPreferredSize(new Dimension(500, 117));
+        //Add the table to the frame
+        solutionDetails.add(pane);
+
+		
+//		solutionDetails.add(new JLabel("Solutions created: " + astar.solutionsCreated));
+//		solutionDetails.add(new JLabel("Solutions popped: " + astar.solutionsPopped));
+//		solutionDetails.add(new JLabel("Solutions pruned: " + astar.solutionsPruned));
+//		solutionDetails.add(new JLabel("Max memory (MB): " + astar.maxMemory /1024/1024));
+//		long finishTime = System.currentTimeMillis();
+//		solutionDetails.add(new JLabel("Time taken: " + (finishTime - startTime)));
 		
 		frame.add(solutionDetails);
 		frame.setVisible(true);
