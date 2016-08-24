@@ -6,6 +6,7 @@ public class Vertex {
 	private int weight;
 	private int bottomLevel;
 	private int numbOfUse = 0;
+	private final static int UPDATE_FREQUENCY = 2000;
 	
 	public Vertex(String name, int weight) {
 		this.name = name;
@@ -64,8 +65,13 @@ public class Vertex {
 		this.weight = weight;
 	}
 	
-	public void incrementNumbUsed() {
+	public boolean incrementNumbUsed() {
 		this.numbOfUse++;
+		
+		if (this.numbOfUse % UPDATE_FREQUENCY == 1) {
+			return true;
+		}
+		return false;
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package scheduling_solution.astar;
 
+import java.util.HashSet;
 import java.util.PriorityQueue;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -9,6 +10,7 @@ import scheduling_solution.astar.parallel.AStarRunnable;
 import scheduling_solution.astar.parallel.AStarRunnableVisuals;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
+import scheduling_solution.solver.BottomLevelCalculator;
 import scheduling_solution.visualisation.GraphVisualisation;
 
 public class AStarVisuals extends AStarParallel {
@@ -116,6 +118,9 @@ public class AStarVisuals extends AStarParallel {
 	@Override
 	protected void createViableSolution(PartialSolution solution, Vertex v, byte processor) {
 		super.createViableSolution(solution, v, processor);
+		if (v.incrementNumbUsed()) {
+			visualisation.changeNodeColour(v.getName());
+		}
 		solutionsCreated++;
 	}
 	
@@ -130,10 +135,42 @@ public class AStarVisuals extends AStarParallel {
 	
 	@Override
 	protected void expandPartialSolution(PartialSolution solution) {
+		
 		super.expandPartialSolution(solution);
+		
 		solutionsPopped++;
 		maxMemory = Math.max(maxMemory, Runtime.getRuntime().totalMemory());
 		visualisation.updateQueueSize(0, unexploredSolutions.size(), exploredSolutions.size());
+	}
+	
+	
+	@Override
+	public void initialise() {
+		BottomLevelCalculator.calculate(graph);
+		
+		// Create a crude upper bound for pruning
+		int sequentialTime = 0;
+		for (Vertex v : graph.vertexSet()) {
+			sequentialTime += v.getWeight();
+		}
+		PartialSolution.setSequentialTime(sequentialTime);
+		
+		//Get all nodes of indegree 0
+		HashSet<Vertex> startingVertices = new HashSet<>();
+		for (Vertex v : graph.vertexSet()) {
+			if (graph.inDegreeOf(v) == 0) {
+				startingVertices.add(v);
+			}
+		}	
+		
+		PartialSolution.setStartingVertices(startingVertices);
+
+		for (Vertex v : startingVertices) {
+			if (v.incrementNumbUsed()) {
+				visualisation.changeNodeColour(v.getName());
+			}
+			unexploredSolutions.add(new PartialSolution(graph, numProcessors, v, (byte)0));
+		}
 	}
 	
 	@Override
@@ -151,4 +188,6 @@ public class AStarVisuals extends AStarParallel {
 		}
 		return bestSolution;
 	}
+	
+	
 }
