@@ -13,7 +13,6 @@ import scheduling_solution.graph.Vertex;
 
 /**
  * Creates and writes the output file in the same format as the input file
- * @author Team 8
  */
 public class OutputFileCreator {
 	
@@ -71,6 +70,7 @@ public class OutputFileCreator {
 						bw.newLine();
 					}									
 			}
+			
 			bw.close();
 
 		} catch (IOException e) {
