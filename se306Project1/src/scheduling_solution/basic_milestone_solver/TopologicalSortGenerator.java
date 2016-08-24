@@ -14,7 +14,6 @@ import scheduling_solution.graph.Vertex;
 /**
  * Basic milestone:
  * TopologicalSortGenerator creates a topological sort of a directed graph 
- * @author Team 8
  */
 public class TopologicalSortGenerator {
 	

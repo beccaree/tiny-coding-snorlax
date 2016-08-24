@@ -1,20 +1,10 @@
 package junit.out_of_commission;
 
-import static org.junit.Assert.*;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import scheduling_solution.astar.AStarSequential;
-import scheduling_solution.astar.AllocationInfo;
-import scheduling_solution.branch_and_bound.PartialSolution;
 import scheduling_solution.branch_and_bound.BranchAndBound;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.JGraphTAdapter;
@@ -23,8 +13,6 @@ import scheduling_solution.graph.Vertex;
 public class TestBranchAndBound {
 	
 	private GraphInterface<Vertex, DefaultWeightedEdge> graph;
-	private HashSet<Vertex> startStates;
-	private static final int NUM_Processors=4 ;
 	BranchAndBound branchBound;
 
 
@@ -36,12 +24,9 @@ public class TestBranchAndBound {
 	@After
 	public void tearDown() {
 		graph = null;
-		startStates = null;
 	}
 	
 	
-	
-	@SuppressWarnings("static-access")
 	@Test//Need to test getStartState and isComplete
 	public void testSmallGraphAStar() {
 		

@@ -7,7 +7,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import scheduling_solution.astar.AStar;
 import scheduling_solution.astar.AStarSequential;
 import scheduling_solution.astar.PartialSolution;
 import scheduling_solution.branch_and_bound.BranchAndBound;

@@ -18,7 +18,6 @@ import scheduling_solution.graph.Vertex;
 
 /**
  * GraphParser Class creates a weighted directed graph with values from an input file
- * @author Team 8
  */
 public class GraphParser {
 
@@ -28,7 +27,7 @@ public class GraphParser {
 	
 	/**
 	 * Reads the input file, parses each line
-	 * and adds the edges and nodes into a directed graph
+	 * Adds the edges and nodes into a directed graph
 	 */
 	public static GraphInterface<Vertex, DefaultWeightedEdge> parse(String inputFile) {
 		
@@ -84,9 +83,6 @@ public class GraphParser {
 						Edge e = gsGraph.getEdge(fromVertex.getName()+toVertex.getName());
 						e.addAttribute("ui.label", Integer.parseInt(weight));
 						
-						//TODO: remove this debugging statement at end
-						//System.out.println("New edge " + fromVertex + "->" + toVertex + " with weight " + weight + " created.");
-						
 					} else {
 						
 						//Add the node with weight to the directed graph.
@@ -102,9 +98,6 @@ public class GraphParser {
 							Node n = gsGraph.getNode(vertexOrEdge);
 						    n.addAttribute("ui.label", vertexOrEdge+ ": " + weight);
 						}
-					
-						//TODO: remove this debugging statement at end
-						//System.out.println("New node " + vertexOrEdge + " with weight " + weight + " created.");					
 					}
 				
 				} catch (StringIndexOutOfBoundsException e) {
@@ -114,8 +107,6 @@ public class GraphParser {
 				//Read next line
 				line = br.readLine();
 			}
-			//TODO: remove this debugging statement at end
-			//System.out.println(directedGraph.toString());
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -135,7 +126,7 @@ public class GraphParser {
 	 * Creates a new vertex with the given name and weight, and adds it to the graph and vertexMap.
 	 * @param vertexName
 	 * @param vertexWeight
-	 * @return v : the created vertex
+	 * @return v : The created vertex
 	 */
 	private static Vertex addVertex(String vertexName, int vertexWeight) {
 		Vertex v = new Vertex(vertexName, vertexWeight);
