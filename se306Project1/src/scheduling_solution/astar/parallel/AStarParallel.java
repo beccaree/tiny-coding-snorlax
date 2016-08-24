@@ -54,7 +54,7 @@ public class AStarParallel extends AStarSequential {
 
 		// Initialize the queues of each thread
 		for (int i = 0; i < nThreads; i++) {
-			queues[i] = new PriorityQueue<PartialSolution>(new PartialSolutionComparator());
+			queues[i] = new PriorityQueue<PartialSolution>(1000, new PartialSolutionComparator());
 		}
 
 		// Rotate through the list of queues, popping a solution for each until
