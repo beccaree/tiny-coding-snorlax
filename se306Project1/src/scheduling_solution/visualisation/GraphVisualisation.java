@@ -60,7 +60,7 @@ static Boolean programEnded = false;
 
 	private ColourArray colours;
 	
-	public GraphVisualisation(Graph gsGraph, long startTime, byte numProc, int numThreads, String inputFileName) {
+	public GraphVisualisation(Graph gsGraph, final long startTime, byte numProc, int numThreads, String inputFileName) {
 		setTitle("A* Graph Visualisation - " + inputFileName);
 		setBounds(0, 0, 900, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
