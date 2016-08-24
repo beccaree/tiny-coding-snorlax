@@ -1,0 +1,15 @@
+Meeting - All members present
+
+Current State: 
+	
+	Parallelisation Complete
+	Optimisation Complete
+	Visualisation still under development - GraphStream not updating node colour in Jframe
+						- Number labels not displaying on gantt chart
+
+Todo:
+	Isabel to create google document for report compilation
+		- Each team member has an allocated section to fill in
+	Kristy to create unit tests
+	Rebecca and Sabrina to continue visualisation
+	Stefan to refactor code 
