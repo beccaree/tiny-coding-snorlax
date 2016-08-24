@@ -50,6 +50,8 @@ static Boolean programEnded = false;
 	
 	byte numbProc;
 	CategoryPlot plot;
+
+	private ColourArray colours;
 	
 	public GraphVisualisation(Graph gsGraph, long startTime, byte numProc, int numThreads) {
 		setTitle("Process Visualisation");
@@ -63,6 +65,7 @@ static Boolean programEnded = false;
 		this.gsGraph = gsGraph;
 		this.gsGraph.addAttribute("ui.stylesheet", "node {fill-mode: dyn-plain;}");
 		this.openQlbls = new JLabel[numThreads];
+		this.colours = new ColourArray();
 		
 		JPanel information = new JPanel();
 		information.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -180,9 +183,13 @@ static Boolean programEnded = false;
 		openQlbls[threadID].setText(Integer.toString(openSize));
 	}
 	
-	public void changeNodeColour(String name) {
+	public void changeNodeColour(String name, int numUsed) {
+		int i = numUsed / 1000;
+		
+		if (i > 30) { i = 30; }
+			
 		Node n = gsGraph.getNode(name);
-		n.addAttribute("ui.color", Color.RED);
+		n.addAttribute("ui.color", colours.getColour(i));
 		
 		vp.pump();
 	}

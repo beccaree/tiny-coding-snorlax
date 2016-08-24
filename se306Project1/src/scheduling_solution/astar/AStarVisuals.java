@@ -49,11 +49,19 @@ public class AStarVisuals extends AStarParallel {
 	//Overridden methods to increment statistics when called
 	@Override
 	protected void createViableSolution(PartialSolution solution, Vertex v, byte processor) {
-		super.createViableSolution(solution, v, processor);
-		if (v.incrementNumbUsed()) {
-			visualisation.changeNodeColour(v.getName());
+		PartialSolution newSolution = new PartialSolution(graph, solution, v, processor);
+		// Only add the solution to the priority queue if it passes the pruning check
+		if (isViable(newSolution)) {
+			unexploredSolutions.add(newSolution);
+			
+			for (Vertex vertex: newSolution.getAllocatedVertices().keySet()) {
+				if (vertex.incrementNumbUsed()) {
+					visualisation.changeNodeColour(vertex.getName(), vertex.getNumbOfUse());
+				}
+				solutionsCreated++;
+			}
+
 		}
-		solutionsCreated++;
 	}
 	
 	@Override
@@ -99,7 +107,7 @@ public class AStarVisuals extends AStarParallel {
 
 		for (Vertex v : startingVertices) {
 			if (v.incrementNumbUsed()) {
-				visualisation.changeNodeColour(v.getName());
+				visualisation.changeNodeColour(v.getName(), v.getNumbOfUse());
 			}
 			unexploredSolutions.add(new PartialSolution(graph, numProcessors, v, (byte)0));
 		}

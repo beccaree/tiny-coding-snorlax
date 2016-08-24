@@ -6,7 +6,7 @@ public class Vertex {
 	private int weight;
 	private int bottomLevel;
 	private int numbOfUse = 0;
-	private final static int UPDATE_FREQUENCY = 2000;
+	private final static int UPDATE_FREQUENCY = 1000;
 	
 	public Vertex(String name, int weight) {
 		this.name = name;
