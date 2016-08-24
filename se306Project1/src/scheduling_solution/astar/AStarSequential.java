@@ -7,7 +7,6 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
-import scheduling_solution.solver.BottomLevelCalculator;
 
 /**
  * Standard sequential version of AStar

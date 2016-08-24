@@ -8,12 +8,12 @@ import org.junit.After;
 import org.junit.Before;
 
 import junit.framework.TestCase;
+import scheduling_solution.basic_milestone_solver.Solution;
+import scheduling_solution.basic_milestone_solver.TopologicalSolver;
+import scheduling_solution.basic_milestone_solver.VertexInfo;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.JGraphTAdapter;
 import scheduling_solution.graph.Vertex;
-import scheduling_solution.output.Solution;
-import scheduling_solution.solver.TopologicalSolver;
-import scheduling_solution.solver.VertexInfo;
 
 /**
  * This class tests that the topological solver returns the correct time to finish if every vertex

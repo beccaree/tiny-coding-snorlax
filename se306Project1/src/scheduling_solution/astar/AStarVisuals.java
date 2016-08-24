@@ -10,7 +10,6 @@ import scheduling_solution.astar.parallel.AStarRunnable;
 import scheduling_solution.astar.parallel.AStarRunnableVisuals;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
-import scheduling_solution.solver.BottomLevelCalculator;
 import scheduling_solution.visualisation.GraphVisualisation;
 
 public class AStarVisuals extends AStarParallel {

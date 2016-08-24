@@ -1,4 +1,4 @@
-package scheduling_solution.solver;
+package scheduling_solution.astar;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;

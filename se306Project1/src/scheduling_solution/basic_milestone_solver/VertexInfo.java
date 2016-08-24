@@ -1,4 +1,4 @@
-package scheduling_solution.solver;
+package scheduling_solution.basic_milestone_solver;
 
 /**
  * This class stores the solution (start time and processor) for a vertex.

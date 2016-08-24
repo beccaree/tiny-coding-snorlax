@@ -1,4 +1,4 @@
-package scheduling_solution.solver;
+package scheduling_solution.basic_milestone_solver;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
