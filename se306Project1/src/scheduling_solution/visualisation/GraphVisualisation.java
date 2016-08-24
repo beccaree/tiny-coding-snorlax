@@ -2,10 +2,15 @@ package scheduling_solution.visualisation;
 
 
 import java.awt.BorderLayout;
+<<<<<<< HEAD
 import java.awt.Color;
 import java.awt.Dimension;
+=======
+import java.awt.Image;
+>>>>>>> 267c9347328398120b289c009c63dda7009b9630
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -154,7 +159,13 @@ static Boolean programEnded = false;
 			//table.add(new Object[]{("Open Queue Size - Thread " + (i+1) + ":"), openQlbls[i]});
 			information.add(openQlbls[i]);
 		}
+<<<<<<< HEAD
 				
+=======
+		
+		information.add(new JLabel(new ImageIcon(new ImageIcon(System.getProperty("user.dir") + "\\ColourKey.jpg").getImage().getScaledInstance(150, 70, Image.SCALE_DEFAULT))));
+		
+>>>>>>> 267c9347328398120b289c009c63dda7009b9630
 		add(information, BorderLayout.WEST);
 		
 		Viewer viewer = new Viewer(this.gsGraph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
