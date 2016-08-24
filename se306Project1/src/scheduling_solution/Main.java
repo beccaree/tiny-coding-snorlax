@@ -23,7 +23,7 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-		args = new String[]{"tests/Nodes_11_OutTree.dot", "4"};
+		args = new String[]{"tests/Nodes_7_OutTree.dot", "2"};
 		
 		long startTime = System.currentTimeMillis();
 
@@ -33,7 +33,7 @@ public class Main {
 		PartialSolution p = null;
 		
 		if (isVisualised) {
-			GraphVisualisation visuals = new GraphVisualisation(GraphParser.getDisplayGraph(), startTime, numProcessors, numThreads);
+			GraphVisualisation visuals = new GraphVisualisation(GraphParser.getDisplayGraph(), startTime, numProcessors, numThreads, inputFileName);
 			AStarVisuals astar = new AStarVisuals(graph,  numProcessors, numThreads, visuals, isParallel);
 			p = astar.calculateOptimalSolution();
 			visuals.stopTimer(p, astar);	
