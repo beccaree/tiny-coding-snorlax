@@ -25,12 +25,14 @@ public class Main {
 	public static void main(String[] args) {
 
 		long startTime = System.currentTimeMillis();
-
+		
+		//Parse command line instructions and stores data from input file into a digraph
 		parseArgs(args);
 		GraphInterface<Vertex, DefaultWeightedEdge> graph = GraphParser.parse(inputFileName);
 		
 		PartialSolution p = null;
 		
+		//If user wants visualisation then initalise and start JFrames 
 		if (isVisualised) {
 			GraphVisualisation visuals = new GraphVisualisation(GraphParser.getDisplayGraph(), startTime, numProcessors, numThreads, inputFileName);
 			AStarVisuals astar = new AStarVisuals(graph,  numProcessors, numThreads, visuals, isParallel);
@@ -38,6 +40,8 @@ public class Main {
 			visuals.stopTimer(p, astar);	
 		} else {
 			AStar astar;
+			
+			//Check if calculating in parallel then start the AStar process for calculation
 			if (isParallel) {
 				astar = new AStarParallel(graph,  numProcessors, numThreads);
 			} else {
@@ -46,9 +50,14 @@ public class Main {
 			p = astar.calculateOptimalSolution();
 		}
 		
+		//Create the output file
 		OutputFileCreator.create(outputFileName, inputFileName, p);
 	}
 	
+	/**
+	 * Parse command line argument
+	 * @param args - command line arguments
+	 */
 	private static void parseArgs(String[] args) {		
 		try {
 			inputFileName = args[0];
