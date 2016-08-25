@@ -23,10 +23,7 @@ public class Main {
 	private static String outputFileName;
 
 	public static void main(String[] args) {
-<<<<<<< HEAD
-=======
-//		args = new String[]{"tests/Nodes_11_OutTree.dot", "2"};
->>>>>>> e5a713598f5a30099457a5fff862ed46a2d9c95e
+
 		long startTime = System.currentTimeMillis();
 
 		parseArgs(args);
@@ -50,7 +47,6 @@ public class Main {
 		}
 		
 		OutputFileCreator.create(outputFileName, inputFileName, p);
-		System.out.println("File Created");
 	}
 	
 	private static void parseArgs(String[] args) {		
