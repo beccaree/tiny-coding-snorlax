@@ -1,5 +1,5 @@
 # tiny-coding-snorlax
-Team 8 (Team m8s) SOFTENG 306 2016 Semester 2
+Team 8 (Team M8s) SOFTENG 306 2016 Semester 2
 
 
 Project Overview:
