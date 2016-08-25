@@ -15,13 +15,17 @@ statistics are shown.
 ----------------------------------------------------------------------------------------------------
 Team Details:
 
-Name			upi		id		github
--------------------	-------		-------		-----------
-Isabel Zhuang		izhu678		9097662		Tarotato
-Kristy Tsoi		ytso868		6521229		kris-t-tsoi
-Rebecca Lee		rlee291		8017413		beccaree
-Stefan Gorgiovski	sgor395		8765614		StefanGor
-Sabrina Zafarullah	szaf045		8703958		sabflik
+Name, upi, id, github
+Isabel Zhuang izhu678 9097662 Tarotato
+
+Kristy Tsoi ytso868 6521229 kris-t-tsoi
+
+Rebecca Lee rlee291 8017413 beccaree
+
+Stefan Gorgiovski sgor395 8765614 StefanGor
+
+Sabrina Zafarullah szaf045 8703958 sabflik
+
 
 
 ----------------------------------------------------------------------------------------------------
