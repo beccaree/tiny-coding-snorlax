@@ -58,6 +58,7 @@ public class GraphVisualisation extends JFrame {
 		setTitle("A* Graph Visualisation - " + inputFileName);
 		setBounds(0, 0, 900, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		
 		if (numThreads == 0) { numThreads = 1; } // main thread
 		
@@ -133,7 +134,7 @@ public class GraphVisualisation extends JFrame {
         JScrollPane pane1 = new JScrollPane(infoTable);
         JPanel p = new JPanel();
         p.add(pane1);
-        pane1.setPreferredSize(new Dimension(200, 0));
+        pane1.setPreferredSize(new Dimension(300, 0));
         
         //Add the table to the frame
         information.add(pane1);
