@@ -14,6 +14,12 @@ import scheduling_solution.astar.parallel.AStarParallel;
 import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 
+/**
+ * The class that contains allocated vertices, start times and their allocated processor
+ * 
+ * @author Team 8
+ *
+ */
 @SuppressWarnings("unchecked")
 public class PartialSolution {
 	private GraphInterface<Vertex, DefaultWeightedEdge> graph;

@@ -12,6 +12,12 @@ import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 import scheduling_solution.visualisation.GraphVisualisation;
 
+/**
+ * AStar class with visualisation components
+ * 
+ * @author Team 8
+ *
+ */
 public class AStarVisuals extends AStarParallel {
 	public int solutionsPopped = 0;
 	public int solutionsCreated = 0;

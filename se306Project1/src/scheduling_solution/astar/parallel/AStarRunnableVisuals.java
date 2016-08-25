@@ -11,6 +11,12 @@ import scheduling_solution.graph.GraphInterface;
 import scheduling_solution.graph.Vertex;
 import scheduling_solution.visualisation.GraphVisualisation;
 
+/**
+ * Visual version of the AStarRunnable class
+ * 
+ * @author Team 8
+ *
+ */
 public class AStarRunnableVisuals extends AStarVisuals implements AStarRunnable{
 	
 	private GraphVisualisation visualisation;	
@@ -49,10 +55,34 @@ public class AStarRunnableVisuals extends AStarVisuals implements AStarRunnable{
 	}
 	
 	@Override
+	protected void expandPartialSolution(PartialSolution solution) {
+		for (Vertex v : solution.getAvailableVertices()) {
+			for (byte processor = 0; processor < numProcessors; processor++) {
+				
+				createViableSolution(solution, v, processor);
+
+				// Only adds vertex to leftmost empty processor
+				if (solution.getFinishTimes()[processor] == 0) {
+					break;
+				}
+
+			}
+		}
+		exploredSolutions.add(solution);
+		
+		solutionsPopped++;
+		maxMemory = Math.max(maxMemory, Runtime.getRuntime().totalMemory());
+		visualisation.updateQueueSize(threadNumber, unexploredSolutions.size(), exploredSolutions.size());
+	}
+	
+	@Override
 	public PartialSolution getOptimalSolution() {
 		return optimalSolution;
 	}
 
+	/**
+	 * Increments parent statistics when it is complete, so final Gantt chart can have Final statistics
+	 */
 	private void incrementStatistics() {
 		parent.solutionsCreated += this.solutionsCreated;
 		parent.solutionsPopped += this.solutionsPopped;
