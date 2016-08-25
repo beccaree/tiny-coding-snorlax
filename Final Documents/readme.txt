@@ -9,8 +9,7 @@ the optimal schedule. A valid .dot file is needed as an input containing data th
 At the end of the search, an output .dot file is generated with the optimal schedule results. If 
 visualised, a window with the input graph tree and live search statistics is displayed. At the end
 of the search, a popup containing the schedule in the form of a gantt chart and final search 
-statistics are shown
-.
+statistics are shown.
 
 
 ----------------------------------------------------------------------------------------------------
@@ -28,14 +27,19 @@ Sabrina Zafarullah	szaf045		8703958		sabflik
 ----------------------------------------------------------------------------------------------------
 Build Instructions:
 
-Open Eclipse and import our se306Project1 project. Add all jar libraries in the lib folder to the 
-project build path. At this stage, you can run the program from Eclipse by typing the inputs into
-run configurations and setting the main class as scheduling_solution.Main.java.
+1. Boot Linux Beta on the lab computers and open Eclipse in Java 1.8 environment.
+2. Import the se306Project1 project. 
+3. Add all jar libraries in the lib folder to the project build path. 
+4. At this stage, you can run the program from Eclipse by typing the inputs into run configurations 
+   and setting the main class as scheduling_solution.Main.java.
 
-To create a brand new jar file, right click the project and click "export". Then select 
-"Runnable Jar file" and select the right run configurations (select main class), export destination
-and "Package required libraries into generated JAR". You can run this jar using the instructions 
-provided below and replacing "scheduler.jar" with the name you gave the jar file.
+To create a brand new jar file:
+1. Right click the project and click "export". 
+2. Select "Runnable Jar file" and select the right run configurations (select main class) and export 
+   destination.
+3. Select "Package required libraries into generated JAR". 
+4. You can run this jar using the instructions provided below and replacing "scheduler.jar" with the 
+   name you gave the jar file.
 
 
 To try the JUnit tests, run any of the tests under the junit package as Test Cases.
@@ -44,16 +48,18 @@ To try the JUnit tests, run any of the tests under the junit package as Test Cas
 **NOTE: For best results, run the project on Java 1.8. In Java 1.7, for some cases, the parallelisation
 has some issues.
 
+
 ----------------------------------------------------------------------------------------------------
 How to run the supplied jar:
 
-The program can be run by opening the command line on Linux and Navigating to the directory 
-containing the jar file and the "ColourKey.jpg" image. This image can be found at the top level in 
-the se306Project1 project directory. Then, type "java -jar scheculer.jar -args" where the -args are 
-the input arguments to the program. This should include the name of a valid .dot file name followed 
-by the number of processors to schedule it on. Other optional arguments include -v for visualisation, 
--o followed by an output file name to customise the name of the output file and -p for parallelisation 
-followed by the number of threads.
+1. The program can be run by opening the command line on Linux and Navigating to the directory 
+   containing the jar file and the "ColourKey.jpg" image. This image can be found at the top level in 
+   the se306Project1 project directory. 
+2. Type "java -jar scheculer.jar -args" where the -args are the input arguments to the program. 
+   This should include the name of a valid .dot file name followed by the number of processors to 
+   schedule it on. Other optional arguments include -v for visualisation, -o followed by an output 
+   file name to customise the name of the output file and -p for parallelisation followed by the number 
+   of threads.
 
 By default, the output file name would be the input file name with "-output" appended to it. The 
 program also assumes that the number of threads is 1, unless the -p is followed by a number.
